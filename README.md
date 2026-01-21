@@ -1,2 +1,2 @@
 # iv1201-recruitment-app
-Repo for IV1201 project
+Using microservices architecture because we love added complexity!
