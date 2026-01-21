@@ -7,7 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class RecruitmentServiceApplication {
 
 	public static void main(String[] args) {
+		System.out.println("Starting Recruitment Service...");
 		SpringApplication.run(RecruitmentServiceApplication.class, args);
+		System.out.println("Recruitment Service started successfully.");
 	}
 
 }
