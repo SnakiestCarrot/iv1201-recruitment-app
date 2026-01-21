@@ -47,5 +47,16 @@ services:
       - auth-service
       - recruitment-service
 
+  # 5. Frontend
+  frontend:
+    build: ./frontend-service 
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend-service:/app
+      - /app/node_modules
+    environment:
+      VITE_API_URL: http://localhost:8080
+
 volumes:
   postgres_data:
