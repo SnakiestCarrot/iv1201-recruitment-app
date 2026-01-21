@@ -1,4 +1,4 @@
-package com.iv1201.gateway;
+package com.iv1201.gateway.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
