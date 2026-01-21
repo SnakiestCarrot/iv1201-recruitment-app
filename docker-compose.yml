@@ -5,24 +5,24 @@ services:
   postgres:
     image: postgres:15
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: recruitment_db
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     ports:
-      - "5432:5432" # Maps Docker port 5432 to your Laptop port 5432
+      - "${DB_PORT}:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data # Saves data so it doesn't vanish on restart
+      - postgres_data:/var/lib/postgresql/data
 
   # 2. Auth Service
   auth-service:
-    build: ./auth-service # Looks for Dockerfile in this folder
+    build: ./auth-service
     ports:
       - "8081:8080"
     environment:
-      # Note: We use the service name 'postgres' as the hostname
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/recruitment_db?currentSchema=auth
-      SPRING_DATASOURCE_USERNAME: admin
-      SPRING_DATASOURCE_PASSWORD: password
+      # We construct the URL dynamically using the variables
+      SPRING_DATASOURCE_URL: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}?currentSchema=auth
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
     depends_on:
       - postgres
 
@@ -32,17 +32,17 @@ services:
     ports:
       - "8082:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/recruitment_db?currentSchema=core
-      SPRING_DATASOURCE_USERNAME: admin
-      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_DATASOURCE_URL: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}?currentSchema=core
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
     depends_on:
       - postgres
 
-  # 4. API Gateway (The Entry Point)
+  # 4. API Gateway
   gateway:
-    build: ./api-gateway
+    build: ./api-gateway-service
     ports:
-      - "8080:8080" # You only need to talk to THIS port
+      - "8080:8080"
     depends_on:
       - auth-service
       - recruitment-service
