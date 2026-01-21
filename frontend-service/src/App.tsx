@@ -1,34 +1,31 @@
 import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
 import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [status, setStatus] = useState<string>('Idle');
+
+  const pingGateway = async () => {
+    setStatus('Sending request...');
+    try {
+      // we use '/auth/test' so the Gateway route matches it
+      await fetch('http://localhost:8080/auth/test');
+      setStatus('Request sent! Check Docker logs.');
+    } catch (error) {
+      console.error(error);
+      setStatus('Error connecting to Gateway');
+    }
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div style={{ padding: '50px', textAlign: 'center' }}>
+      <h1>Integration Test</h1>
+      <div style={{ marginBottom: '20px' }}>
+        Current Status: <strong>{status}</strong>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+      <button onClick={pingGateway} style={{ padding: '10px 20px', fontSize: '16px' }}>
+        Ping API Gateway
+      </button>
+    </div>
   );
 }
 
