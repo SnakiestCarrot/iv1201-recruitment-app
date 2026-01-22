@@ -1,44 +1,59 @@
-version: '3.8'
-
 services:
-  # 1. The Database
-  postgres:
+  auth-db:
     image: postgres:15
+    container_name: iv1201_auth_db
     environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${AUTH_DB_NAME}
     ports:
-      - "${DB_PORT}:5432"
+      - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - auth_db_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    restart: always
 
-  # 2. Auth Service
+  recruitment-db:
+    image: postgres:15
+    container_name: iv1201_recruitment_db
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${RECRUIT_DB_NAME}
+    ports:
+      - "5433:5432"
+    volumes:
+      - recruitment_db_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    restart: always
+
   auth-service:
     build: ./auth-service
-    ports:
-      - "8081:8080"
-    environment:
-      # Connect to the 'auth' schema in Postgres
-      SPRING_DATASOURCE_URL: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}?currentSchema=auth
-      SPRING_DATASOURCE_USERNAME: ${DB_USER}
-      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
     depends_on:
-      - postgres
+      - auth-db
+    environment:
+      # We construct the URL dynamically using the variables
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://${AUTH_DB_HOST}:${AUTH_DB_PORT}/${AUTH_DB_NAME}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    networks:
+      - app-network
 
-  # 3. Recruitment Service
   recruitment-service:
     build: ./recruitment-service
-    ports:
-      - "8082:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}?currentSchema=core
-      SPRING_DATASOURCE_USERNAME: ${DB_USER}
-      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
     depends_on:
-      - postgres
+      - recruitment-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://${RECRUIT_DB_HOST}:${RECRUIT_DB_PORT}/${RECRUIT_DB_NAME}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    networks:
+      - app-network
 
-  # 4. API Gateway
   gateway:
     build: ./api-gateway-service
     ports:
@@ -46,17 +61,26 @@ services:
     depends_on:
       - auth-service
       - recruitment-service
+    networks:
+      - app-network
 
-  # 5. Frontend
   frontend:
-    build: ./frontend-service 
+    build: ./frontend-service
     ports:
       - "3000:3000"
+      - "5173:5173"
     volumes:
       - ./frontend-service:/app
       - /app/node_modules
+    networks:
+      - app-network
     environment:
-      VITE_API_URL: http://localhost:8080
+      - CHOKIDAR_USEPOLLING=true
+
+networks:
+  app-network:
+    driver: bridge
 
 volumes:
-  postgres_data:
+  auth_db_data:
+  recruitment_db_data:
