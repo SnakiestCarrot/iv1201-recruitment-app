@@ -19,6 +19,7 @@ public class RouteConfig {
             // Recruitment Service Routes
             .route("recruitment-service", r -> r
                 .path("/api/recruitment/**") // Example path convention
+                .filters(f -> f.stripPrefix(2)) // Remove /api/recruitment prefix before forwarding
                 .uri("http://recruitment-service:8080"))
 
             // Future Services
