@@ -31,8 +31,6 @@ services:
 
   auth-service:
     build: ./auth-service
-    ports: #TEMPORARY FOR TESTING - REMOVE LATER.
-      - "8081:8080"
     depends_on:
       - auth-db
     environment:
