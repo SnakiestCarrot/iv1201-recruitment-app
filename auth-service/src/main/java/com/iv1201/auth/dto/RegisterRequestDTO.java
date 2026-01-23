@@ -1,5 +1,10 @@
 package com.iv1201.auth.dto;
 
+
+/**
+ * Data Transfer Object for user registration.
+ * Captures the input data sent from the client.
+ */
 public class RegisterRequestDTO {
 
     private String username;
