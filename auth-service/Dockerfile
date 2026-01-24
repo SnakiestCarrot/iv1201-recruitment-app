@@ -13,8 +13,8 @@ RUN mvn dependency:go-offline
 # Copy the actual source code
 COPY src ./src
 
-# Build the jar file (skip tests here to speed up builds, tests should be in CI pipeline)
-RUN mvn clean package -DskipTests
+# Build the jar file (with tests for now)
+RUN mvn clean package
 
 # -----------------------------------------------------------------------------
 
@@ -31,7 +31,7 @@ WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
 # Expose the port the app runs on
-EXPOSE 8082
+EXPOSE 8080
 
 # The command to start the app
 ENTRYPOINT ["java", "-jar", "app.jar"]
