@@ -25,10 +25,13 @@ public class JwtUtil {
      * @param roleId The user's role (to be embedded in the token).
      * @return A signed JWT string.
      */
-    public String generateToken(String username, Long roleId) {
+    public String generateToken(com.iv1201.auth.model.User user) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", roleId); 
-        return createToken(claims, username);
+        
+        claims.put("role", user.getRoleId());
+        claims.put("id", user.getId()); 
+
+        return createToken(claims, user.getUsername());
     }
 
     private String createToken(Map<String, Object> claims, String subject) {

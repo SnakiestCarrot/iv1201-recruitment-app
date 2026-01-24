@@ -65,13 +65,13 @@ public class AuthService {
      * @throws IllegalArgumentException If credentials are invalid.
      */
     public String login(LoginRequestDTO request) {
-        User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid username or password"));
+    User user = userRepository.findByUsername(request.getUsername())
+            .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("Invalid username or password");
-        }
-
-        return jwtUtil.generateToken(user.getUsername(), user.getRoleId());
+    if (!passwordEncoder.matches(request.getUsername(), user.getPassword())) {
+        throw new RuntimeException("Invalid credentials");
     }
+
+    return jwtUtil.generateToken(user);
+}
 }
