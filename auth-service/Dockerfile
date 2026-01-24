@@ -13,8 +13,8 @@ RUN mvn dependency:go-offline
 # Copy the actual source code
 COPY src ./src
 
-# Build the jar file (skip tests here to speed up builds, tests should be in CI pipeline)
-RUN mvn clean package -DskipTests
+# Build the jar file (with tests for now)
+RUN mvn clean package
 
 # -----------------------------------------------------------------------------
 

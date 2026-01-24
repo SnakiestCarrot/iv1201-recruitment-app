@@ -53,11 +53,11 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO request) {
         try {
             String token = authService.login(request);
-            // Return the token wrapped in a nice JSON object
             return ResponseEntity.ok(new AuthResponseDTO(token));
-        } catch (IllegalArgumentException e) {
-            // Return 401 Unauthorized for bad login attempts
-            return ResponseEntity.status(401).body(e.getMessage());
+        } catch (IllegalArgumentException e) { 
+            return ResponseEntity.status(401).body(e.getMessage());      
+        } catch (Exception e) { 
+            return ResponseEntity.status(500).body("Internal Server Error");
         }
     }
 }
