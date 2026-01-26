@@ -66,10 +66,10 @@ public class AuthService {
      */
     public String login(LoginRequestDTO request) {
         User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid username"));;
+                .orElseThrow(() -> new IllegalArgumentException("Invalid credentials"));;
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-                throw new IllegalArgumentException("Invalid password");
+                throw new IllegalArgumentException("Invalid credentials");
             }
 
         return jwtUtil.generateToken(user);
