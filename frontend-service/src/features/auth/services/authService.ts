@@ -26,7 +26,11 @@ export const authService = {
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(errorText || 'Login failed');
+      if(errorText.includes("Invalid")) {
+        throw new Error('Invalid username or password');
+      } else {
+        throw new Error(errorText || 'Login failed');
+      }
     }
     return await response.json();
   }
