@@ -64,6 +64,8 @@ services:
       - recruitment-service
     networks:
       - app-network
+    environment:
+      APP_FRONTEND_URL: ${FRONTEND_URL}
 
   frontend:
     build: ./frontend-service
