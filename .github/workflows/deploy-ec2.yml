@@ -32,3 +32,25 @@ jobs:
             
             # Prune unused images to save disk space on the small instance
             sudo docker image prune -f
+      - name: Verify Deployment (Health Check)
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+        run: |
+          echo "Waiting for service to be ready at http://$EC2_HOST:3000..."
+          
+          # Retry 12 times with 5s delay (Total 60s wait)
+          for i in {1..12}; do
+            # -s = Silent, -o /dev/null = hide output, -w = show status code
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://$EC2_HOST:3000)
+            
+            if [ "$STATUS" == "200" ]; then
+              echo "✅ Service is UP and responding 200 OK!"
+              exit 0
+            fi
+            
+            echo "Attempt $i: Got status $STATUS. Waiting 5s..."
+            sleep 5
+          done
+          
+          echo "❌ Deployment failed: Service is not reachable on port 3000"
+          exit 1
