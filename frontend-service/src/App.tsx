@@ -1,31 +1,28 @@
-import { useState } from 'react';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { LoginForm } from './features/auth/views/LoginForm';
+import { RegisterForm } from './features/auth/views/RegisterForm';
 import './App.css';
 
 function App() {
-  const [status, setStatus] = useState<string>('Idle');
-
-  const pingGateway = async () => {
-    setStatus('Sending request...');
-    try {
-      // we use '/auth/test' so the Gateway route matches it
-      await fetch('http://localhost:8080/auth/test');
-      setStatus('Request sent! Check Docker logs.');
-    } catch (error) {
-      console.error(error);
-      setStatus('Error connecting to Gateway');
-    }
-  };
-
   return (
-    <div style={{ padding: '50px', textAlign: 'center' }}>
-      <h1>Integration Test</h1>
-      <div style={{ marginBottom: '20px' }}>
-        Current Status: <strong>{status}</strong>
+    <HashRouter>
+      <div className="app-container">
+        <header>
+          <h1>Recruitment App</h1>
+        </header>
+
+        <main className="page-container">
+          <Routes>
+            <Route path="/" element={<Navigate to="/login" replace />} />
+            
+            <Route path="/login" element={<LoginForm />} />
+            <Route path="/register" element={<RegisterForm />} />
+            
+            <Route path="*" element={<Navigate to="/login" replace />} />
+          </Routes>
+        </main>
       </div>
-      <button onClick={pingGateway} style={{ padding: '10px 20px', fontSize: '16px' }}>
-        Ping API Gateway
-      </button>
-    </div>
+    </HashRouter>
   );
 }
 
