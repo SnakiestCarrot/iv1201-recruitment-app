@@ -1,11 +1,19 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom'; // <--- Import Link
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuthPresenter } from '../presenters/useAuthPresenter';
 
 export const LoginForm = () => {
   const { state, loginUser } = useAuthPresenter();
+  const navigate = useNavigate();
+  
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  useEffect(() => {
+    if (state.status === 'success') {
+      navigate('/dashboard');
+    }
+  }, [state.status, navigate]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
