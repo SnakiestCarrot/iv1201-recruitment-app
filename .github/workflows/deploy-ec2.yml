@@ -27,8 +27,8 @@ jobs:
             
             # Rebuild and restart containers
             # We use --build to ensure code changes are picked up
-            docker compose down
-            docker compose up -d --build
+            sudo docker compose down
+            sudo docker compose up -d --build
             
             # Prune unused images to save disk space on the small instance
-            docker image prune -f
+            sudo docker image prune -f
