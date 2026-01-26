@@ -1,0 +1,37 @@
+import { type AuthRequest, type AuthResponse } from '../types/authTypes';
+
+const API_BASE_URL = 'http://localhost:8080/auth';
+
+export const authService = {
+  async register(data: AuthRequest): Promise<string> {
+    const response = await fetch(`${API_BASE_URL}/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText || 'Registration failed');
+    }
+    return await response.text();
+  },
+
+  async login(data: AuthRequest): Promise<AuthResponse> {
+    const response = await fetch(`${API_BASE_URL}/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      if(errorText.includes("Invalid")) {
+        throw new Error('Invalid username or password');
+      } else {
+        throw new Error(errorText || 'Login failed');
+      }
+    }
+    return await response.json();
+  }
+};
