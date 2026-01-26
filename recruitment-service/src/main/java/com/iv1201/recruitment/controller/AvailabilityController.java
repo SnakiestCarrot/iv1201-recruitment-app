@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.http.ResponseEntity;
 import com.iv1201.recruitment.dto.AvailabilityDTO;
+import com.iv1201.recruitment.service.AvailabilityService;
 
 import java.util.List;
 import java.time.LocalDate;
@@ -19,20 +20,21 @@ import java.time.LocalDate;
 @RequestMapping("api/recruitment/availabilities")
 public class AvailabilityController {
 
+    private final AvailabilityService availabilityService;
+
+    public AvailabilityController(AvailabilityService availabilityService) {
+        this.availabilityService = availabilityService;
+    }
+
+    
     /**
      * Retrieves all availability periods.
-     * 
-     * @return
+     *
+     * @return list of availability DTOs
      */
-
     @GetMapping
     public ResponseEntity<List<AvailabilityDTO>> getAllAvailabilities() {
-        // Temporary mock response
-        AvailabilityDTO dto = new AvailabilityDTO();
-        dto.setFromDate(LocalDate.of(2023, 1, 1));
-        dto.setToDate(LocalDate.of(2023, 12, 31));
-
-        return ResponseEntity.ok(List.of(dto));
+        return ResponseEntity.ok(availabilityService.getAllAvailabilities());
     }
     
 }

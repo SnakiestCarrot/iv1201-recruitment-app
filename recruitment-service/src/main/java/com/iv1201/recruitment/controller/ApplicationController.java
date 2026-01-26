@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.http.ResponseEntity;
 import com.iv1201.recruitment.dto.ApplicationSummaryDTO;
+import com.iv1201.recruitment.service.ApplicationService;
 
 import java.util.List;
 /**
@@ -17,20 +18,21 @@ import java.util.List;
 @RequestMapping("api/recruitment/applications")
 public class ApplicationController {
 
+    private final ApplicationService applicationService;
+
+    public ApplicationController(ApplicationService applicationService) {
+        this.applicationService = applicationService;
+    }
+
     /**
      * Retrieve a list of all recruitment applications.
      * 
-     * @return
+     * @return list of application summary DTOs
      */
+
     @GetMapping
     public ResponseEntity<List<ApplicationSummaryDTO>> getAllApplications() {
-        // Temporary mock response
-        ApplicationSummaryDTO dto = new ApplicationSummaryDTO();
-        dto.setPersonID(1L);
-        dto.setFullName("John Doe");
-        dto.setStatus("UNHANDLED");
-
-        return ResponseEntity.ok(List.of(dto));
+        return ResponseEntity.ok(applicationService.getAllApplications());
     }
     
 }
