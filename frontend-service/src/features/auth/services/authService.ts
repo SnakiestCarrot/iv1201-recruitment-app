@@ -1,6 +1,6 @@
 import { type AuthRequest, type AuthResponse } from '../types/authTypes';
 
-const API_BASE_URL = 'http://localhost:8080/auth';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/auth';
 
 export const authService = {
   async register(data: AuthRequest): Promise<string> {
