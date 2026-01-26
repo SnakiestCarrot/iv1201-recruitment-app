@@ -1,32 +1,30 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { dashboardService } from '../services/dashboardService';
+import { type UserProfile } from '../types/dashboardTypes';
 
 export const useDashboardPresenter = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState<string>('User');
+  const [user, setUser] = useState<UserProfile | null>(null);
 
-  // Check authentication on load
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    if (!token) {
-      // If no token, kick them back to login
+    const currentUser = dashboardService.getUserFromToken();
+
+    if (!currentUser) {
       navigate('/login');
     } else {
-      // Optional: You could decode the JWT here to get the real username
-      // For now, we just assume they are valid
-      setUsername('Applicant'); 
+      setUser(currentUser);
     }
   }, [navigate]);
 
   const logout = () => {
-    // 1. Clear the token
-    localStorage.removeItem('authToken');
-    // 2. Redirect to Login
+    dashboardService.logout();
     navigate('/login');
   };
 
   return {
-    username,
+    username: user?.username || '',
+    roleId: user?.roleId || null,
     logout
   };
 };
