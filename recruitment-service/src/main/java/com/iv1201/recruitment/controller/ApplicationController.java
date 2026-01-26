@@ -14,7 +14,7 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("/applications")
+@RequestMapping("api/recruitment/applications")
 public class ApplicationController {
 
     /**

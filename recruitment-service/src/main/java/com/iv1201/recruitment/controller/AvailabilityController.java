@@ -16,7 +16,7 @@ import java.time.LocalDate;
  */
 
 @RestController
-@RequestMapping("/availabilities")
+@RequestMapping("api/recruitment/availabilities")
 public class AvailabilityController {
 
     /**

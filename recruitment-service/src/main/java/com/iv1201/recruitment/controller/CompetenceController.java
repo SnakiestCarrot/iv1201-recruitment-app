@@ -16,7 +16,7 @@ import java.math.BigDecimal;
  */
 
 @RestController
-@RequestMapping("/competences")
+@RequestMapping("api/recruitment/competences")
 public class CompetenceController {
     /**
      * Retrieves all competences.
