@@ -38,17 +38,16 @@ jobs:
         run: |
           echo "Waiting for service to be ready at http://$EC2_HOST:3000..."
           
-          # Retry 12 times with 5s delay (Total 60s wait)
           for i in {1..12}; do
-            # -s = Silent, -o /dev/null = hide output, -w = show status code
-            STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://$EC2_HOST:3000)
+            # The "|| echo '000'" prevents the script from crashing if curl fails to connect
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://$EC2_HOST:3000 || echo "000")
             
             if [ "$STATUS" == "200" ]; then
               echo "✅ Service is UP and responding 200 OK!"
               exit 0
             fi
             
-            echo "Attempt $i: Got status $STATUS. Waiting 5s..."
+            echo "Attempt $i: Got status $STATUS (Service not ready). Waiting 5s..."
             sleep 5
           done
           
