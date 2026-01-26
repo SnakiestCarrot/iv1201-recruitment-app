@@ -13,12 +13,12 @@ public class RouteConfig {
         return builder.routes()
             // Auth Service Routes
             .route("auth-service", r -> r
-                .path("/auth/**") // Catch any path starting with /auth
-                .uri("http://auth-service:8080")) // Forward to Docker container
+                .path("/auth/**")
+                .uri("http://auth-service:8080"))
 
             // Recruitment Service Routes
             .route("recruitment-service", r -> r
-                .path("/api/recruitment/**") // Example path convention
+                .path("/api/recruitment/**")
                 .uri("http://recruitment-service:8080"))
 
             // Future Services
