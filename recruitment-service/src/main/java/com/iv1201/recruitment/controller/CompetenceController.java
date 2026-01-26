@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.http.ResponseEntity;
 import com.iv1201.recruitment.dto.CompetenceDTO;
+import com.iv1201.recruitment.service.CompetenceService;
 
 import java.util.List;
 import java.math.BigDecimal;
@@ -18,20 +19,24 @@ import java.math.BigDecimal;
 @RestController
 @RequestMapping("api/recruitment/competences")
 public class CompetenceController {
+
+
+    private final CompetenceService competenceService;
+
+    public CompetenceController(CompetenceService competenceService) {
+        this.competenceService = competenceService;
+    }
+
+
     /**
      * Retrieves all competences.
      * 
-     * @return
+     * @return list of competence DTOs
      */
 
     @GetMapping
     public ResponseEntity<List<CompetenceDTO>> getAllCompetences() {
-        // Temporary mock response
-        CompetenceDTO dto = new CompetenceDTO();
-        dto.setCompetenceId(1L);
-        dto.setYearsOfExperience(new BigDecimal("5.0"));
-
-        return ResponseEntity.ok(List.of(dto));
+        return ResponseEntity.ok(competenceService.getAllCompetences());
     }
     
 }
