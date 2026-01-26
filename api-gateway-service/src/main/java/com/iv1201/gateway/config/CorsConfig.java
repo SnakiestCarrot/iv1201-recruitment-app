@@ -1,5 +1,6 @@
 package com.iv1201.gateway.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -10,20 +11,21 @@ import java.util.Arrays;
 
 @Configuration
 public class CorsConfig {
+    @Value("${app.frontend.url:http://localhost:3000}")
+    private String frontendUrl;
 
     @Bean
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration corsConfig = new CorsConfiguration();
-        // Allow the React frontend
-        corsConfig.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        
+        corsConfig.setAllowedOrigins(Arrays.asList(frontendUrl.split(",")));
+        
         corsConfig.setMaxAge(3600L);
-        // Allow generic HTTP methods
         corsConfig.addAllowedMethod("GET");
         corsConfig.addAllowedMethod("POST");
         corsConfig.addAllowedMethod("PUT");
         corsConfig.addAllowedMethod("DELETE");
         corsConfig.addAllowedMethod("OPTIONS");
-        // Allow all headers
         corsConfig.addAllowedHeader("*");
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

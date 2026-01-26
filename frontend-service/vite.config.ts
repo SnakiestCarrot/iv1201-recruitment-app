@@ -11,5 +11,10 @@ export default defineConfig({
     host: true, // Expose to Docker network (0.0.0.0)
     strictPort: true,
     port: 3000, // We want port 3000, not 5173
+    allowedHosts:
+    [
+      'ec2-18-193-22-98.eu-central-1.compute.amazonaws.com',
+      'localhost',
+    ],
   },
 });
