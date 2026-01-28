@@ -12,18 +12,18 @@ export const dashboardService = {
 
     try {
       const decoded = jwtDecode<TokenPayload>(token);
-      
+
       return {
         username: decoded.sub,
-        roleId: decoded.role
+        roleId: decoded.role,
       };
     } catch (error) {
-      console.error("Failed to decode token", error);
+      console.error('Failed to decode token', error);
       return null;
     }
   },
 
   logout(): void {
     localStorage.removeItem('authToken');
-  }
+  },
 };

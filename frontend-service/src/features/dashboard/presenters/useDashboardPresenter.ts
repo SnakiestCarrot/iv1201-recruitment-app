@@ -5,17 +5,15 @@ import { type UserProfile } from '../types/dashboardTypes';
 
 export const useDashboardPresenter = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState<UserProfile | null>(null);
+  const [user] = useState<UserProfile | null>(() => {
+    return dashboardService.getUserFromToken();
+  });
 
   useEffect(() => {
-    const currentUser = dashboardService.getUserFromToken();
-
-    if (!currentUser) {
+    if (!user) {
       navigate('/login');
-    } else {
-      setUser(currentUser);
     }
-  }, [navigate]);
+  }, [user, navigate]);
 
   const logout = () => {
     dashboardService.logout();
@@ -25,6 +23,6 @@ export const useDashboardPresenter = () => {
   return {
     username: user?.username || '',
     roleId: user?.roleId || null,
-    logout
+    logout,
   };
 };
