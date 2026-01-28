@@ -5,27 +5,29 @@ import { useAuthPresenter } from '../presenters/useAuthPresenter';
 
 vi.mock('react-router-dom', () => ({
   useNavigate: () => vi.fn(),
-  Link: ({ children }: { children: React.ReactNode }) => <a href="/register">{children}</a>
+  Link: ({ children }: { children: React.ReactNode }) => (
+    <a href="/register">{children}</a>
+  ),
 }));
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string) => key,
-    i18n: { changeLanguage: vi.fn(), language: 'en' }
-  })
+    i18n: { changeLanguage: vi.fn(), language: 'en' },
+  }),
 }));
 
 vi.mock('../presenters/useAuthPresenter');
 
 describe('LoginForm Component', () => {
   const mockLoginUser = vi.fn();
-  
+
   beforeEach(() => {
     vi.clearAllMocks();
-    
+
     (useAuthPresenter as any).mockReturnValue({
       state: { status: 'idle', message: '' },
-      loginUser: mockLoginUser
+      loginUser: mockLoginUser,
     });
   });
 
@@ -34,15 +36,21 @@ describe('LoginForm Component', () => {
 
     expect(screen.getByLabelText('common.username')).toBeInTheDocument();
     expect(screen.getByLabelText('common.password')).toBeInTheDocument();
-    
-    expect(screen.getByRole('button', { name: 'auth.login' })).toBeInTheDocument();
+
+    expect(
+      screen.getByRole('button', { name: 'auth.login' })
+    ).toBeInTheDocument();
   });
 
   it('updates input fields when user types', () => {
     render(<LoginForm />);
-    
-    const usernameInput = screen.getByLabelText('common.username') as HTMLInputElement;
-    const passwordInput = screen.getByLabelText('common.password') as HTMLInputElement;
+
+    const usernameInput = screen.getByLabelText(
+      'common.username'
+    ) as HTMLInputElement;
+    const passwordInput = screen.getByLabelText(
+      'common.password'
+    ) as HTMLInputElement;
 
     // Simulate typing
     fireEvent.change(usernameInput, { target: { value: 'testuser' } });
@@ -54,29 +62,33 @@ describe('LoginForm Component', () => {
 
   it('calls loginUser with credentials when form is submitted', () => {
     render(<LoginForm />);
-    
-    fireEvent.change(screen.getByLabelText('common.username'), { target: { value: 'myUser' } });
-    fireEvent.change(screen.getByLabelText('common.password'), { target: { value: 'myPass' } });
-    
+
+    fireEvent.change(screen.getByLabelText('common.username'), {
+      target: { value: 'myUser' },
+    });
+    fireEvent.change(screen.getByLabelText('common.password'), {
+      target: { value: 'myPass' },
+    });
+
     fireEvent.click(screen.getByRole('button', { name: 'auth.login' }));
 
     expect(mockLoginUser).toHaveBeenCalledTimes(1);
     expect(mockLoginUser).toHaveBeenCalledWith({
       username: 'myUser',
-      password: 'myPass'
+      password: 'myPass',
     });
   });
 
   it('disables the submit button when loading', () => {
     (useAuthPresenter as any).mockReturnValue({
       state: { status: 'loading', message: 'Logging in...' },
-      loginUser: mockLoginUser
+      loginUser: mockLoginUser,
     });
 
     render(<LoginForm />);
 
     const button = screen.getByRole('button');
-    
+
     expect(button).toBeDisabled();
 
     expect(button).toHaveTextContent('auth.verification');
@@ -85,7 +97,7 @@ describe('LoginForm Component', () => {
   it('displays error message when state is error', () => {
     (useAuthPresenter as any).mockReturnValue({
       state: { status: 'error', message: 'Invalid credentials' },
-      loginUser: mockLoginUser
+      loginUser: mockLoginUser,
     });
 
     render(<LoginForm />);

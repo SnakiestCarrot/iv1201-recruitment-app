@@ -5,8 +5,6 @@ import { useTranslation } from 'react-i18next';
 
 export const RegisterForm = () => {
   const { state, registerUser } = useAuthPresenter();
-
-  // 1. Initialize the translation hook
   const { t, i18n } = useTranslation();
 
   const [username, setUsername] = useState('');
@@ -14,7 +12,6 @@ export const RegisterForm = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [validationError, setValidationError] = useState('');
 
-  // 2. Language switcher logic (consistent with LoginForm)
   const handleLangChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const lng = e.target.value;
     i18n.changeLanguage(lng);
@@ -27,7 +24,6 @@ export const RegisterForm = () => {
     setValidationError('');
 
     if (password !== confirmPassword) {
-      // 3. Use 't' inside the function for validation messages
       setValidationError(t('auth.password-mismatch'));
       return;
     }
@@ -42,7 +38,6 @@ export const RegisterForm = () => {
 
   return (
     <div className="auth-card">
-      {/* 4. Language Selector UI */}
       <div
         style={{
           display: 'flex',
@@ -66,8 +61,9 @@ export const RegisterForm = () => {
 
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>{t('common.username')}</label>
+          <label htmlFor="reg-username">{t('common.username')}</label>
           <input
+            id="reg-username"
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
@@ -76,8 +72,9 @@ export const RegisterForm = () => {
         </div>
 
         <div className="form-group">
-          <label>{t('common.password')}</label>
+          <label htmlFor="reg-password">{t('common.password')}</label>
           <input
+            id="reg-password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -86,8 +83,9 @@ export const RegisterForm = () => {
         </div>
 
         <div className="form-group">
-          <label>{t('auth.confirm-password')}</label>
+          <label htmlFor="reg-confirm">{t('auth.confirm-password')}</label>
           <input
+            id="reg-confirm"
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
@@ -102,7 +100,6 @@ export const RegisterForm = () => {
           {state.status === 'loading' ? t('auth.creating') : t('auth.register')}
         </button>
       </form>
-
       {validationError && <p className="status-msg error">{validationError}</p>}
 
       {state.message && !validationError && (
