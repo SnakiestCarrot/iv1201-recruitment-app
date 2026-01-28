@@ -1,0 +1,26 @@
+{
+  "auth": { 
+    "login": "Login",
+    "register": "Register", 
+    "verification": "Verifying...",
+    "password-mismatch": "Passwords do not match",
+    "insufficient-password-length": "Password must be at least 6 characters.",
+    "creating": "Creating...",
+    "already-have-account": "Already have an account?",
+    "dont-have-account": "Don't have an account?",
+    "confirm-password": "Confirm Password",
+    "login-here": "Log in here",
+    "show": "Show",
+    "hide": "Hide"
+},
+  "dash": {
+    "title": "Welcome, ",
+    "logged-in-state": "You are successfully logged in.",
+    "role-id-sentence": "You have role ID: ",
+    "logout": "Log out"
+  },
+  "common": {
+    "username": "Username",
+    "password": "Password"    
+  }
+}
