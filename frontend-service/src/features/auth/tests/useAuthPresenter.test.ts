@@ -16,13 +16,13 @@ describe('useAuthPresenter', () => {
     vi.stubGlobal('localStorage', {
       setItem: vi.fn(),
       getItem: vi.fn(),
-      clear: vi.fn()
+      clear: vi.fn(),
     });
   });
 
   it('initializes with idle state', () => {
     const { result } = renderHook(() => useAuthPresenter());
-    
+
     expect(result.current.state).toEqual({
       status: 'idle',
       message: '',
@@ -38,9 +38,15 @@ describe('useAuthPresenter', () => {
       await result.current.loginUser({ username: 'user', password: 'pw' });
     });
 
-    expect(authService.login).toHaveBeenCalledWith({ username: 'user', password: 'pw' });
+    expect(authService.login).toHaveBeenCalledWith({
+      username: 'user',
+      password: 'pw',
+    });
 
-    expect(localStorage.setItem).toHaveBeenCalledWith('authToken', 'fake-jwt-token');
+    expect(localStorage.setItem).toHaveBeenCalledWith(
+      'authToken',
+      'fake-jwt-token'
+    );
 
     expect(result.current.state).toEqual({
       status: 'success',
@@ -49,7 +55,9 @@ describe('useAuthPresenter', () => {
   });
 
   it('handles login failure', async () => {
-    (authService.login as any).mockRejectedValue(new Error('Invalid credentials'));
+    (authService.login as any).mockRejectedValue(
+      new Error('Invalid credentials')
+    );
 
     const { result } = renderHook(() => useAuthPresenter());
 
@@ -72,7 +80,10 @@ describe('useAuthPresenter', () => {
       await result.current.registerUser({ username: 'new', password: 'pw' });
     });
 
-    expect(authService.register).toHaveBeenCalledWith({ username: 'new', password: 'pw' });
+    expect(authService.register).toHaveBeenCalledWith({
+      username: 'new',
+      password: 'pw',
+    });
 
     expect(result.current.state).toEqual({
       status: 'success',
