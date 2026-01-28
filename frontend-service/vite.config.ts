@@ -6,16 +6,16 @@ export default defineConfig({
   plugins: [react()],
   test: {
     globals: true,
-    environment: 'jsdom',
-    setupFiles: './src/setupTests.ts', // We will create this next
+    environment: 'happy-dom',
+    setupFiles: './src/setupTests.ts',
   },
   server: {
     watch: {
-      usePolling: true, // Needed for Hot Reload in Docker on some systems
+      usePolling: true,
     },
-    host: true, // Expose to Docker network (0.0.0.0)
+    host: true,
     strictPort: true,
-    port: 3000, // We want port 3000, not 5173
+    port: 3000,
     allowedHosts: [
       'ec2-18-193-22-98.eu-central-1.compute.amazonaws.com',
       'localhost',

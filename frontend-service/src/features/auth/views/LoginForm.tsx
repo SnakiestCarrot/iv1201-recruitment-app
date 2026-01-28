@@ -56,8 +56,10 @@ export const LoginForm = () => {
 
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>{t('common.username')}</label>
+          {/* Added htmlFor="username" */}
+          <label htmlFor="username">{t('common.username')}</label>
           <input
+            id="username" /* Added id="username" to match the label */
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
@@ -67,8 +69,10 @@ export const LoginForm = () => {
         </div>
 
         <div className="form-group">
-          <label>{t('common.password')}</label>
+          {/* Added htmlFor="password" */}
+          <label htmlFor="password">{t('common.password')}</label>
           <input
+            id="password" /* Added id="password" to match the label */
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
