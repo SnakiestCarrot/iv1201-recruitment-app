@@ -1,6 +1,7 @@
 import { type AuthRequest, type AuthResponse } from '../types/authTypes';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/auth';
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || 'http://localhost:8080/auth';
 
 export const authService = {
   async register(data: AuthRequest): Promise<string> {
@@ -26,12 +27,12 @@ export const authService = {
 
     if (!response.ok) {
       const errorText = await response.text();
-      if(errorText.includes("Invalid")) {
+      if (errorText.includes('Invalid')) {
         throw new Error('Invalid username or password');
       } else {
         throw new Error(errorText || 'Login failed');
       }
     }
     return await response.json();
-  }
+  },
 };
