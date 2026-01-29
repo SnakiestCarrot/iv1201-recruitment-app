@@ -28,9 +28,17 @@ jobs:
         working-directory: ./frontend-service
         run: npm run lint
 
-      - name: Unit Tests
+      - name: Unit Tests & Coverage
         working-directory: ./frontend-service
-        run: npm test -- --run
+        run: npm run test:coverage
+
+      - name: Upload Frontend Coverage Report
+        if: always() # Run even if tests fail
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-coverage-report
+          path: frontend-service/coverage/
+          retention-days: 30
 
   backend-ci:
     runs-on: ubuntu-latest
@@ -45,26 +53,37 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      # auth service
       - name: Test Auth Service
         working-directory: ./auth-service
-        run: mvn test checkstyle:check
+        run: mvn test jacoco:report checkstyle:check
 
-      # recruitment service
+      - name: Upload Auth Service Coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: auth-service-coverage
+          path: auth-service/target/site/jacoco/
+          retention-days: 30
+
       - name: Test Recruitment Service
         working-directory: ./recruitment-service
-        run: mvn test checkstyle:check
+        run: mvn test jacoco:report checkstyle:check
 
-      # API gateway
+      - name: Upload Recruitment Service Coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: recruitment-service-coverage
+          path: recruitment-service/target/site/jacoco/
+          retention-days: 30
+
       - name: Test API Gateway
         working-directory: ./api-gateway-service
-        run: mvn test checkstyle:check
+        run: mvn test jacoco:report checkstyle:check
 
-  # Deployment Job
   deploy:
     # DO NOT REMOVE!!!!!!! 
     # This line makes Deployment wait for Tests to pass! 
-    # Lets not deploy code that doesnt pass tests :)
     needs: [frontend-ci, backend-ci]
     
     runs-on: ubuntu-latest
