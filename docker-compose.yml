@@ -9,7 +9,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - auth_db_data:/var/lib/postgresql/data
+      - ./auth-service/src/main/resources/auth-db.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - app-network
     restart: always
@@ -24,7 +24,7 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - recruitment_db_data:/var/lib/postgresql/data
+      - ./recruitment-service/src/main/resources/recruitment-db.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - app-network
     restart: always
