@@ -38,12 +38,13 @@ jobs:
         run: npm run test:coverage
 
       - name: Upload Frontend Coverage Report
-        if: always() # Run even if tests fail
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: frontend-coverage-report
           path: frontend-service/coverage/
           retention-days: 30
+          if-no-files-found: ignore
 
   backend-ci:
     runs-on: ubuntu-latest
@@ -69,6 +70,7 @@ jobs:
           name: auth-service-coverage
           path: auth-service/target/site/jacoco/
           retention-days: 30
+          if-no-files-found: ignore
 
       - name: Test Recruitment Service
         working-directory: ./recruitment-service
@@ -81,6 +83,7 @@ jobs:
           name: recruitment-service-coverage
           path: recruitment-service/target/site/jacoco/
           retention-days: 30
+          if-no-files-found: ignore
 
       - name: Test API Gateway
         working-directory: ./api-gateway-service
@@ -103,27 +106,49 @@ jobs:
         with:
           name: frontend-coverage-report
           path: _site/frontend
+        continue-on-error: true 
 
       - name: Download Auth Artifact
         uses: actions/download-artifact@v4
         with:
           name: auth-service-coverage
           path: _site/auth
+        continue-on-error: true
 
       - name: Download Recruitment Artifact
         uses: actions/download-artifact@v4
         with:
           name: recruitment-service-coverage
           path: _site/recruitment
+        continue-on-error: true
 
       - name: Create Index Page
         run: |
           echo "<html><body>" > _site/index.html
           echo "<h1>Test Coverage Reports</h1>" >> _site/index.html
           echo "<ul>" >> _site/index.html
-          echo "<li><a href='frontend/index.html'>Frontend (React/Vitest)</a></li>" >> _site/index.html
-          echo "<li><a href='auth/index.html'>Auth Service (Java/JaCoCo)</a></li>" >> _site/index.html
-          echo "<li><a href='recruitment/index.html'>Recruitment Service (Java/JaCoCo)</a></li>" >> _site/index.html
+          
+          # Check if Frontend exists
+          if [ -d "_site/frontend" ]; then
+            echo "<li><a href='frontend/index.html'>Frontend (React/Vitest)</a></li>" >> _site/index.html
+          else
+            echo "<li>Frontend: <em>No report found</em></li>" >> _site/index.html
+          fi
+
+          # Check if Auth exists
+          if [ -d "_site/auth" ]; then
+            echo "<li><a href='auth/index.html'>Auth Service (Java/JaCoCo)</a></li>" >> _site/index.html
+          else
+            echo "<li>Auth Service: <em>No report found</em></li>" >> _site/index.html
+          fi
+
+          # Check if Recruitment exists
+          if [ -d "_site/recruitment" ]; then
+            echo "<li><a href='recruitment/index.html'>Recruitment Service (Java/JaCoCo)</a></li>" >> _site/index.html
+          else
+            echo "<li>Recruitment Service: <em>No report found (No tests yet)</em></li>" >> _site/index.html
+          fi
+          
           echo "</ul>" >> _site/index.html
           echo "</body></html>" >> _site/index.html
 
