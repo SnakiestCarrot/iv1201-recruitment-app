@@ -3,10 +3,6 @@ package com.iv1201.recruitment.repository;
 import com.iv1201.recruitment.model.Competence;
 import com.iv1201.recruitment.model.CompetenceProfile;
 import com.iv1201.recruitment.model.Person;
-
-import com.iv1201.recruitment.repository.CompetenceProfileRepository;
-import com.iv1201.recruitment.repository.PersonRepository;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -32,11 +28,11 @@ class CompetenceProfileRepositoryTest {
     @Test
     void saveAndFindCompetenceProfile() {
         Person person = new Person();
+        person.setId(2L); // Manually set ID
         person.setName("Gustav");
         person.setSurname("Grahn");
         person.setEmail("gustav@test.com");
         person.setPnr("199001011234");
-        person.setUsername("ggrahn");
         person = personRepository.save(person);
 
         Competence competence = new Competence();
@@ -57,9 +53,6 @@ class CompetenceProfileRepositoryTest {
 
         assertThat(found.getPerson().getId()).isEqualTo(person.getId());
         assertThat(found.getCompetence().getId()).isEqualTo(competence.getId());
-        assertThat(found.getYearsOfExperience())
-                .isEqualByComparingTo("5.0");
+        assertThat(found.getYearsOfExperience()).isEqualByComparingTo("5.0");
     }
 }
-
-

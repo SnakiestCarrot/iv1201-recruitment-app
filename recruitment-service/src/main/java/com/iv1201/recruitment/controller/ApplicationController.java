@@ -1,18 +1,14 @@
 package com.iv1201.recruitment.controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.http.ResponseEntity;
+
 import com.iv1201.recruitment.dto.ApplicationSummaryDTO;
+import com.iv1201.recruitment.dto.ApplicationsCreateDTO;
 import com.iv1201.recruitment.service.ApplicationService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-/**
- * REST controller for handling recruitment applications.
- * 
- * Exposes endpoints for recruiters to list applications and,¨
- * in the future, to update application statuses.
- */
 
 @RestController
 @RequestMapping("api/recruitment/applications")
@@ -24,15 +20,26 @@ public class ApplicationController {
         this.applicationService = applicationService;
     }
 
-    /**
-     * Retrieve a list of all recruitment applications.
-     * 
-     * @return list of application summary DTOs
-     */
-
     @GetMapping
     public ResponseEntity<List<ApplicationSummaryDTO>> getAllApplications() {
         return ResponseEntity.ok(applicationService.getAllApplications());
     }
-    
+
+    /**
+     * Submits a new recruitment application.
+     * Expects a header 'X-User-ID' forwarded by the Gateway.
+     */
+    @PostMapping
+    public ResponseEntity<Void> submitApplication(@RequestBody ApplicationsCreateDTO applicationDTO, 
+                                                  @RequestHeader(value = "X-User-ID", required = false) Long userIdHeader) {
+        
+        // PRODUCTION FIX: Fail loudly if the header is missing
+        if (userIdHeader == null) {
+            // 401 Unauthorized is appropriate as the Gateway should have authenticated them
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User ID header missing");
+        }
+        
+        applicationService.createApplication(applicationDTO, userIdHeader);
+        return ResponseEntity.status(201).build();
+    }
 }
