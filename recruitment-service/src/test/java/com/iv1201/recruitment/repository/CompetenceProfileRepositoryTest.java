@@ -48,10 +48,10 @@ public class CompetenceProfileRepositoryTest {
         competenceProfileRepository.save(profile);
 
         List<CompetenceProfile> results = competenceProfileRepository.findByPerson_Id(savedPerson.getId());
-        
+
         assertThat(results).isNotEmpty();
-        assertThat(results.get(0).getYearsOfExperience()).isEqualTo(new BigDecimal("2.50")); // Standardize scale check
-        
+        assertThat(results.get(0).getYearsOfExperience()).isEqualByComparingTo(new BigDecimal("2.5"));
+
         assertThat(results.get(0).getCompetence().getCompetenceId()).isEqualTo(savedCompetence.getCompetenceId());
     }
 }
