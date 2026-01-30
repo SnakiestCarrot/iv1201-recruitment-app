@@ -18,7 +18,29 @@
     "logged-in-state": "Du är nu inloggad.",
     "role-id-sentence": "Du har roll-ID: ",
     "logout": "Logga ut"
-
+  },
+  "application": {
+    "title": "Registrera Ansökan",
+    "personal-details": "Personuppgifter",
+    "name": "Förnamn",
+    "surname": "Efternamn",
+    "email": "E-post",
+    "pnr": "Personnummer",
+    "competence-profile": "Kompetensprofil",
+    "select-competence": "Välj Kompetens",
+    "years-exp": "Års Erfarenhet",
+    "add": "Lägg till",
+    "remove": "Ta bort",
+    "availability": "Tillgänglighet",
+    "from": "Från",
+    "to": "Till",
+    "submit": "Skicka Ansökan",
+    "submitting": "Skickar...",
+    "success-title": "Klart!",
+    "success-message": "Din ansökan har skickats.",
+    "error-message": "Kunde inte skicka ansökan. Försök igen.",
+    "no-competences": "Inga kompetenser tillagda än.",
+    "no-availability": "Inga perioder tillagda än."
   },
   "common": {
     "username": "Användarnamn",

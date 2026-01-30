@@ -1,0 +1,266 @@
+/* ============================================
+   Application Form Container
+   ============================================ */
+
+.application-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2.5rem;
+  margin-top: 2.5rem;
+  background-color: rgb(94, 94, 94);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.application-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  color: #1f2937;
+}
+
+/* ============================================
+   Success State
+   ============================================ */
+
+.application-success-container {
+  max-width: 800px;
+  margin: 0 auto;
+  margin-top: 2.5rem;
+  padding: 1.5rem;
+  background-color:  rgb(94, 94, 94);
+  border-radius: 8px;
+  border: 1px solid #a7f3d0;
+}
+
+.application-success-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #047857;
+  margin-bottom: 0.5rem;
+}
+
+.application-success-text {
+  color: #065f46;
+}
+
+/* ============================================
+   Form Sections
+   ============================================ */
+
+.application-section {
+  margin-bottom: 1.5rem;
+}
+
+.application-section-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #374151;
+}
+
+/* ============================================
+   Form Grid
+   ============================================ */
+
+.application-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .application-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ============================================
+   Form Inputs
+   ============================================ */
+
+.application-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid  rgb(94, 94, 94);
+  border-radius: 4px;
+  outline: none;
+  transition: all 0.2s;
+  box-sizing: border-box;
+}
+
+.application-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.application-select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid  rgb(94, 94, 94);
+  border-radius: 4px;
+  background-color:  rgb(94, 94, 94);
+  box-sizing: border-box;
+}
+
+.application-label {
+  display: block;
+  font-size: 0.75rem;
+  color: #4b5563;
+  margin-bottom: 0.25rem;
+}
+
+/* ============================================
+   Input Groups
+   ============================================ */
+
+.application-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .application-input-group {
+    flex-direction: row;
+  }
+}
+
+.application-input-group .application-input,
+.application-input-group .application-select {
+  flex: 1;
+}
+
+.application-input-small {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .application-input-small {
+    width: 8rem;
+  }
+}
+
+/* ============================================
+   Buttons
+   ============================================ */
+
+.application-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+  font-weight: 500;
+}
+
+.application-btn-add {
+  background-color: white;
+  color: #1f2937;
+  border: 1px solid #d1d5db;
+}
+
+.application-btn-add:hover {
+  background-color: #f3f4f6;
+}
+
+.application-btn-submit {
+  width: 100%;
+  padding: 0.625rem;
+  background-color: #1f2937;
+  color: white;
+}
+
+.application-btn-submit:hover {
+  background-color: #374151;
+}
+
+.application-btn-submit:disabled {
+  background-color: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.application-btn-remove {
+  background: none;
+  border: none;
+  color: #6b7280;
+  text-decoration: underline;
+  padding: 0;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.application-btn-remove:hover {
+  color: #ef4444;
+}
+
+/* ============================================
+   Lists
+   ============================================ */
+
+.application-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.application-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #3a3a3a;
+  padding: 0.75rem;
+  border-radius: 4px;
+  border: 1px solid #e5e7eb;
+}
+
+.application-list-item-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.application-list-item-label {
+  font-weight: 500;
+}
+
+.application-list-item-value {
+  color: #6b7280;
+}
+
+/* ============================================
+   Empty State
+   ============================================ */
+
+.application-empty-text {
+  color: #9ca3af;
+  font-size: 0.875rem;
+  font-style: italic;
+}
+
+/* ============================================
+   Error Message
+   ============================================ */
+
+.application-error {
+  padding: 0.75rem;
+  background-color: #fef2f2;
+  color: #b91c1c;
+  border-radius: 4px;
+  border: 1px solid #fecaca;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+/* ============================================
+   Alignment Helper
+   ============================================ */
+
+.application-align-end {
+  align-self: flex-end;
+}
