@@ -30,6 +30,7 @@ public class CompetenceProfileRepositoryTest {
     public void testFindByPersonId() {
         // Create Person
         Person person = new Person();
+        person.setId(1L);
         person.setName("Test");
         person.setSurname("User");
         person.setEmail("test@example.com");
