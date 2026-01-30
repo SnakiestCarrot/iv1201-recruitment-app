@@ -2,6 +2,7 @@ package com.iv1201.gateway.filter;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
 
 /**
  * Filter that validates JWT tokens and forwards User ID/Role as headers.
@@ -51,8 +51,10 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
             String token = authHeader.substring(7);
 
             try {
-                SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
-                
+                // Decode the BASE64 secret key to match how auth-service generates tokens
+                byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+                SecretKey key = Keys.hmacShaKeyFor(keyBytes);
+
                 Claims claims = Jwts.parserBuilder()
                         .setSigningKey(key)
                         .build()
