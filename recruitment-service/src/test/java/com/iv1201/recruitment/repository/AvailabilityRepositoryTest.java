@@ -2,10 +2,6 @@ package com.iv1201.recruitment.repository;
 
 import com.iv1201.recruitment.model.Availability;
 import com.iv1201.recruitment.model.Person;
-
-import com.iv1201.recruitment.repository.AvailabilityRepository;
-import com.iv1201.recruitment.repository.PersonRepository;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -28,11 +24,11 @@ class AvailabilityRepositoryTest {
     @Test
     void saveAndFindAvailability() {
         Person person = new Person();
+        person.setId(3L); // Manually set ID
         person.setName("Gustav");
         person.setSurname("Grahn");
         person.setEmail("gustav@test.com");
         person.setPnr("199001011234");
-        person.setUsername("ggrahn");
         person = personRepository.save(person);
 
         Availability availability = new Availability();
@@ -52,4 +48,3 @@ class AvailabilityRepositoryTest {
         assertThat(found.getToDate()).isEqualTo(LocalDate.of(2023, 12, 31));
     }
 }
-

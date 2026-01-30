@@ -66,6 +66,7 @@ services:
       - app-network
     environment:
       APP_FRONTEND_URL: ${FRONTEND_URL}
+      JWT_SECRET: ${JWT_SECRET}
 
   frontend:
     build: ./frontend-service

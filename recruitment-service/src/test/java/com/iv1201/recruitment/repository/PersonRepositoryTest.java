@@ -1,9 +1,6 @@
 package com.iv1201.recruitment.repository;
 
 import com.iv1201.recruitment.model.Person;
-
-import com.iv1201.recruitment.repository.PersonRepository;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -21,11 +18,11 @@ class PersonRepositoryTest {
     @Test
     void saveAndFindPerson() {
         Person person = new Person();
+        person.setId(1L); 
         person.setName("Gustav");
         person.setSurname("Grahn");
         person.setEmail("gustav.grahn@test.com");
         person.setPnr("199001011234");
-        person.setUsername("ggrahn");
 
         Person saved = personRepository.save(person);
 
@@ -36,7 +33,5 @@ class PersonRepositoryTest {
         assertThat(found.getSurname()).isEqualTo("Grahn");
         assertThat(found.getEmail()).isEqualTo("gustav.grahn@test.com");
         assertThat(found.getPnr()).isEqualTo("199001011234");
-        assertThat(found.getUsername()).isEqualTo("ggrahn");
     }
 }
-

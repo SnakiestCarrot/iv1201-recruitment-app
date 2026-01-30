@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthPresenter } from '../presenters/useAuthPresenter';
 import { useTranslation } from 'react-i18next';
+import '../styles/RegisterForm.css';
 
 export const RegisterForm = () => {
   const { state, registerUser } = useAuthPresenter();
@@ -38,15 +39,9 @@ export const RegisterForm = () => {
 
   return (
     <div className="auth-card">
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          marginBottom: '0.75rem',
-        }}
-      >
-        <label style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-          <span style={{ fontSize: '0.9rem' }}>Language</span>
+      <div className="register-language-selector">
+        <label className="register-language-label">
+          <span>Language</span>
           <select
             value={i18n.language?.startsWith('sv') ? 'sv' : 'en'}
             onChange={handleLangChange}
@@ -68,6 +63,7 @@ export const RegisterForm = () => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
+            className="register-input"
           />
         </div>
 
@@ -79,6 +75,7 @@ export const RegisterForm = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            className="register-input"
           />
         </div>
 
@@ -90,9 +87,7 @@ export const RegisterForm = () => {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
-            style={{
-              borderColor: validationError ? 'red' : undefined,
-            }}
+            className={`register-input ${validationError ? 'register-input-error' : ''}`}
           />
         </div>
 
@@ -100,15 +95,14 @@ export const RegisterForm = () => {
           {state.status === 'loading' ? t('auth.creating') : t('auth.register')}
         </button>
       </form>
+
       {validationError && <p className="status-msg error">{validationError}</p>}
 
       {state.message && !validationError && (
         <p className={`status-msg ${state.status}`}>{state.message}</p>
       )}
 
-      <div
-        style={{ marginTop: '1rem', textAlign: 'center', fontSize: '0.9rem' }}
-      >
+      <div className="register-footer">
         <p>{t('auth.already-have-account')}</p>
         <Link to="/login">{t('auth.login-here')}</Link>
       </div>

@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthPresenter } from '../presenters/useAuthPresenter';
 import { useTranslation } from 'react-i18next';
+import '../styles/LoginForm.css';
 
 export const LoginForm = () => {
   const { state, loginUser } = useAuthPresenter();
   const navigate = useNavigate();
-  // Initialize the hook once at the top level
   const { t, i18n } = useTranslation();
 
   const [username, setUsername] = useState('');
@@ -33,15 +33,9 @@ export const LoginForm = () => {
   return (
     <div className="auth-card">
       {/* Language selector */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          marginBottom: '0.75rem',
-        }}
-      >
-        <label style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-          <span style={{ fontSize: '0.9rem' }}>Language</span>
+      <div className="login-language-selector">
+        <label className="login-language-label">
+          <span>Language</span>
           <select
             value={i18n.language?.startsWith('sv') ? 'sv' : 'en'}
             onChange={handleLangChange}
@@ -56,28 +50,28 @@ export const LoginForm = () => {
 
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          {/* Added htmlFor="username" */}
           <label htmlFor="username">{t('common.username')}</label>
           <input
-            id="username" /* Added id="username" to match the label */
+            id="username"
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
             autoComplete="username"
+            className="login-input"
           />
         </div>
 
         <div className="form-group">
-          {/* Added htmlFor="password" */}
           <label htmlFor="password">{t('common.password')}</label>
           <input
-            id="password" /* Added id="password" to match the label */
+            id="password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
             autoComplete="current-password"
+            className="login-input"
           />
         </div>
 
@@ -92,9 +86,7 @@ export const LoginForm = () => {
         <p className={`status-msg ${state.status}`}>{state.message}</p>
       )}
 
-      <div
-        style={{ marginTop: '1rem', textAlign: 'center', fontSize: '0.9rem' }}
-      >
+      <div className="login-footer">
         <p>{t('auth.dont-have-account')}</p>
         <Link to="/register">{t('auth.register')}</Link>
       </div>

@@ -19,6 +19,29 @@
     "role-id-sentence": "You have role ID: ",
     "logout": "Log out"
   },
+  "application": {
+    "title": "Recruitment Application",
+    "personal-details": "Personal Details",
+    "name": "First Name",
+    "surname": "Surname",
+    "email": "Email",
+    "pnr": "Personal Number",
+    "competence-profile": "Competence Profile",
+    "select-competence": "Select Competence",
+    "years-exp": "Years Exp.",
+    "add": "Add",
+    "remove": "Remove",
+    "availability": "Availability",
+    "from": "From",
+    "to": "To",
+    "submit": "Submit Application",
+    "submitting": "Submitting...",
+    "success-title": "Success!",
+    "success-message": "Your application has been submitted.",
+    "error-message": "Failed to submit application. Please try again.",
+    "no-competences": "No competences added yet.",
+    "no-availability": "No availability periods added yet."
+  },
   "common": {
     "username": "Username",
     "password": "Password"    
