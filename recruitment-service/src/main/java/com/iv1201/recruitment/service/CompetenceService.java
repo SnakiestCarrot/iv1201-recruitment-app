@@ -1,42 +1,38 @@
 package com.iv1201.recruitment.service;
 
 import org.springframework.stereotype.Service;
-
 import java.util.List;
+import java.math.BigDecimal;
 
 import com.iv1201.recruitment.dto.CompetenceDTO;
-import com.iv1201.recruitment.model.CompetenceProfile;
-import com.iv1201.recruitment.repository.CompetenceProfileRepository;
+import com.iv1201.recruitment.model.Competence;
+import com.iv1201.recruitment.repository.CompetenceRepository;
 
-/**
- * Service responsible for competence-related logic in the recruitment system.
- */
 @Service
 public class CompetenceService {
 
-    private final CompetenceProfileRepository competenceProfileRepository;
+    private final CompetenceRepository competenceRepository;
 
-    public CompetenceService(CompetenceProfileRepository competenceProfileRepository) {
-        this.competenceProfileRepository = competenceProfileRepository;
+    public CompetenceService(CompetenceRepository competenceRepository) {
+        this.competenceRepository = competenceRepository;
     }
 
-    /**
-     * Retrieves all competences with years of experience.
-     *
-     * @return list of competence DTOs
-     */
     public List<CompetenceDTO> getAllCompetences() {
-        return competenceProfileRepository.findAll()
+        return competenceRepository.findAll()
                 .stream()
                 .map(this::mapToDTO)
                 .toList();
     }
 
-    private CompetenceDTO mapToDTO(CompetenceProfile competenceProfile) {
+    private CompetenceDTO mapToDTO(Competence competence) {
         CompetenceDTO dto = new CompetenceDTO();
-        dto.setCompetenceId(competenceProfile.getCompetence().getId());
-        dto.setYearsOfExperience(competenceProfile.getYearsOfExperience());
+        
+        dto.setCompetenceId(competence.getCompetenceId()); 
+        
+        dto.setName(competence.getName());
+
+        dto.setYearsOfExperience(BigDecimal.ZERO); 
+        
         return dto;
     }
 }
-
