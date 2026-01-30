@@ -24,14 +24,18 @@ export const ApplicationForm: React.FC = () => {
     removeCompetence,
     addAvailability,
     removeAvailability,
-    submitApplication
+    submitApplication,
   } = useApplicationPresenter();
 
   if (status === 'success') {
     return (
       <div className="application-success-container">
-        <h2 className="application-success-title">{t('application.success-title')}</h2>
-        <p className="application-success-text">{t('application.success-message')}</p>
+        <h2 className="application-success-title">
+          {t('application.success-title')}
+        </h2>
+        <p className="application-success-text">
+          {t('application.success-message')}
+        </p>
       </div>
     );
   }
@@ -41,10 +45,11 @@ export const ApplicationForm: React.FC = () => {
       <h2 className="application-title">{t('application.title')}</h2>
 
       <form onSubmit={submitApplication}>
-
         {/* Personal Information */}
         <section className="application-section">
-          <h3 className="application-section-title">{t('application.personal-details')}</h3>
+          <h3 className="application-section-title">
+            {t('application.personal-details')}
+          </h3>
           <div className="application-grid">
             <input
               name="name"
@@ -84,7 +89,9 @@ export const ApplicationForm: React.FC = () => {
 
         {/* Competence Profile */}
         <section className="application-section">
-          <h3 className="application-section-title">{t('application.competence-profile')}</h3>
+          <h3 className="application-section-title">
+            {t('application.competence-profile')}
+          </h3>
           <div className="application-input-group">
             <select
               value={currentCompetenceId}
@@ -92,8 +99,10 @@ export const ApplicationForm: React.FC = () => {
               className="application-select"
             >
               <option value="">{t('application.select-competence')}</option>
-              {availableCompetences.map(c => (
-                <option key={c.competenceId} value={c.competenceId}>{c.name}</option>
+              {availableCompetences.map((c) => (
+                <option key={c.competenceId} value={c.competenceId}>
+                  {c.name}
+                </option>
               ))}
             </select>
             <input
@@ -118,8 +127,12 @@ export const ApplicationForm: React.FC = () => {
               {addedCompetences.map((item, idx) => (
                 <li key={idx} className="application-list-item">
                   <span className="application-list-item-content">
-                    <span className="application-list-item-label">{item.name}</span>
-                    <span className="application-list-item-value">{item.yearsOfExperience} {t('application.years-exp')}</span>
+                    <span className="application-list-item-label">
+                      {item.name}
+                    </span>
+                    <span className="application-list-item-value">
+                      {item.yearsOfExperience} {t('application.years-exp')}
+                    </span>
                   </span>
                   <button
                     type="button"
@@ -132,16 +145,22 @@ export const ApplicationForm: React.FC = () => {
               ))}
             </ul>
           ) : (
-            <p className="application-empty-text">{t('application.no-competences')}</p>
+            <p className="application-empty-text">
+              {t('application.no-competences')}
+            </p>
           )}
         </section>
 
         {/* Availability */}
         <section className="application-section">
-          <h3 className="application-section-title">{t('application.availability')}</h3>
+          <h3 className="application-section-title">
+            {t('application.availability')}
+          </h3>
           <div className="application-input-group">
             <div>
-              <label className="application-label">{t('application.from')}</label>
+              <label className="application-label">
+                {t('application.from')}
+              </label>
               <input
                 type="date"
                 value={currentFromDate}
@@ -171,7 +190,9 @@ export const ApplicationForm: React.FC = () => {
             <ul className="application-list">
               {addedAvailabilities.map((item, idx) => (
                 <li key={idx} className="application-list-item">
-                  <span>{item.fromDate} → {item.toDate}</span>
+                  <span>
+                    {item.fromDate} → {item.toDate}
+                  </span>
                   <button
                     type="button"
                     onClick={() => removeAvailability(idx)}
@@ -183,7 +204,9 @@ export const ApplicationForm: React.FC = () => {
               ))}
             </ul>
           ) : (
-            <p className="application-empty-text">{t('application.no-availability')}</p>
+            <p className="application-empty-text">
+              {t('application.no-availability')}
+            </p>
           )}
         </section>
 
@@ -193,7 +216,9 @@ export const ApplicationForm: React.FC = () => {
           disabled={status === 'loading'}
           className="application-btn application-btn-submit"
         >
-          {status === 'loading' ? t('application.submitting') : t('application.submit')}
+          {status === 'loading'
+            ? t('application.submitting')
+            : t('application.submit')}
         </button>
 
         {/* Error Message */}

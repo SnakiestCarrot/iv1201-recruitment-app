@@ -43,9 +43,7 @@ export const Dashboard = () => {
       </div>
 
       <div className="dashboard-status-box">
-        <h3 className="dashboard-status-title">
-          {t('dash.logged-in-state')}
-        </h3>
+        <h3 className="dashboard-status-title">{t('dash.logged-in-state')}</h3>
       </div>
 
       <div className="dashboard-actions">

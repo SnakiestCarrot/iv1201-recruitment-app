@@ -21,14 +21,28 @@ function App() {
           <div className="flex gap-4 items-center">
             <h1 className="text-xl font-bold">Recruitment App</h1>
             <nav className="flex gap-4 text-sm text-gray-300">
-               <Link to="/dashboard" className="hover:text-white">Dashboard</Link>
-               <Link to="/application" className="hover:text-white">Apply</Link>
+              <Link to="/dashboard" className="hover:text-white">
+                Dashboard
+              </Link>
+              <Link to="/application" className="hover:text-white">
+                Apply
+              </Link>
             </nav>
           </div>
-          
+
           <div className="flex gap-2 text-sm">
-            <button onClick={() => changeLanguage('en')} className={`px-2 py-1 rounded ${i18n.language === 'en' ? 'bg-blue-600' : 'bg-gray-700'}`}>EN</button>
-            <button onClick={() => changeLanguage('sv')} className={`px-2 py-1 rounded ${i18n.language === 'sv' ? 'bg-blue-600' : 'bg-gray-700'}`}>SV</button>
+            <button
+              onClick={() => changeLanguage('en')}
+              className={`px-2 py-1 rounded ${i18n.language === 'en' ? 'bg-blue-600' : 'bg-gray-700'}`}
+            >
+              EN
+            </button>
+            <button
+              onClick={() => changeLanguage('sv')}
+              className={`px-2 py-1 rounded ${i18n.language === 'sv' ? 'bg-blue-600' : 'bg-gray-700'}`}
+            >
+              SV
+            </button>
           </div>
         </header>
 
