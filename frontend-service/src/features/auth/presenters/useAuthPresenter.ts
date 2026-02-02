@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { authService } from '../services/authService';
 import { type AuthRequest, type AuthState } from '../types/authTypes';
+import { AUTH_CHANGED_EVENT } from '../hooks/useAuth';
 
 export const useAuthPresenter = () => {
   const [state, setState] = useState<AuthState>({
@@ -27,6 +28,8 @@ export const useAuthPresenter = () => {
       const data = await authService.login(credentials);
       // save token to storage
       localStorage.setItem('authToken', data.token);
+      // Dispatch custom event to notify auth state changed
+      window.dispatchEvent(new Event(AUTH_CHANGED_EVENT));
       setState({
         status: 'success',
         message: 'Login successful! Token saved.',

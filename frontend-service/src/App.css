@@ -1,9 +1,4 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
+/* Root styles moved to index.css for full-width layout */
 
 .logo {
   height: 6em;
@@ -43,11 +38,16 @@
 
 
 .app-container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 2rem;
+  width: 100%;
+  margin: 0;
+  padding: 0;
   text-align: center;
   font-family: sans-serif;
+}
+
+.page-container {
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .auth-container {
