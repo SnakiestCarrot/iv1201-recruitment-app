@@ -3,6 +3,12 @@ export interface AuthRequest {
   password: string;
 }
 
+export interface RecruiterRegisterRequest {
+  username: string;
+  password: string;
+  secretCode: string;
+}
+
 export interface AuthResponse {
   token: string;
 }

@@ -1,7 +1,7 @@
 {
-  "auth": { 
+  "auth": {
     "login": "Login",
-    "register": "Register", 
+    "register": "Register",
     "verification": "Verifying...",
     "password-mismatch": "Passwords do not match",
     "insufficient-password-length": "Password must be at least 6 characters.",
@@ -11,7 +11,15 @@
     "confirm-password": "Confirm Password",
     "login-here": "Log in here",
     "show": "Show",
-    "hide": "Hide"
+    "hide": "Hide",
+    "recruiter-register": "Recruiter Registration",
+    "secret-code": "Registration Code",
+    "secret-code-placeholder": "Enter the recruiter registration code",
+    "secret-code-required": "Registration code is required",
+    "invalid-secret-code": "Invalid registration code",
+    "recruiter-register-success": "Recruiter account created successfully!",
+    "register-as-applicant": "Register as Applicant",
+    "register-as-recruiter": "Register as Recruiter"
 },
   "dash": {
     "title": "Welcome, ",
