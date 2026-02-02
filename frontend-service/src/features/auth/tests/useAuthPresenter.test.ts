@@ -1,6 +1,7 @@
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { useAuthPresenter } from '../presenters/useAuthPresenter';
 import { authService } from '../services/authService';
+import { AUTH_CHANGED_EVENT } from '../hooks/useAuth';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 
 vi.mock('../services/authService', () => ({
@@ -52,6 +53,21 @@ describe('useAuthPresenter', () => {
       status: 'success',
       message: 'Login successful! Token saved.',
     });
+  });
+
+  it('dispatches AUTH_CHANGED_EVENT on successful login', async () => {
+    (authService.login as any).mockResolvedValue({ token: 'fake-jwt-token' });
+    const dispatchEventSpy = vi.spyOn(window, 'dispatchEvent');
+
+    const { result } = renderHook(() => useAuthPresenter());
+
+    await act(async () => {
+      await result.current.loginUser({ username: 'user', password: 'pw' });
+    });
+
+    expect(dispatchEventSpy).toHaveBeenCalledWith(
+      expect.objectContaining({ type: AUTH_CHANGED_EVENT })
+    );
   });
 
   it('handles login failure', async () => {
