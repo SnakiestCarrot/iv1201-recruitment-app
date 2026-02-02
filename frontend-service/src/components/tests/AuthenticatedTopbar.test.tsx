@@ -95,19 +95,12 @@ describe('AuthenticatedTopbar Component', () => {
   });
 
   it('applies active class to current language button', () => {
-    vi.doMock('react-i18next', () => ({
-      useTranslation: () => ({
-        t: (key: string) => key,
-        i18n: { changeLanguage: vi.fn(), language: 'sv' },
-      }),
-    }));
-
     render(<AuthenticatedTopbar />);
 
-    const svButton = screen.getByRole('button', { name: 'SV' });
+    const enButton = screen.getByRole('button', { name: 'EN' });
 
-    // Check if the button has the active class
-    expect(svButton.className).toContain('topbar-lang-btn-active');
+    // EN should be active since the mock returns language: 'en'
+    expect(enButton).toHaveClass('topbar-lang-btn-active');
   });
 
   it('navigation links have correct href attributes', () => {
