@@ -2,6 +2,7 @@ import { HashRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next'; // Import for language switcher
 import { LoginForm } from './features/auth/views/LoginForm';
 import { RegisterForm } from './features/auth/views/RegisterForm';
+import { RecruiterRegisterForm } from './features/auth/views/RecruiterRegisterForm';
 import { Dashboard } from './features/dashboard/views/Dashboard';
 import { ApplicationForm } from './features/application/views/ApplicationForm.tsx';
 import './App.css';
@@ -51,6 +52,10 @@ function App() {
             <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/register" element={<RegisterForm />} />
+            <Route
+              path="/register/recruiter"
+              element={<RecruiterRegisterForm />}
+            />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/application" element={<ApplicationForm />} />
             <Route path="*" element={<Navigate to="/login" replace />} />

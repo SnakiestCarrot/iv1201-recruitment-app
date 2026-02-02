@@ -1,10 +1,12 @@
 package com.iv1201.auth.service;
 
 import com.iv1201.auth.dto.LoginRequestDTO;
+import com.iv1201.auth.dto.RecruiterRegisterRequestDTO;
 import com.iv1201.auth.dto.RegisterRequestDTO;
 import com.iv1201.auth.integration.UserRepository;
 import com.iv1201.auth.model.User;
 import com.iv1201.auth.util.JwtUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +24,9 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+
+    @Value("${recruiter.secret.code}")
+    private String recruiterSecretCode;
 
     /**
      * Constructor injection for dependencies.
@@ -53,6 +58,30 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         user.setRoleId(2L);
+
+        userRepository.save(user);
+    }
+
+    /**
+     * Registers a new recruiter with a secret code.
+     *
+     * @param request The registration data including secret code.
+     * @throws IllegalArgumentException If the secret code is invalid or username is taken.
+     */
+    public void registerRecruiter(RecruiterRegisterRequestDTO request) {
+        // Validate secret code
+        if (request.getSecretCode() == null || !request.getSecretCode().equals(recruiterSecretCode)) {
+            throw new IllegalArgumentException("Invalid registration code");
+        }
+
+        if (userRepository.existsByUsername(request.getUsername())) {
+            throw new IllegalArgumentException("Username is already taken");
+        }
+
+        User user = new User();
+        user.setUsername(request.getUsername());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRoleId(1L); // Recruiter role
 
         userRepository.save(user);
     }

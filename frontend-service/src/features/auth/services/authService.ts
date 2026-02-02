@@ -1,4 +1,8 @@
-import { type AuthRequest, type AuthResponse } from '../types/authTypes';
+import {
+  type AuthRequest,
+  type AuthResponse,
+  type RecruiterRegisterRequest,
+} from '../types/authTypes';
 
 const API_BASE_URL =
   import.meta.env.VITE_API_URL || 'http://localhost:8080/auth';
@@ -13,6 +17,23 @@ export const authService = {
 
     if (!response.ok) {
       const errorText = await response.text();
+      throw new Error(errorText || 'Registration failed');
+    }
+    return await response.text();
+  },
+
+  async registerRecruiter(data: RecruiterRegisterRequest): Promise<string> {
+    const response = await fetch(`${API_BASE_URL}/register/recruiter`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      if (response.status === 403) {
+        throw new Error('Invalid registration code');
+      }
       throw new Error(errorText || 'Registration failed');
     }
     return await response.text();

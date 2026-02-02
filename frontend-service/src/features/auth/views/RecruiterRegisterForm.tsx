@@ -1,16 +1,17 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuthPresenter } from '../presenters/useAuthPresenter';
+import { useRecruiterAuthPresenter } from '../presenters/useRecruiterAuthPresenter';
 import { useTranslation } from 'react-i18next';
 import '../styles/RegisterForm.css';
 
-export const RegisterForm = () => {
-  const { state, registerUser } = useAuthPresenter();
+export const RecruiterRegisterForm = () => {
+  const { state, registerRecruiter } = useRecruiterAuthPresenter();
   const { t, i18n } = useTranslation();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [secretCode, setSecretCode] = useState('');
   const [validationError, setValidationError] = useState('');
 
   const handleLangChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -34,7 +35,12 @@ export const RegisterForm = () => {
       return;
     }
 
-    registerUser({ username, password });
+    if (!secretCode.trim()) {
+      setValidationError(t('auth.secret-code-required'));
+      return;
+    }
+
+    registerRecruiter({ username, password, secretCode });
   };
 
   return (
@@ -52,13 +58,13 @@ export const RegisterForm = () => {
         </label>
       </div>
 
-      <h2>{t('auth.register')}</h2>
+      <h2>{t('auth.recruiter-register')}</h2>
 
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="reg-username">{t('common.username')}</label>
+          <label htmlFor="rec-username">{t('common.username')}</label>
           <input
-            id="reg-username"
+            id="rec-username"
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
@@ -68,9 +74,9 @@ export const RegisterForm = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="reg-password">{t('common.password')}</label>
+          <label htmlFor="rec-password">{t('common.password')}</label>
           <input
-            id="reg-password"
+            id="rec-password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -80,14 +86,27 @@ export const RegisterForm = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="reg-confirm">{t('auth.confirm-password')}</label>
+          <label htmlFor="rec-confirm">{t('auth.confirm-password')}</label>
           <input
-            id="reg-confirm"
+            id="rec-confirm"
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
             className={`register-input ${validationError ? 'register-input-error' : ''}`}
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="rec-secret">{t('auth.secret-code')}</label>
+          <input
+            id="rec-secret"
+            type="password"
+            value={secretCode}
+            onChange={(e) => setSecretCode(e.target.value)}
+            placeholder={t('auth.secret-code-placeholder')}
+            required
+            className="register-input"
           />
         </div>
 
@@ -103,13 +122,13 @@ export const RegisterForm = () => {
       )}
 
       <div className="register-footer">
-        <p>{t('auth.already-have-account')}</p>
-        <Link to="/login">{t('auth.login-here')}</Link>
+        <p>{t('auth.register-as-applicant')}</p>
+        <Link to="/register">{t('auth.register')}</Link>
       </div>
 
       <div className="register-footer">
-        <p>{t('auth.register-as-recruiter')}</p>
-        <Link to="/register/recruiter">{t('auth.recruiter-register')}</Link>
+        <p>{t('auth.already-have-account')}</p>
+        <Link to="/login">{t('auth.login-here')}</Link>
       </div>
     </div>
   );

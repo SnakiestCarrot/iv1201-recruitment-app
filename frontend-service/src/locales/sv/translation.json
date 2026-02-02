@@ -11,7 +11,15 @@
     "confirm-password": "Bekräfta lösenord",
     "login-here": "Logga in här",
     "show": "Visa",
-    "hide": "Göm"
+    "hide": "Göm",
+    "recruiter-register": "Rekryterare Registrering",
+    "secret-code": "Registreringskod",
+    "secret-code-placeholder": "Ange rekryterarens registreringskod",
+    "secret-code-required": "Registreringskod krävs",
+    "invalid-secret-code": "Ogiltig registreringskod",
+    "recruiter-register-success": "Rekryterarkonto skapat!",
+    "register-as-applicant": "Registrera som Sökande",
+    "register-as-recruiter": "Registrera som Rekryterare"
   },
   "dash": {
     "title": "Välkommen, ",
