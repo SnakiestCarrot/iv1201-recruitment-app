@@ -2,12 +2,13 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthPresenter } from '../presenters/useAuthPresenter';
 import { useTranslation } from 'react-i18next';
+import { LanguageDropdown } from '../../../components/LanguageDropdown';
 import '../styles/LoginForm.css';
 
 export const LoginForm = () => {
   const { state, loginUser } = useAuthPresenter();
   const navigate = useNavigate();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -23,28 +24,9 @@ export const LoginForm = () => {
     loginUser({ username, password });
   };
 
-  const handleLangChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const lng = e.target.value;
-    i18n.changeLanguage(lng);
-    localStorage.setItem('lang', lng);
-    document.documentElement.lang = lng;
-  };
-
   return (
     <div className="auth-card">
-      {/* Language selector */}
-      <div className="login-language-selector">
-        <label className="login-language-label">
-          <span>Language</span>
-          <select
-            value={i18n.language?.startsWith('sv') ? 'sv' : 'en'}
-            onChange={handleLangChange}
-          >
-            <option value="en">English</option>
-            <option value="sv">Svenska</option>
-          </select>
-        </label>
-      </div>
+      <LanguageDropdown />
 
       <h2>{t('auth.login')}</h2>
 

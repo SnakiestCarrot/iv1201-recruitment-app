@@ -2,24 +2,18 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useRecruiterAuthPresenter } from '../presenters/useRecruiterAuthPresenter';
 import { useTranslation } from 'react-i18next';
+import { LanguageDropdown } from '../../../components/LanguageDropdown';
 import '../styles/RegisterForm.css';
 
 export const RecruiterRegisterForm = () => {
   const { state, registerRecruiter } = useRecruiterAuthPresenter();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [secretCode, setSecretCode] = useState('');
   const [validationError, setValidationError] = useState('');
-
-  const handleLangChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const lng = e.target.value;
-    i18n.changeLanguage(lng);
-    localStorage.setItem('lang', lng);
-    document.documentElement.lang = lng;
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,18 +39,7 @@ export const RecruiterRegisterForm = () => {
 
   return (
     <div className="auth-card">
-      <div className="register-language-selector">
-        <label className="register-language-label">
-          <span>Language</span>
-          <select
-            value={i18n.language?.startsWith('sv') ? 'sv' : 'en'}
-            onChange={handleLangChange}
-          >
-            <option value="en">English</option>
-            <option value="sv">Svenska</option>
-          </select>
-        </label>
-      </div>
+      <LanguageDropdown />
 
       <h2>{t('auth.recruiter-register')}</h2>
 

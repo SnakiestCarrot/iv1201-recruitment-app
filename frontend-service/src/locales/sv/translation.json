@@ -25,7 +25,9 @@
     "title": "Välkommen, ",
     "logged-in-state": "Du är nu inloggad.",
     "role-id-sentence": "Du har roll-ID: ",
-    "logout": "Logga ut"
+    "logout": "Logga ut",
+    "dashboard": "Instrumentpanel",
+    "apply-now": "Ansök Nu"
   },
   "application": {
     "title": "Registrera Ansökan",

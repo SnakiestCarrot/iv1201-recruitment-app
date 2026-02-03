@@ -32,7 +32,7 @@
 .dashboard-link {
   display: inline-block;
   background-color: #3b82f6;
-  color: white;
+  color: rgb(255, 255, 255);
   padding: 0.5rem 1.5rem;
   border-radius: 4px;
   text-decoration: none;
@@ -40,7 +40,7 @@
 }
 
 .dashboard-link:hover {
-  background-color: #2563eb;
+  background-color: #777777;
 }
 
 /* ============================================

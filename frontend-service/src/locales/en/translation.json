@@ -25,7 +25,9 @@
     "title": "Welcome, ",
     "logged-in-state": "You are successfully logged in.",
     "role-id-sentence": "You have role ID: ",
-    "logout": "Log out"
+    "logout": "Log out",
+    "dashboard": "Dashboard",
+    "apply-now": "Apply Now"
   },
   "application": {
     "title": "Recruitment Application",

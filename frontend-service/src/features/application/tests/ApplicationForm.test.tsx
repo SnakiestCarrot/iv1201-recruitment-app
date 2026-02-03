@@ -1,0 +1,440 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { ApplicationForm } from '../views/ApplicationForm';
+import { useApplicationPresenter } from '../presenters/useApplicationPresenter';
+
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) => key,
+  }),
+}));
+
+vi.mock('../presenters/useApplicationPresenter');
+
+describe('ApplicationForm Component', () => {
+  const mockSetCurrentCompetenceId = vi.fn();
+  const mockSetCurrentYoe = vi.fn();
+  const mockSetCurrentFromDate = vi.fn();
+  const mockSetCurrentToDate = vi.fn();
+  const mockHandleInfoChange = vi.fn();
+  const mockAddCompetence = vi.fn();
+  const mockRemoveCompetence = vi.fn();
+  const mockAddAvailability = vi.fn();
+  const mockRemoveAvailability = vi.fn();
+  const mockSubmitApplication = vi.fn();
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+
+    (useApplicationPresenter as any).mockReturnValue({
+      availableCompetences: [
+        { competenceId: 1, name: 'JavaScript' },
+        { competenceId: 2, name: 'Python' },
+      ],
+      status: 'idle',
+      personalInfo: {
+        name: '',
+        surname: '',
+        email: '',
+        pnr: '',
+      },
+      addedCompetences: [],
+      addedAvailabilities: [],
+      currentCompetenceId: '',
+      currentYoe: '',
+      currentFromDate: '',
+      currentToDate: '',
+      setCurrentCompetenceId: mockSetCurrentCompetenceId,
+      setCurrentYoe: mockSetCurrentYoe,
+      setCurrentFromDate: mockSetCurrentFromDate,
+      setCurrentToDate: mockSetCurrentToDate,
+      handleInfoChange: mockHandleInfoChange,
+      addCompetence: mockAddCompetence,
+      removeCompetence: mockRemoveCompetence,
+      addAvailability: mockAddAvailability,
+      removeAvailability: mockRemoveAvailability,
+      submitApplication: mockSubmitApplication,
+    });
+  });
+
+  it('renders the application form correctly', () => {
+    render(<ApplicationForm />);
+
+    expect(screen.getByText('application.title')).toBeInTheDocument();
+    expect(
+      screen.getByText('application.personal-details')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('application.competence-profile')
+    ).toBeInTheDocument();
+    expect(screen.getByText('application.availability')).toBeInTheDocument();
+  });
+
+  it('renders personal information input fields', () => {
+    render(<ApplicationForm />);
+
+    expect(
+      screen.getByPlaceholderText('application.name')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText('application.surname')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText('application.email')
+    ).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('application.pnr')).toBeInTheDocument();
+  });
+
+  it('calls handleInfoChange when typing in personal info fields', () => {
+    render(<ApplicationForm />);
+
+    const nameInput = screen.getByPlaceholderText('application.name');
+    fireEvent.change(nameInput, { target: { value: 'John' } });
+
+    expect(mockHandleInfoChange).toHaveBeenCalled();
+  });
+
+  it('renders competence dropdown with available competences', () => {
+    render(<ApplicationForm />);
+
+    expect(
+      screen.getByText('application.select-competence')
+    ).toBeInTheDocument();
+    expect(screen.getByText('JavaScript')).toBeInTheDocument();
+    expect(screen.getByText('Python')).toBeInTheDocument();
+  });
+
+  it('calls setCurrentCompetenceId when competence is selected', () => {
+    render(<ApplicationForm />);
+
+    const select = screen.getByDisplayValue('application.select-competence');
+    fireEvent.change(select, { target: { value: '1' } });
+
+    expect(mockSetCurrentCompetenceId).toHaveBeenCalledWith('1');
+  });
+
+  it('calls setCurrentYoe when years of experience is entered', () => {
+    render(<ApplicationForm />);
+
+    const yoeInput = screen.getByPlaceholderText('application.years-exp');
+    fireEvent.change(yoeInput, { target: { value: '5' } });
+
+    expect(mockSetCurrentYoe).toHaveBeenCalledWith('5');
+  });
+
+  it('calls addCompetence when add button is clicked', () => {
+    render(<ApplicationForm />);
+
+    const addButtons = screen.getAllByText('application.add');
+    fireEvent.click(addButtons[0]);
+
+    expect(mockAddCompetence).toHaveBeenCalledTimes(1);
+  });
+
+  it('displays added competences', () => {
+    (useApplicationPresenter as any).mockReturnValue({
+      availableCompetences: [],
+      status: 'idle',
+      personalInfo: { name: '', surname: '', email: '', pnr: '' },
+      addedCompetences: [
+        { competenceId: 1, yearsOfExperience: 3, name: 'JavaScript' },
+        { competenceId: 2, yearsOfExperience: 2, name: 'Python' },
+      ],
+      addedAvailabilities: [],
+      currentCompetenceId: '',
+      currentYoe: '',
+      currentFromDate: '',
+      currentToDate: '',
+      setCurrentCompetenceId: mockSetCurrentCompetenceId,
+      setCurrentYoe: mockSetCurrentYoe,
+      setCurrentFromDate: mockSetCurrentFromDate,
+      setCurrentToDate: mockSetCurrentToDate,
+      handleInfoChange: mockHandleInfoChange,
+      addCompetence: mockAddCompetence,
+      removeCompetence: mockRemoveCompetence,
+      addAvailability: mockAddAvailability,
+      removeAvailability: mockRemoveAvailability,
+      submitApplication: mockSubmitApplication,
+    });
+
+    render(<ApplicationForm />);
+
+    expect(screen.getByText('JavaScript')).toBeInTheDocument();
+    expect(screen.getByText('Python')).toBeInTheDocument();
+    expect(screen.getByText('3 application.years-exp')).toBeInTheDocument();
+    expect(screen.getByText('2 application.years-exp')).toBeInTheDocument();
+  });
+
+  it('calls removeCompetence when remove button is clicked', () => {
+    (useApplicationPresenter as any).mockReturnValue({
+      availableCompetences: [],
+      status: 'idle',
+      personalInfo: { name: '', surname: '', email: '', pnr: '' },
+      addedCompetences: [
+        { competenceId: 1, yearsOfExperience: 3, name: 'JavaScript' },
+      ],
+      addedAvailabilities: [],
+      currentCompetenceId: '',
+      currentYoe: '',
+      currentFromDate: '',
+      currentToDate: '',
+      setCurrentCompetenceId: mockSetCurrentCompetenceId,
+      setCurrentYoe: mockSetCurrentYoe,
+      setCurrentFromDate: mockSetCurrentFromDate,
+      setCurrentToDate: mockSetCurrentToDate,
+      handleInfoChange: mockHandleInfoChange,
+      addCompetence: mockAddCompetence,
+      removeCompetence: mockRemoveCompetence,
+      addAvailability: mockAddAvailability,
+      removeAvailability: mockRemoveAvailability,
+      submitApplication: mockSubmitApplication,
+    });
+
+    render(<ApplicationForm />);
+
+    const removeButtons = screen.getAllByText('application.remove');
+    fireEvent.click(removeButtons[0]);
+
+    expect(mockRemoveCompetence).toHaveBeenCalledWith(0);
+  });
+
+  it('displays empty message when no competences are added', () => {
+    render(<ApplicationForm />);
+
+    expect(screen.getByText('application.no-competences')).toBeInTheDocument();
+  });
+
+  it('renders availability date inputs', () => {
+    render(<ApplicationForm />);
+
+    expect(screen.getByText('application.from')).toBeInTheDocument();
+    expect(screen.getByText('application.to')).toBeInTheDocument();
+
+    const dateInputs = screen.getAllByDisplayValue('');
+    expect(dateInputs.length).toBeGreaterThan(0);
+  });
+
+  it('calls setCurrentFromDate when from date is changed', () => {
+    render(<ApplicationForm />);
+
+    const dateInputs = screen.getAllByDisplayValue('');
+    const fromDateInput = dateInputs.find(
+      (input) => (input as HTMLInputElement).type === 'date'
+    );
+
+    if (fromDateInput) {
+      fireEvent.change(fromDateInput, { target: { value: '2026-03-01' } });
+      expect(mockSetCurrentFromDate).toHaveBeenCalledWith('2026-03-01');
+    }
+  });
+
+  it('calls addAvailability when add button is clicked', () => {
+    render(<ApplicationForm />);
+
+    const addButtons = screen.getAllByText('application.add');
+    fireEvent.click(addButtons[1]);
+
+    expect(mockAddAvailability).toHaveBeenCalledTimes(1);
+  });
+
+  it('displays added availabilities', () => {
+    (useApplicationPresenter as any).mockReturnValue({
+      availableCompetences: [],
+      status: 'idle',
+      personalInfo: { name: '', surname: '', email: '', pnr: '' },
+      addedCompetences: [],
+      addedAvailabilities: [
+        { fromDate: '2026-03-01', toDate: '2026-06-01' },
+        { fromDate: '2026-07-01', toDate: '2026-09-01' },
+      ],
+      currentCompetenceId: '',
+      currentYoe: '',
+      currentFromDate: '',
+      currentToDate: '',
+      setCurrentCompetenceId: mockSetCurrentCompetenceId,
+      setCurrentYoe: mockSetCurrentYoe,
+      setCurrentFromDate: mockSetCurrentFromDate,
+      setCurrentToDate: mockSetCurrentToDate,
+      handleInfoChange: mockHandleInfoChange,
+      addCompetence: mockAddCompetence,
+      removeCompetence: mockRemoveCompetence,
+      addAvailability: mockAddAvailability,
+      removeAvailability: mockRemoveAvailability,
+      submitApplication: mockSubmitApplication,
+    });
+
+    render(<ApplicationForm />);
+
+    expect(screen.getByText('2026-03-01 → 2026-06-01')).toBeInTheDocument();
+    expect(screen.getByText('2026-07-01 → 2026-09-01')).toBeInTheDocument();
+  });
+
+  it('calls removeAvailability when remove button is clicked', () => {
+    (useApplicationPresenter as any).mockReturnValue({
+      availableCompetences: [],
+      status: 'idle',
+      personalInfo: { name: '', surname: '', email: '', pnr: '' },
+      addedCompetences: [],
+      addedAvailabilities: [
+        { fromDate: '2026-03-01', toDate: '2026-06-01' },
+      ],
+      currentCompetenceId: '',
+      currentYoe: '',
+      currentFromDate: '',
+      currentToDate: '',
+      setCurrentCompetenceId: mockSetCurrentCompetenceId,
+      setCurrentYoe: mockSetCurrentYoe,
+      setCurrentFromDate: mockSetCurrentFromDate,
+      setCurrentToDate: mockSetCurrentToDate,
+      handleInfoChange: mockHandleInfoChange,
+      addCompetence: mockAddCompetence,
+      removeCompetence: mockRemoveCompetence,
+      addAvailability: mockAddAvailability,
+      removeAvailability: mockRemoveAvailability,
+      submitApplication: mockSubmitApplication,
+    });
+
+    render(<ApplicationForm />);
+
+    const removeButtons = screen.getAllByText('application.remove');
+    fireEvent.click(removeButtons[0]);
+
+    expect(mockRemoveAvailability).toHaveBeenCalledWith(0);
+  });
+
+  it('displays empty message when no availabilities are added', () => {
+    render(<ApplicationForm />);
+
+    expect(
+      screen.getByText('application.no-availability')
+    ).toBeInTheDocument();
+  });
+
+  it('calls submitApplication when form is submitted', () => {
+    render(<ApplicationForm />);
+
+    const form = screen.getByRole('button', { name: 'application.submit' })
+      .closest('form');
+    if (form) {
+      fireEvent.submit(form);
+    }
+
+    expect(mockSubmitApplication).toHaveBeenCalledTimes(1);
+  });
+
+  it('disables submit button and shows loading text when status is loading', () => {
+    (useApplicationPresenter as any).mockReturnValue({
+      availableCompetences: [],
+      status: 'loading',
+      personalInfo: { name: '', surname: '', email: '', pnr: '' },
+      addedCompetences: [],
+      addedAvailabilities: [],
+      currentCompetenceId: '',
+      currentYoe: '',
+      currentFromDate: '',
+      currentToDate: '',
+      setCurrentCompetenceId: mockSetCurrentCompetenceId,
+      setCurrentYoe: mockSetCurrentYoe,
+      setCurrentFromDate: mockSetCurrentFromDate,
+      setCurrentToDate: mockSetCurrentToDate,
+      handleInfoChange: mockHandleInfoChange,
+      addCompetence: mockAddCompetence,
+      removeCompetence: mockRemoveCompetence,
+      addAvailability: mockAddAvailability,
+      removeAvailability: mockRemoveAvailability,
+      submitApplication: mockSubmitApplication,
+    });
+
+    render(<ApplicationForm />);
+
+    const submitButton = screen.getByRole('button', {
+      name: 'application.submitting',
+    });
+
+    expect(submitButton).toBeDisabled();
+  });
+
+  it('displays error message when status is error', () => {
+    (useApplicationPresenter as any).mockReturnValue({
+      availableCompetences: [],
+      status: 'error',
+      personalInfo: { name: '', surname: '', email: '', pnr: '' },
+      addedCompetences: [],
+      addedAvailabilities: [],
+      currentCompetenceId: '',
+      currentYoe: '',
+      currentFromDate: '',
+      currentToDate: '',
+      setCurrentCompetenceId: mockSetCurrentCompetenceId,
+      setCurrentYoe: mockSetCurrentYoe,
+      setCurrentFromDate: mockSetCurrentFromDate,
+      setCurrentToDate: mockSetCurrentToDate,
+      handleInfoChange: mockHandleInfoChange,
+      addCompetence: mockAddCompetence,
+      removeCompetence: mockRemoveCompetence,
+      addAvailability: mockAddAvailability,
+      removeAvailability: mockRemoveAvailability,
+      submitApplication: mockSubmitApplication,
+    });
+
+    render(<ApplicationForm />);
+
+    expect(
+      screen.getByText('application.error-message')
+    ).toBeInTheDocument();
+  });
+
+  it('displays success message when status is success', () => {
+    (useApplicationPresenter as any).mockReturnValue({
+      availableCompetences: [],
+      status: 'success',
+      personalInfo: { name: '', surname: '', email: '', pnr: '' },
+      addedCompetences: [],
+      addedAvailabilities: [],
+      currentCompetenceId: '',
+      currentYoe: '',
+      currentFromDate: '',
+      currentToDate: '',
+      setCurrentCompetenceId: mockSetCurrentCompetenceId,
+      setCurrentYoe: mockSetCurrentYoe,
+      setCurrentFromDate: mockSetCurrentFromDate,
+      setCurrentToDate: mockSetCurrentToDate,
+      handleInfoChange: mockHandleInfoChange,
+      addCompetence: mockAddCompetence,
+      removeCompetence: mockRemoveCompetence,
+      addAvailability: mockAddAvailability,
+      removeAvailability: mockRemoveAvailability,
+      submitApplication: mockSubmitApplication,
+    });
+
+    render(<ApplicationForm />);
+
+    expect(screen.getByText('application.success-title')).toBeInTheDocument();
+    expect(
+      screen.getByText('application.success-message')
+    ).toBeInTheDocument();
+    expect(screen.queryByText('application.title')).not.toBeInTheDocument();
+  });
+
+  it('has required attribute on personal info inputs', () => {
+    render(<ApplicationForm />);
+
+    const nameInput = screen.getByPlaceholderText('application.name');
+    const surnameInput = screen.getByPlaceholderText('application.surname');
+    const emailInput = screen.getByPlaceholderText('application.email');
+    const pnrInput = screen.getByPlaceholderText('application.pnr');
+
+    expect(nameInput).toHaveAttribute('required');
+    expect(surnameInput).toHaveAttribute('required');
+    expect(emailInput).toHaveAttribute('required');
+    expect(pnrInput).toHaveAttribute('required');
+  });
+
+  it('email input has correct type', () => {
+    render(<ApplicationForm />);
+
+    const emailInput = screen.getByPlaceholderText('application.email');
+
+    expect(emailInput).toHaveAttribute('type', 'email');
+  });
+});
