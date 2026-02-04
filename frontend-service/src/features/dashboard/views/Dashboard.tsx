@@ -3,6 +3,14 @@ import { useDashboardPresenter } from '../presenters/useDashboardPresenter';
 import { useTranslation } from 'react-i18next';
 import '../styles/Dashboard.css';
 
+/**
+ * Dashboard component for authenticated users.
+ * Displays user information including username and role ID.
+ * Provides navigation to the job application form.
+ * Automatically redirects to login if the user is not authenticated.
+ *
+ * @returns The dashboard component.
+ */
 export const Dashboard = () => {
   const { username, roleId } = useDashboardPresenter();
   const { t } = useTranslation();

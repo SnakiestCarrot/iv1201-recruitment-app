@@ -3,6 +3,18 @@ import { useTranslation } from 'react-i18next';
 import { useApplicationPresenter } from '../presenters/useApplicationPresenter';
 import '../styles/ApplicationForm.css';
 
+/**
+ * Job application form component.
+ * Allows users to submit applications with personal information, competences, and availability periods.
+ * Displays a success message upon successful submission.
+ * Features include:
+ * - Personal information fields (name, surname, email, personnummer)
+ * - Dynamic addition/removal of competences with years of experience
+ * - Dynamic addition/removal of availability periods
+ * - Form validation and submission handling
+ *
+ * @returns The job application form component.
+ */
 export const ApplicationForm: React.FC = () => {
   const { t } = useTranslation();
   const {

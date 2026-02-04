@@ -8,6 +8,13 @@ import { AuthenticatedTopbar } from './components/AuthenticatedTopbar';
 import { useAuth } from './features/auth/hooks/useAuth';
 import './App.css';
 
+/**
+ * Main application component that sets up routing and authentication.
+ * Conditionally displays the authenticated topbar based on authentication status.
+ * Defines all application routes including login, registration, dashboard, and application forms.
+ *
+ * @returns The root application component with routing configuration.
+ */
 function App() {
   const { isAuthenticated } = useAuth();
 

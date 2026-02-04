@@ -3,6 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { authService } from '../services/authService';
 import type { AuthState, RecruiterRegisterRequest } from '../types/authTypes';
 
+/**
+ * Custom React hook for managing recruiter registration operations.
+ * Provides state management and functionality for registering recruiters with a secret code.
+ * Automatically navigates to login page after successful registration.
+ *
+ * @returns An object containing the current auth state and the registerRecruiter function.
+ */
 export const useRecruiterAuthPresenter = () => {
   const [state, setState] = useState<AuthState>({
     status: 'idle',
@@ -10,6 +17,13 @@ export const useRecruiterAuthPresenter = () => {
   });
   const navigate = useNavigate();
 
+  /**
+   * Registers a new recruiter with the provided credentials and secret code.
+   * On success, navigates to the login page after a 2-second delay.
+   * Updates the state to reflect loading, success, or error status.
+   *
+   * @param credentials - The recruiter's registration data including username, password, and secret code.
+   */
   const registerRecruiter = async (credentials: RecruiterRegisterRequest) => {
     setState({ status: 'loading', message: '' });
 

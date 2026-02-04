@@ -1,6 +1,13 @@
 import { useTranslation } from 'react-i18next';
 import './LanguageDropdown.css';
 
+/**
+ * Language selector dropdown component.
+ * Allows users to switch between English and Swedish languages.
+ * Persists the selected language in localStorage and updates the document language attribute.
+ *
+ * @returns A dropdown select element for language selection.
+ */
 export const LanguageDropdown = () => {
   const { i18n } = useTranslation();
 
