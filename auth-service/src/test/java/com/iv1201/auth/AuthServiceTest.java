@@ -113,4 +113,18 @@ class AuthServiceTest {
 
         assertThrows(IllegalArgumentException.class, () -> authService.login(request));
     }
+
+    @Test
+    void testRegisterRecruiter_Success() {
+        RecruiterRegisterRequestDTO request = new RecruiterRegisterRequestDTO();
+        request.setUsername("newRecruiter");
+        request.setPassword("pass");
+        request.setSecretCode(TEST_SECRET); // Correct Secret
+
+        when(userRepository.existsByUsername("newRecruiter")).thenReturn(false);
+
+        authService.registerRecruiter(request);
+
+        verify(userRepository, times(1)).save(any(User.class));
+    }
 }

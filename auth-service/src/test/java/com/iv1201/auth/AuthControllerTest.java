@@ -123,4 +123,19 @@ public class AuthControllerTest {
                 .andExpect(status().isInternalServerError()) 
                 .andExpect(content().string("Internal Server Error"));
     }
+
+    @Test
+    @WithMockUser
+    public void shouldRegisterRecruiterSuccessfully() throws Exception {
+        RecruiterRegisterRequestDTO request = new RecruiterRegisterRequestDTO();
+        request.setUsername("recruiter");
+        request.setSecretCode("correctCode");
+        
+        mockMvc.perform(post("/auth/register/recruiter")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isCreated())
+                .andExpect(content().string("Recruiter registered successfully"));
+    }
 }
