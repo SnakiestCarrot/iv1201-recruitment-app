@@ -58,6 +58,86 @@ describe('authService', () => {
     ).rejects.toThrow('Registration failed');
   });
 
+  // --- Register Recruiter Tests (Added) ---
+
+  it('registerRecruiter sends correct request and returns message on success', async () => {
+    fetchMock.mockResolvedValue({
+      ok: true,
+      text: () => Promise.resolve('Recruiter created successfully'),
+    });
+
+    const result = await authService.registerRecruiter({
+      username: 'recruiter',
+      password: 'pw',
+      secretCode: 'code123',
+    });
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining('/register/recruiter'),
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: 'recruiter',
+          password: 'pw',
+          secretCode: 'code123',
+        }),
+      }
+    );
+
+    expect(result).toBe('Recruiter created successfully');
+  });
+
+  it('registerRecruiter throws specific error for 403 Forbidden (Invalid code)', async () => {
+    fetchMock.mockResolvedValue({
+      ok: false,
+      status: 403,
+      text: () => Promise.resolve('Forbidden'),
+    });
+
+    await expect(
+      authService.registerRecruiter({
+        username: 'recruiter',
+        password: 'pw',
+        secretCode: 'bad_code',
+      })
+    ).rejects.toThrow('Invalid registration code');
+  });
+
+  it('registerRecruiter throws generic error for other failures', async () => {
+    fetchMock.mockResolvedValue({
+      ok: false,
+      status: 400,
+      text: () => Promise.resolve('Username taken'),
+    });
+
+    await expect(
+      authService.registerRecruiter({
+        username: 'recruiter',
+        password: 'pw',
+        secretCode: 'code123',
+      })
+    ).rejects.toThrow('Username taken');
+  });
+
+  it('registerRecruiter throws default error if backend response is empty', async () => {
+    fetchMock.mockResolvedValue({
+      ok: false,
+      status: 500,
+      text: () => Promise.resolve(''),
+    });
+
+    await expect(
+      authService.registerRecruiter({
+        username: 'recruiter',
+        password: 'pw',
+        secretCode: 'code123',
+      })
+    ).rejects.toThrow('Registration failed');
+  });
+
+  // --- Login Tests ---
+
   it('login returns token on success', async () => {
     const mockResponse = { token: 'jwt-token-123' };
     fetchMock.mockResolvedValue({
@@ -99,5 +179,16 @@ describe('authService', () => {
     await expect(
       authService.login({ username: 'user', password: 'pw' })
     ).rejects.toThrow('Database connection failed');
+  });
+
+  it('login throws default error if backend response is empty', async () => {
+    fetchMock.mockResolvedValue({
+      ok: false,
+      text: () => Promise.resolve(''),
+    });
+
+    await expect(
+      authService.login({ username: 'user', password: 'pw' })
+    ).rejects.toThrow('Login failed');
   });
 });

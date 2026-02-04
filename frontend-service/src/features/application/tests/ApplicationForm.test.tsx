@@ -228,6 +228,28 @@ describe('ApplicationForm Component', () => {
     }
   });
 
+  it('calls setCurrentToDate when to date is changed', () => {
+    render(<ApplicationForm />);
+
+    // Find all inputs that are currently empty
+    const inputs = screen.getAllByDisplayValue('');
+    
+    // Filter specifically for date inputs (From and To)
+    const dateInputs = inputs.filter(
+      (input) => (input as HTMLInputElement).type === 'date'
+    );
+
+    // The "To" date input is the second one (index 1)
+    const toDateInput = dateInputs[1];
+
+    if (toDateInput) {
+      fireEvent.change(toDateInput, { target: { value: '2026-06-01' } });
+      expect(mockSetCurrentToDate).toHaveBeenCalledWith('2026-06-01');
+    } else {
+      throw new Error('To Date input not found');
+    }
+  });
+
   it('calls addAvailability when add button is clicked', () => {
     render(<ApplicationForm />);
 
