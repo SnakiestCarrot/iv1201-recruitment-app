@@ -4,6 +4,15 @@ import { dashboardService } from '../features/dashboard/services/dashboardServic
 import { AUTH_CHANGED_EVENT } from '../features/auth/hooks/useAuth';
 import './AuthenticatedTopbar.css';
 
+/**
+ * Top navigation bar component for authenticated users.
+ * Displays the application title, navigation links (Dashboard, Application),
+ * language switcher (EN/SV), and logout button.
+ * Handles language changes and logout functionality.
+ * Dispatches auth state change events on logout.
+ *
+ * @returns The authenticated top navigation bar component.
+ */
 export const AuthenticatedTopbar = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
