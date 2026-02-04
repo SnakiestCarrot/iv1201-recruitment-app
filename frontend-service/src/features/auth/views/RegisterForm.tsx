@@ -5,6 +5,14 @@ import { useTranslation } from 'react-i18next';
 import { LanguageDropdown } from '../../../components/LanguageDropdown';
 import '../styles/RegisterForm.css';
 
+/**
+ * Registration form component for new applicant users.
+ * Provides input fields for username, password, and password confirmation.
+ * Validates password length (minimum 6 characters) and matching passwords.
+ * Includes language selection and links to login and recruiter registration.
+ *
+ * @returns The registration form component.
+ */
 export const RegisterForm = () => {
   const { state, registerUser } = useAuthPresenter();
   const { t } = useTranslation();

@@ -3,12 +3,24 @@ import { authService } from '../services/authService';
 import { type AuthRequest, type AuthState } from '../types/authTypes';
 import { AUTH_CHANGED_EVENT } from '../hooks/useAuth';
 
+/**
+ * Custom React hook for managing authentication operations (registration and login).
+ * Provides state management and functions for user registration and login flows.
+ *
+ * @returns An object containing the current auth state and functions for registerUser and loginUser.
+ */
 export const useAuthPresenter = () => {
   const [state, setState] = useState<AuthState>({
     status: 'idle',
     message: '',
   });
 
+  /**
+   * Registers a new applicant user with the provided credentials.
+   * Updates the state to reflect loading, success, or error status.
+   *
+   * @param credentials - The user's registration credentials (username and password).
+   */
   const registerUser = async (credentials: AuthRequest) => {
     setState({ status: 'loading', message: 'Registering...' });
     try {
@@ -22,6 +34,13 @@ export const useAuthPresenter = () => {
     }
   };
 
+  /**
+   * Authenticates a user with the provided credentials.
+   * On success, stores the JWT token in localStorage and dispatches an auth changed event.
+   * Updates the state to reflect loading, success, or error status.
+   *
+   * @param credentials - The user's login credentials (username and password).
+   */
   const loginUser = async (credentials: AuthRequest) => {
     setState({ status: 'loading', message: 'Logging in...' });
     try {

@@ -5,6 +5,14 @@ import { useTranslation } from 'react-i18next';
 import { LanguageDropdown } from '../../../components/LanguageDropdown';
 import '../styles/LoginForm.css';
 
+/**
+ * Login form component for user authentication.
+ * Provides username and password input fields and handles login submission.
+ * Redirects to dashboard upon successful authentication.
+ * Includes language selection and links to registration pages.
+ *
+ * @returns The login form component.
+ */
 export const LoginForm = () => {
   const { state, loginUser } = useAuthPresenter();
   const navigate = useNavigate();
