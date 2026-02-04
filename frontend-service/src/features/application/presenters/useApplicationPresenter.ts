@@ -14,6 +14,17 @@ import type {
   ApplicationStatus,
 } from '../types/applicationTypes';
 
+/**
+ * Custom React hook for managing job application form state and operations.
+ * Handles fetching available competences, managing personal information,
+ * adding/removing competences and availability periods, and submitting applications.
+ *
+ * @returns An object containing:
+ * - State variables for competences, status, personal info, and form inputs
+ * - Setter functions for form inputs
+ * - Handler functions for managing competences and availabilities
+ * - Submit function for the application
+ */
 export const useApplicationPresenter = () => {
   const [availableCompetences, setAvailableCompetences] = useState<
     Competence[]
@@ -40,6 +51,10 @@ export const useApplicationPresenter = () => {
   const [currentFromDate, setCurrentFromDate] = useState<string>('');
   const [currentToDate, setCurrentToDate] = useState<string>('');
 
+  /**
+   * Loads available competences from the server.
+   * Filters out duplicates based on competenceId.
+   */
   const loadCompetences = useCallback(async () => {
     try {
       const data = await applicationService.getCompetences();
@@ -59,10 +74,20 @@ export const useApplicationPresenter = () => {
     loadCompetences();
   }, [loadCompetences]);
 
+  /**
+   * Handles changes to personal information input fields.
+   *
+   * @param e - The change event from an input element.
+   */
   const handleInfoChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPersonalInfo({ ...personalInfo, [e.target.name]: e.target.value });
   };
 
+  /**
+   * Adds a competence with years of experience to the application.
+   * Validates that both competenceId and years of experience are provided.
+   * Clears the current input fields after adding.
+   */
   const addCompetence = () => {
     if (!currentCompetenceId || !currentYoe) return;
 
@@ -84,10 +109,20 @@ export const useApplicationPresenter = () => {
     setCurrentYoe('');
   };
 
+  /**
+   * Removes a competence from the application at the specified index.
+   *
+   * @param index - The index of the competence to remove.
+   */
   const removeCompetence = (index: number) => {
     setAddedCompetences((prev) => prev.filter((_, i) => i !== index));
   };
 
+  /**
+   * Adds an availability period to the application.
+   * Validates that both from date and to date are provided.
+   * Clears the current date input fields after adding.
+   */
   const addAvailability = () => {
     if (!currentFromDate || !currentToDate) return;
 
@@ -100,10 +135,22 @@ export const useApplicationPresenter = () => {
     setCurrentToDate('');
   };
 
+  /**
+   * Removes an availability period from the application at the specified index.
+   *
+   * @param index - The index of the availability period to remove.
+   */
   const removeAvailability = (index: number) => {
     setAddedAvailabilities((prev) => prev.filter((_, i) => i !== index));
   };
 
+  /**
+   * Submits the complete job application to the server.
+   * Combines personal information, competences, and availabilities into a single payload.
+   * Updates status to loading, success, or error based on the result.
+   *
+   * @param e - The form submit event.
+   */
   const submitApplication = async (e: FormEvent) => {
     e.preventDefault();
     setStatus('loading');
