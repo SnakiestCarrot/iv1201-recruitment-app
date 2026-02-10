@@ -193,14 +193,14 @@ jobs:
           EC2_HOST: ${{ secrets.EC2_HOST }}
         run: |
           echo "Waiting for service to be ready at http://$EC2_HOST:3000..."
-          for i in {1..12}; do
+          for i in {1..20}; do
             STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://$EC2_HOST:3000 || echo "000")
             if [ "$STATUS" == "200" ]; then
               echo "✅ Service is UP!"
               exit 0
             fi
-            echo "Attempt $i: Status $STATUS. Waiting 5s..."
-            sleep 5
+            echo "Attempt $i: Status $STATUS. Waiting 10s..."
+            sleep 10
           done
           echo "❌ Deployment failed."
           exit 1
