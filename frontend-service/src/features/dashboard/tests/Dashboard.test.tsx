@@ -52,13 +52,25 @@ describe('Dashboard Component', () => {
     expect(screen.getByText(/2/)).toBeInTheDocument();
   });
 
-  it('renders application link', () => {
+  it('renders application link for applicants', () => {
+    (useDashboardPresenter as any).mockReturnValue({
+      username: 'testuser',
+      roleId: 2,
+      logout: mockLogout,
+    });
+
     render(<Dashboard />);
 
     const applicationLink = screen.getByText('dash.apply-now').closest('a');
 
     expect(applicationLink).toBeInTheDocument();
     expect(applicationLink).toHaveAttribute('href', '/application');
+  });
+
+  it('hides application link for recruiters', () => {
+    render(<Dashboard />);
+
+    expect(screen.queryByText('dash.apply-now')).not.toBeInTheDocument();
   });
 
   it('renders logged-in state box', () => {
@@ -81,6 +93,12 @@ describe('Dashboard Component', () => {
   });
 
   it('applies correct CSS classes', () => {
+    (useDashboardPresenter as any).mockReturnValue({
+      username: 'testuser',
+      roleId: 2,
+      logout: mockLogout,
+    });
+
     render(<Dashboard />);
 
     const container = screen.getByText(/dash.title/).closest('div');

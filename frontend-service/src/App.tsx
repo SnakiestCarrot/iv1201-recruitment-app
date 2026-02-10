@@ -16,7 +16,7 @@ import './App.css';
  * @returns The root application component with routing configuration.
  */
 function App() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
 
   return (
     <HashRouter>
@@ -33,7 +33,16 @@ function App() {
               element={<RecruiterRegisterForm />}
             />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/application" element={<ApplicationForm />} />
+            <Route
+              path="/application"
+              element={
+                user?.roleId === 1 ? (
+                  <Navigate to="/dashboard" replace />
+                ) : (
+                  <ApplicationForm />
+                )
+              }
+            />
             <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
         </main>
