@@ -26,6 +26,14 @@ vi.mock('../../features/dashboard/services/dashboardService', () => ({
   },
 }));
 
+vi.mock('../../features/auth/hooks/useAuth', async () => {
+  const actual = await vi.importActual('../../features/auth/hooks/useAuth');
+  return {
+    ...actual as object,
+    useAuth: () => ({ user: { username: 'testuser', roleId: 2 }, isAuthenticated: true }),
+  };
+});
+
 describe('AuthenticatedTopbar Component', () => {
   beforeEach(() => {
     vi.clearAllMocks();
