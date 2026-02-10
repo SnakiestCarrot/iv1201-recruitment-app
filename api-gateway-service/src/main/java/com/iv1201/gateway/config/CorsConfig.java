@@ -23,10 +23,8 @@ public class CorsConfig {
         corsConfig.setMaxAge(3600L);
         corsConfig.addAllowedMethod("GET");
         corsConfig.addAllowedMethod("POST");
-        corsConfig.addAllowedMethod("PUT");
-        corsConfig.addAllowedMethod("DELETE");
-        corsConfig.addAllowedMethod("OPTIONS");
-        corsConfig.addAllowedHeader("*");
+        corsConfig.addAllowedHeader("Content-Type");
+        corsConfig.addAllowedHeader("Authorization");
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfig);
