@@ -27,11 +27,13 @@ export const Dashboard = () => {
         {roleId}
       </p>
 
-      <div className="dashboard-link-section">
-        <Link to="/application" className="dashboard-link">
-          {t('dash.apply-now')}
-        </Link>
-      </div>
+      {roleId !== 1 && (
+        <div className="dashboard-link-section">
+          <Link to="/application" className="dashboard-link">
+            {t('dash.apply-now')}
+          </Link>
+        </div>
+      )}
 
       <div className="dashboard-status-box">
         <h3 className="dashboard-status-title">{t('dash.logged-in-state')}</h3>

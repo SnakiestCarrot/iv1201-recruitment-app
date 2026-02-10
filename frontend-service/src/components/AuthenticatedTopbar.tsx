@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { dashboardService } from '../features/dashboard/services/dashboardService';
-import { AUTH_CHANGED_EVENT } from '../features/auth/hooks/useAuth';
+import { AUTH_CHANGED_EVENT, useAuth } from '../features/auth/hooks/useAuth';
 import './AuthenticatedTopbar.css';
 
 /**
@@ -16,6 +16,7 @@ import './AuthenticatedTopbar.css';
 export const AuthenticatedTopbar = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const handleLanguageChange = (lng: string) => {
     i18n.changeLanguage(lng);
@@ -39,9 +40,11 @@ export const AuthenticatedTopbar = () => {
             <Link to="/dashboard" className="topbar-link">
               {t('dash.dashboard')}
             </Link>
-            <Link to="/application" className="topbar-link">
-              {t('application.title')}
-            </Link>
+            {user?.roleId !== 1 && (
+              <Link to="/application" className="topbar-link">
+                {t('application.title')}
+              </Link>
+            )}
           </nav>
         </div>
 
