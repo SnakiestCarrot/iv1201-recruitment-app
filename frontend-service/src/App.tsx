@@ -33,7 +33,16 @@ function App() {
               element={<RecruiterRegisterForm />}
             />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/application" element={user?.roleId === 1 ? <Navigate to="/dashboard" replace /> : <ApplicationForm />} />
+            <Route
+              path="/application"
+              element={
+                user?.roleId === 1 ? (
+                  <Navigate to="/dashboard" replace />
+                ) : (
+                  <ApplicationForm />
+                )
+              }
+            />
             <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
         </main>
