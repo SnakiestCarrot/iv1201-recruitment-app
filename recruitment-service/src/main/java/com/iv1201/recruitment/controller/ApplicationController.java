@@ -1,7 +1,9 @@
 package com.iv1201.recruitment.controller;
 
+import com.iv1201.recruitment.dto.ApplicationDetailDTO;
 import com.iv1201.recruitment.dto.ApplicationSummaryDTO;
 import com.iv1201.recruitment.dto.ApplicationsCreateDTO;
+import com.iv1201.recruitment.dto.StatusUpdateDTO;
 import com.iv1201.recruitment.service.ApplicationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,5 +43,30 @@ public class ApplicationController {
         
         applicationService.createApplication(applicationDTO, userIdHeader);
         return ResponseEntity.status(201).build();
+    }
+
+    /**
+     * Returns the full details of a specific application.
+     *
+     * @param id the person ID of the application to retrieve
+     * @return the application detail DTO
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<ApplicationDetailDTO> getApplicationById(@PathVariable Long id) {
+        return ResponseEntity.ok(applicationService.getApplicationById(id));
+    }
+
+    /**
+     * Updates the status of a specific application.
+     *
+     * @param id the person ID of the application to update
+     * @param statusUpdateDTO the new status value
+     * @return 200 OK on success
+     */
+    @PutMapping("/{id}/status")
+    public ResponseEntity<Void> updateApplicationStatus(@PathVariable Long id,
+                                                         @RequestBody StatusUpdateDTO statusUpdateDTO) {
+        applicationService.updateApplicationStatus(id, statusUpdateDTO.getStatus());
+        return ResponseEntity.ok().build();
     }
 }

@@ -5,6 +5,7 @@ import { dashboardService } from '../../features/dashboard/services/dashboardSer
 import { AUTH_CHANGED_EVENT } from '../../features/auth/hooks/useAuth';
 
 const mockNavigate = vi.fn();
+const mockUseAuth = vi.fn();
 
 vi.mock('react-router-dom', () => ({
   Link: ({ children, to }: { children: React.ReactNode; to: string }) => (
@@ -30,17 +31,21 @@ vi.mock('../../features/auth/hooks/useAuth', async () => {
   const actual = await vi.importActual('../../features/auth/hooks/useAuth');
   return {
     ...actual as object,
-    useAuth: () => ({ user: { username: 'testuser', roleId: 2 }, isAuthenticated: true }),
+    useAuth: (...args: any[]) => mockUseAuth(...args),
   };
 });
 
-describe('AuthenticatedTopbar Component', () => {
+describe('AuthenticatedTopbar Component (applicant)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.stubGlobal('localStorage', {
       setItem: vi.fn(),
       getItem: vi.fn(),
       removeItem: vi.fn(),
+    });
+    mockUseAuth.mockReturnValue({
+      user: { username: 'testuser', roleId: 2 },
+      isAuthenticated: true,
     });
   });
 
@@ -71,14 +76,6 @@ describe('AuthenticatedTopbar Component', () => {
   });
 
   it('changes language when language button is clicked', () => {
-    const mockChangeLanguage = vi.fn();
-    vi.doMock('react-i18next', () => ({
-      useTranslation: () => ({
-        t: (key: string) => key,
-        i18n: { changeLanguage: mockChangeLanguage, language: 'en' },
-      }),
-    }));
-
     render(<AuthenticatedTopbar />);
 
     const svButton = screen.getByRole('button', { name: 'SV' });
@@ -119,5 +116,40 @@ describe('AuthenticatedTopbar Component', () => {
 
     expect(dashboardLink).toHaveAttribute('href', '/dashboard');
     expect(applicationLink).toHaveAttribute('href', '/application');
+  });
+
+  it('hides recruiter applications link for applicants', () => {
+    render(<AuthenticatedTopbar />);
+
+    expect(screen.queryByText('recruiter.applications')).not.toBeInTheDocument();
+  });
+});
+
+describe('AuthenticatedTopbar Component (recruiter)', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.stubGlobal('localStorage', {
+      setItem: vi.fn(),
+      getItem: vi.fn(),
+      removeItem: vi.fn(),
+    });
+    mockUseAuth.mockReturnValue({
+      user: { username: 'recruiter', roleId: 1 },
+      isAuthenticated: true,
+    });
+  });
+
+  it('shows applications link for recruiters', () => {
+    render(<AuthenticatedTopbar />);
+
+    const appsLink = screen.getByText('recruiter.applications').closest('a');
+    expect(appsLink).toBeInTheDocument();
+    expect(appsLink).toHaveAttribute('href', '/applications');
+  });
+
+  it('hides application form link for recruiters', () => {
+    render(<AuthenticatedTopbar />);
+
+    expect(screen.queryByText('application.title')).not.toBeInTheDocument();
   });
 });

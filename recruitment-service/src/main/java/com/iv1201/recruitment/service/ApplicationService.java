@@ -1,13 +1,15 @@
 package com.iv1201.recruitment.service;
 
-import com.iv1201.recruitment.dto.ApplicationSummaryDTO;
-import com.iv1201.recruitment.dto.ApplicationsCreateDTO;
+import com.iv1201.recruitment.dto.*;
 import com.iv1201.recruitment.model.*;
 import com.iv1201.recruitment.repository.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -123,6 +125,75 @@ public class ApplicationService {
                 availabilityRepository.save(availability);
             });
         }
+    }
+
+    private static final Set<String> VALID_STATUSES = Set.of("UNHANDLED", "ACCEPTED", "REJECTED");
+
+    /**
+     * Returns the full details of a specific recruitment application.
+     *
+     * Loads the Person entity along with their competence profiles and
+     * availability periods, then maps all data into an ApplicationDetailDTO.
+     *
+     * @param id the person ID of the application to retrieve
+     * @return a detailed DTO containing all application information
+     * @throws ResponseStatusException with 404 status if no person is found
+     */
+    public ApplicationDetailDTO getApplicationById(Long id) {
+        Person person = personRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Application not found"));
+
+        List<CompetenceProfile> profiles = competenceProfileRepository.findByPerson_Id(id);
+        List<Availability> availabilities = availabilityRepository.findByPerson_Id(id);
+
+        ApplicationDetailDTO dto = new ApplicationDetailDTO();
+        dto.setPersonID(person.getId());
+        dto.setName(person.getName());
+        dto.setSurname(person.getSurname());
+        dto.setEmail(person.getEmail());
+        dto.setPnr(person.getPnr());
+        dto.setStatus(person.getStatus() != null ? person.getStatus() : "UNHANDLED");
+
+        dto.setCompetences(profiles.stream().map(p -> {
+            CompetenceDTO c = new CompetenceDTO();
+            c.setCompetenceId(p.getCompetence().getCompetenceId());
+            c.setName(p.getCompetence().getName());
+            c.setYearsOfExperience(p.getYearsOfExperience());
+            return c;
+        }).collect(Collectors.toList()));
+
+        dto.setAvailabilities(availabilities.stream().map(a -> {
+            AvailabilityDTO av = new AvailabilityDTO();
+            av.setFromDate(a.getFromDate());
+            av.setToDate(a.getToDate());
+            return av;
+        }).collect(Collectors.toList()));
+
+        return dto;
+    }
+
+    /**
+     * Updates the status of a specific recruitment application.
+     *
+     * Validates that the new status is one of UNHANDLED, ACCEPTED, or REJECTED.
+     * If valid, updates and persists the new status.
+     *
+     * @param id the person ID of the application to update
+     * @param status the new status value
+     * @throws ResponseStatusException with 404 if no person is found,
+     *         or 400 if the status value is invalid
+     */
+    public void updateApplicationStatus(Long id, String status) {
+        if (!VALID_STATUSES.contains(status)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Invalid status. Must be one of: UNHANDLED, ACCEPTED, REJECTED");
+        }
+
+        Person person = personRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Application not found"));
+
+        person.setStatus(status);
+        personRepository.save(person);
     }
 
     /**

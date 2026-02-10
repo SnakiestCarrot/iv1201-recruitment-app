@@ -52,8 +52,30 @@
     "no-competences": "No competences added yet.",
     "no-availability": "No availability periods added yet."
   },
+  "recruiter": {
+    "applications": "Applications",
+    "applications-title": "All Applications",
+    "name": "Name",
+    "status": "Status",
+    "loading": "Loading...",
+    "error": "Failed to load applications.",
+    "no-applications": "No applications found.",
+    "back-to-list": "Back to Applications",
+    "personal-info": "Personal Information",
+    "competences": "Competences",
+    "availability": "Availability",
+    "years-exp": "years",
+    "update-status": "Update Status",
+    "status-updated": "Status updated successfully.",
+    "status-update-error": "Failed to update status.",
+    "unhandled": "Unhandled",
+    "accepted": "Accepted",
+    "rejected": "Rejected",
+    "detail-title": "Application Details",
+    "detail-error": "Failed to load application details."
+  },
   "common": {
     "username": "Username",
-    "password": "Password"    
+    "password": "Password"
   }
 }
