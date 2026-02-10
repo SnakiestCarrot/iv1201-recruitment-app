@@ -24,7 +24,9 @@ export const ApplicationList = () => {
 
   return (
     <div className="recruiter-list-container">
-      <h1 className="recruiter-list-title">{t('recruiter.applications-title')}</h1>
+      <h1 className="recruiter-list-title">
+        {t('recruiter.applications-title')}
+      </h1>
 
       {applications.length === 0 ? (
         <p className="recruiter-empty">{t('recruiter.no-applications')}</p>
@@ -45,7 +47,9 @@ export const ApplicationList = () => {
               >
                 <td>{app.fullName}</td>
                 <td>
-                  <span className={`recruiter-status recruiter-status-${app.status.toLowerCase()}`}>
+                  <span
+                    className={`recruiter-status recruiter-status-${app.status.toLowerCase()}`}
+                  >
                     {t(`recruiter.${app.status.toLowerCase()}`)}
                   </span>
                 </td>

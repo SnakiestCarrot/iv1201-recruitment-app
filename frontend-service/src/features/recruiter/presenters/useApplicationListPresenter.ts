@@ -23,7 +23,9 @@ export const useApplicationListPresenter = () => {
       const data = await recruiterService.getAllApplications();
       setApplications(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load applications');
+      setError(
+        err instanceof Error ? err.message : 'Failed to load applications'
+      );
     } finally {
       setLoading(false);
     }

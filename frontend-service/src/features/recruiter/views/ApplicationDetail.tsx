@@ -48,19 +48,29 @@ export const ApplicationDetail = () => {
         <h2>{t('recruiter.personal-info')}</h2>
         <div className="recruiter-detail-grid">
           <div className="recruiter-detail-field">
-            <span className="recruiter-detail-label">{t('application.name')}</span>
+            <span className="recruiter-detail-label">
+              {t('application.name')}
+            </span>
             <span className="recruiter-detail-value">{application.name}</span>
           </div>
           <div className="recruiter-detail-field">
-            <span className="recruiter-detail-label">{t('application.surname')}</span>
-            <span className="recruiter-detail-value">{application.surname}</span>
+            <span className="recruiter-detail-label">
+              {t('application.surname')}
+            </span>
+            <span className="recruiter-detail-value">
+              {application.surname}
+            </span>
           </div>
           <div className="recruiter-detail-field">
-            <span className="recruiter-detail-label">{t('application.email')}</span>
+            <span className="recruiter-detail-label">
+              {t('application.email')}
+            </span>
             <span className="recruiter-detail-value">{application.email}</span>
           </div>
           <div className="recruiter-detail-field">
-            <span className="recruiter-detail-label">{t('application.pnr')}</span>
+            <span className="recruiter-detail-label">
+              {t('application.pnr')}
+            </span>
             <span className="recruiter-detail-value">{application.pnr}</span>
           </div>
         </div>
@@ -73,7 +83,10 @@ export const ApplicationDetail = () => {
         ) : (
           <ul className="recruiter-detail-list">
             {application.competences.map((comp) => (
-              <li key={comp.competenceId} className="recruiter-detail-list-item">
+              <li
+                key={comp.competenceId}
+                className="recruiter-detail-list-item"
+              >
                 <span className="recruiter-detail-comp-name">{comp.name}</span>
                 <span className="recruiter-detail-comp-years">
                   {comp.yearsOfExperience} {t('recruiter.years-exp')}
@@ -108,7 +121,9 @@ export const ApplicationDetail = () => {
             <button
               key={status}
               className={`recruiter-status-btn recruiter-status-btn-${status.toLowerCase()} ${
-                application.status === status ? 'recruiter-status-btn-active' : ''
+                application.status === status
+                  ? 'recruiter-status-btn-active'
+                  : ''
               }`}
               onClick={() => updateStatus(status)}
               disabled={updating || application.status === status}
@@ -118,10 +133,14 @@ export const ApplicationDetail = () => {
           ))}
         </div>
         {updateSuccess && (
-          <p className="recruiter-success-msg">{t('recruiter.status-updated')}</p>
+          <p className="recruiter-success-msg">
+            {t('recruiter.status-updated')}
+          </p>
         )}
         {updateError && (
-          <p className="recruiter-error-msg">{t('recruiter.status-update-error')}</p>
+          <p className="recruiter-error-msg">
+            {t('recruiter.status-update-error')}
+          </p>
         )}
       </section>
     </div>

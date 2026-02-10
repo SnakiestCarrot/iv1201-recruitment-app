@@ -1,4 +1,7 @@
-import type { ApplicationSummary, ApplicationDetail } from '../types/recruiterTypes';
+import type {
+  ApplicationSummary,
+  ApplicationDetail,
+} from '../types/recruiterTypes';
 
 /**
  * Base URL for recruitment API endpoints.

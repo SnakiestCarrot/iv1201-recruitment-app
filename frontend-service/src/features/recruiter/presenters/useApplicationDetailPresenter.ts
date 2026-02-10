@@ -10,7 +10,9 @@ import type { ApplicationDetail } from '../types/recruiterTypes';
  * @returns An object containing the application detail, loading/error states, and a status update handler.
  */
 export const useApplicationDetailPresenter = (id: number) => {
-  const [application, setApplication] = useState<ApplicationDetail | null>(null);
+  const [application, setApplication] = useState<ApplicationDetail | null>(
+    null
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [updating, setUpdating] = useState(false);
@@ -25,7 +27,9 @@ export const useApplicationDetailPresenter = (id: number) => {
         const data = await recruiterService.getApplicationById(id);
         setApplication(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load application');
+        setError(
+          err instanceof Error ? err.message : 'Failed to load application'
+        );
       } finally {
         setLoading(false);
       }
@@ -39,22 +43,27 @@ export const useApplicationDetailPresenter = (id: number) => {
    *
    * @param newStatus - The new status to set (UNHANDLED, ACCEPTED, or REJECTED).
    */
-  const updateStatus = useCallback(async (newStatus: string) => {
-    if (!application) return;
+  const updateStatus = useCallback(
+    async (newStatus: string) => {
+      if (!application) return;
 
-    setUpdating(true);
-    setUpdateError('');
-    setUpdateSuccess(false);
-    try {
-      await recruiterService.updateApplicationStatus(id, newStatus);
-      setApplication({ ...application, status: newStatus });
-      setUpdateSuccess(true);
-    } catch (err) {
-      setUpdateError(err instanceof Error ? err.message : 'Failed to update status');
-    } finally {
-      setUpdating(false);
-    }
-  }, [id, application]);
+      setUpdating(true);
+      setUpdateError('');
+      setUpdateSuccess(false);
+      try {
+        await recruiterService.updateApplicationStatus(id, newStatus);
+        setApplication({ ...application, status: newStatus });
+        setUpdateSuccess(true);
+      } catch (err) {
+        setUpdateError(
+          err instanceof Error ? err.message : 'Failed to update status'
+        );
+      } finally {
+        setUpdating(false);
+      }
+    },
+    [id, application]
+  );
 
   return {
     application,
