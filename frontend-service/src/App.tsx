@@ -4,6 +4,8 @@ import { RegisterForm } from './features/auth/views/RegisterForm';
 import { RecruiterRegisterForm } from './features/auth/views/RecruiterRegisterForm';
 import { Dashboard } from './features/dashboard/views/Dashboard';
 import { ApplicationForm } from './features/application/views/ApplicationForm.tsx';
+import { ApplicationList } from './features/recruiter/views/ApplicationList';
+import { ApplicationDetail } from './features/recruiter/views/ApplicationDetail';
 import { AuthenticatedTopbar } from './components/AuthenticatedTopbar';
 import { useAuth } from './features/auth/hooks/useAuth';
 import './App.css';
@@ -40,6 +42,26 @@ function App() {
                   <Navigate to="/dashboard" replace />
                 ) : (
                   <ApplicationForm />
+                )
+              }
+            />
+            <Route
+              path="/applications"
+              element={
+                user?.roleId !== 1 ? (
+                  <Navigate to="/dashboard" replace />
+                ) : (
+                  <ApplicationList />
+                )
+              }
+            />
+            <Route
+              path="/applications/:id"
+              element={
+                user?.roleId !== 1 ? (
+                  <Navigate to="/dashboard" replace />
+                ) : (
+                  <ApplicationDetail />
                 )
               }
             />

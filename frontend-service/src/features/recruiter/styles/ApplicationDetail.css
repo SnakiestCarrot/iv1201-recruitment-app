@@ -1,0 +1,197 @@
+/* ============ Container ============ */
+.recruiter-detail-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.recruiter-detail-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+}
+
+/* ============ Back Button ============ */
+.recruiter-back-btn {
+  background: none;
+  border: 1px solid #6b7280;
+  color: #d1d5db;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.recruiter-back-btn:hover {
+  background-color: rgb(74, 74, 74);
+  color: #ffffff;
+}
+
+/* ============ Sections ============ */
+.recruiter-detail-section {
+  background-color: rgb(94, 94, 94);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.recruiter-detail-section h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #d1d5db;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgb(74, 74, 74);
+}
+
+/* ============ Detail Grid ============ */
+.recruiter-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .recruiter-detail-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.recruiter-detail-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.recruiter-detail-label {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.recruiter-detail-value {
+  color: #ffffff;
+  font-size: 1rem;
+}
+
+/* ============ Lists ============ */
+.recruiter-detail-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.recruiter-detail-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  color: #ffffff;
+  border-bottom: 1px solid rgb(74, 74, 74);
+}
+
+.recruiter-detail-list-item:last-child {
+  border-bottom: none;
+}
+
+.recruiter-detail-comp-name {
+  font-weight: 500;
+}
+
+.recruiter-detail-comp-years {
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.recruiter-detail-separator {
+  color: #6b7280;
+  margin: 0 0.5rem;
+}
+
+/* ============ Status Buttons ============ */
+.recruiter-status-buttons {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.recruiter-status-btn {
+  padding: 0.6rem 1.5rem;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-transform: uppercase;
+}
+
+.recruiter-status-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.recruiter-status-btn-unhandled {
+  background-color: #374151;
+  color: #9ca3af;
+  border-color: #4b5563;
+}
+
+.recruiter-status-btn-unhandled:hover:not(:disabled) {
+  background-color: #4b5563;
+}
+
+.recruiter-status-btn-unhandled.recruiter-status-btn-active {
+  border-color: #9ca3af;
+  background-color: #4b5563;
+  color: #ffffff;
+}
+
+.recruiter-status-btn-accepted {
+  background-color: #065f46;
+  color: #a7f3d0;
+  border-color: #047857;
+}
+
+.recruiter-status-btn-accepted:hover:not(:disabled) {
+  background-color: #047857;
+}
+
+.recruiter-status-btn-accepted.recruiter-status-btn-active {
+  border-color: #a7f3d0;
+  background-color: #047857;
+  color: #ffffff;
+}
+
+.recruiter-status-btn-rejected {
+  background-color: #7f1d1d;
+  color: #fca5a5;
+  border-color: #991b1b;
+}
+
+.recruiter-status-btn-rejected:hover:not(:disabled) {
+  background-color: #991b1b;
+}
+
+.recruiter-status-btn-rejected.recruiter-status-btn-active {
+  border-color: #fca5a5;
+  background-color: #991b1b;
+  color: #ffffff;
+}
+
+/* ============ Messages ============ */
+.recruiter-success-msg {
+  margin-top: 0.75rem;
+  color: #a7f3d0;
+  font-size: 0.9rem;
+}
+
+.recruiter-error-msg {
+  margin-top: 0.75rem;
+  color: #fca5a5;
+  font-size: 0.9rem;
+}

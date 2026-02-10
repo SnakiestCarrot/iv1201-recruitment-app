@@ -45,6 +45,11 @@ export const AuthenticatedTopbar = () => {
                 {t('application.title')}
               </Link>
             )}
+            {user?.roleId === 1 && (
+              <Link to="/applications" className="topbar-link">
+                {t('recruiter.applications')}
+              </Link>
+            )}
           </nav>
         </div>
 

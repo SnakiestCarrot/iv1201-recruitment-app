@@ -1,0 +1,93 @@
+/* ============ Container ============ */
+.recruiter-list-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.recruiter-list-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+}
+
+/* ============ Table ============ */
+.recruiter-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: rgb(94, 94, 94);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.recruiter-table th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #d1d5db;
+  background-color: rgb(74, 74, 74);
+  border-bottom: 2px solid rgb(64, 64, 64);
+}
+
+.recruiter-table td {
+  padding: 0.75rem 1rem;
+  color: #ffffff;
+  border-bottom: 1px solid rgb(74, 74, 74);
+}
+
+.recruiter-table-row {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.recruiter-table-row:hover {
+  background-color: rgb(84, 84, 84);
+}
+
+/* ============ Status Badges ============ */
+.recruiter-status {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.recruiter-status-unhandled {
+  background-color: #374151;
+  color: #9ca3af;
+}
+
+.recruiter-status-accepted {
+  background-color: #065f46;
+  color: #a7f3d0;
+}
+
+.recruiter-status-rejected {
+  background-color: #7f1d1d;
+  color: #fca5a5;
+}
+
+/* ============ States ============ */
+.recruiter-loading {
+  text-align: center;
+  padding: 3rem;
+  color: #9ca3af;
+  font-size: 1.1rem;
+}
+
+.recruiter-error {
+  text-align: center;
+  padding: 3rem;
+  color: #fca5a5;
+  font-size: 1.1rem;
+}
+
+.recruiter-empty {
+  text-align: center;
+  padding: 2rem;
+  color: #9ca3af;
+  font-style: italic;
+}

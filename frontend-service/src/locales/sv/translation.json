@@ -52,6 +52,28 @@
     "no-competences": "Inga kompetenser tillagda än.",
     "no-availability": "Inga perioder tillagda än."
   },
+  "recruiter": {
+    "applications": "Ansökningar",
+    "applications-title": "Alla Ansökningar",
+    "name": "Namn",
+    "status": "Status",
+    "loading": "Laddar...",
+    "error": "Kunde inte ladda ansökningar.",
+    "no-applications": "Inga ansökningar hittades.",
+    "back-to-list": "Tillbaka till Ansökningar",
+    "personal-info": "Personuppgifter",
+    "competences": "Kompetenser",
+    "availability": "Tillgänglighet",
+    "years-exp": "år",
+    "update-status": "Uppdatera Status",
+    "status-updated": "Status uppdaterad.",
+    "status-update-error": "Kunde inte uppdatera status.",
+    "unhandled": "Obehandlad",
+    "accepted": "Accepterad",
+    "rejected": "Avvisad",
+    "detail-title": "Ansökningsdetaljer",
+    "detail-error": "Kunde inte ladda ansökningsdetaljer."
+  },
   "common": {
     "username": "Användarnamn",
     "password": "Lösenord"
