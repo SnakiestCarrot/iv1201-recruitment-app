@@ -80,7 +80,11 @@ export const recruiterService = {
    * @returns A promise that resolves when the status is successfully updated.
    * @throws {Error} If the request fails or returns a non-OK status.
    */
-  async updateApplicationStatus(id: number, status: string): Promise<void> {
+  async updateApplicationStatus(
+    id: number,
+    status: string,
+    version: number
+  ): Promise<void> {
     const token = localStorage.getItem('authToken');
 
     const response = await fetch(`${BASE_URL}/applications/${id}/status`, {
@@ -89,10 +93,13 @@ export const recruiterService = {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ status }),
+      body: JSON.stringify({ status, version }),
     });
 
     if (!response.ok) {
+      if (response.status === 409) {
+        throw new Error('CONFLICT');
+      }
       const errorText = await response.text();
       throw new Error(errorText || 'Failed to update application status');
     }

@@ -25,6 +25,7 @@ const mockApplication = {
   email: 'john@example.com',
   pnr: '19900101-1234',
   status: 'UNHANDLED',
+  version: 0,
   competences: [{ competenceId: 1, name: 'Java', yearsOfExperience: 3 }],
   availabilities: [{ fromDate: '2026-06-01', toDate: '2026-08-31' }],
 };
@@ -44,6 +45,7 @@ describe('ApplicationDetail Component', () => {
       updating: false,
       updateError: '',
       updateSuccess: false,
+      isConflict: false,
       updateStatus: mockUpdateStatus,
     });
 
@@ -60,6 +62,7 @@ describe('ApplicationDetail Component', () => {
       updating: false,
       updateError: '',
       updateSuccess: false,
+      isConflict: false,
       updateStatus: mockUpdateStatus,
     });
 
@@ -76,6 +79,7 @@ describe('ApplicationDetail Component', () => {
       updating: false,
       updateError: '',
       updateSuccess: false,
+      isConflict: false,
       updateStatus: mockUpdateStatus,
     });
 
@@ -95,6 +99,7 @@ describe('ApplicationDetail Component', () => {
       updating: false,
       updateError: '',
       updateSuccess: false,
+      isConflict: false,
       updateStatus: mockUpdateStatus,
     });
 
@@ -112,6 +117,7 @@ describe('ApplicationDetail Component', () => {
       updating: false,
       updateError: '',
       updateSuccess: false,
+      isConflict: false,
       updateStatus: mockUpdateStatus,
     });
 
@@ -129,6 +135,7 @@ describe('ApplicationDetail Component', () => {
       updating: false,
       updateError: '',
       updateSuccess: false,
+      isConflict: false,
       updateStatus: mockUpdateStatus,
     });
 
@@ -147,6 +154,7 @@ describe('ApplicationDetail Component', () => {
       updating: false,
       updateError: '',
       updateSuccess: false,
+      isConflict: false,
       updateStatus: mockUpdateStatus,
     });
 
@@ -165,6 +173,7 @@ describe('ApplicationDetail Component', () => {
       updating: false,
       updateError: '',
       updateSuccess: false,
+      isConflict: false,
       updateStatus: mockUpdateStatus,
     });
 
@@ -182,6 +191,7 @@ describe('ApplicationDetail Component', () => {
       updating: false,
       updateError: '',
       updateSuccess: true,
+      isConflict: false,
       updateStatus: mockUpdateStatus,
     });
 
@@ -198,12 +208,33 @@ describe('ApplicationDetail Component', () => {
       updating: false,
       updateError: 'Failed',
       updateSuccess: false,
+      isConflict: false,
       updateStatus: mockUpdateStatus,
     });
 
     render(<ApplicationDetail />);
 
     expect(screen.getByText('recruiter.status-update-error')).toBeInTheDocument();
+  });
+
+  it('shows conflict message when isConflict is true', () => {
+    (useApplicationDetailPresenter as any).mockReturnValue({
+      application: mockApplication,
+      loading: false,
+      error: '',
+      updating: false,
+      updateError: 'CONFLICT',
+      updateSuccess: false,
+      isConflict: true,
+      updateStatus: mockUpdateStatus,
+    });
+
+    render(<ApplicationDetail />);
+
+    expect(screen.getByText('recruiter.status-conflict')).toBeInTheDocument();
+    expect(
+      screen.queryByText('recruiter.status-update-error')
+    ).not.toBeInTheDocument();
   });
 
   it('navigates back to list when back button is clicked', () => {
@@ -214,6 +245,7 @@ describe('ApplicationDetail Component', () => {
       updating: false,
       updateError: '',
       updateSuccess: false,
+      isConflict: false,
       updateStatus: mockUpdateStatus,
     });
 

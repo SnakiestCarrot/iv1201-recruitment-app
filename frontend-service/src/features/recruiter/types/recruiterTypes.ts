@@ -48,6 +48,8 @@ export interface ApplicationDetail {
   pnr: string;
   /** The current status of the application (UNHANDLED, ACCEPTED, REJECTED). */
   status: string;
+  /** Version number for optimistic locking. */
+  version: number;
   /** Array of competences with years of experience. */
   competences: CompetenceEntry[];
   /** Array of availability periods. */

@@ -8,6 +8,7 @@ package com.iv1201.recruitment.dto;
 public class StatusUpdateDTO {
 
     private String status;
+    private Long version;
 
     public String getStatus() {
         return status;
@@ -15,5 +16,13 @@ public class StatusUpdateDTO {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 }

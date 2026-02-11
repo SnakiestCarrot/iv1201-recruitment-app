@@ -25,6 +25,10 @@ public class Person {
     @Column(name = "status")
     private String status;
 
+    @Version
+    @Column(name = "version")
+    private Long version;
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -42,4 +46,7 @@ public class Person {
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+
+    public Long getVersion() { return version; }
+    public void setVersion(Long version) { this.version = version; }
 }

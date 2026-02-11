@@ -75,7 +75,8 @@
     "detail-error": "Kunde inte ladda ansökningsdetaljer.",
     "search-name": "Sök på namn...",
     "filter-all": "Alla statusar",
-    "no-results": "Inga ansökningar matchar dina filter."
+    "no-results": "Inga ansökningar matchar dina filter.",
+    "status-conflict": "Denna ansökan har redan uppdaterats av en annan rekryterare. Sidan har uppdaterats med senaste data."
   },
   "competence": {
     "ticket sales": "Biljettförsäljning",

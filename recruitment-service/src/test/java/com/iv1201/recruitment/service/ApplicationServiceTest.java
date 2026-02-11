@@ -13,6 +13,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -135,5 +137,55 @@ class ApplicationServiceTest {
         assertThatThrownBy(() -> applicationService.createApplication(dto, 1L))
             .isInstanceOf(RuntimeException.class)
             .hasMessage("Competence not found");
+    }
+
+    @Test
+    void updateApplicationStatus_successWhenVersionMatches() {
+        Person person = new Person();
+        person.setId(1L);
+        person.setStatus("UNHANDLED");
+        person.setVersion(0L);
+        when(personRepository.findById(1L)).thenReturn(Optional.of(person));
+
+        applicationService.updateApplicationStatus(1L, "ACCEPTED", 0L);
+
+        assertThat(person.getStatus()).isEqualTo("ACCEPTED");
+        verify(personRepository).save(person);
+    }
+
+    @Test
+    void updateApplicationStatus_throwsConflictWhenVersionMismatch() {
+        Person person = new Person();
+        person.setId(1L);
+        person.setStatus("UNHANDLED");
+        person.setVersion(2L);
+        when(personRepository.findById(1L)).thenReturn(Optional.of(person));
+
+        assertThatThrownBy(() -> applicationService.updateApplicationStatus(1L, "ACCEPTED", 1L))
+            .isInstanceOf(ResponseStatusException.class)
+            .satisfies(ex -> {
+                ResponseStatusException rse = (ResponseStatusException) ex;
+                assertThat(rse.getStatusCode().value()).isEqualTo(409);
+            });
+
+        verify(personRepository, never()).save(any());
+    }
+
+    @Test
+    void updateApplicationStatus_throwsConflictOnOptimisticLockException() {
+        Person person = new Person();
+        person.setId(1L);
+        person.setStatus("UNHANDLED");
+        person.setVersion(0L);
+        when(personRepository.findById(1L)).thenReturn(Optional.of(person));
+        when(personRepository.save(any())).thenThrow(
+            new ObjectOptimisticLockingFailureException(Person.class.getName(), 1L));
+
+        assertThatThrownBy(() -> applicationService.updateApplicationStatus(1L, "ACCEPTED", 0L))
+            .isInstanceOf(ResponseStatusException.class)
+            .satisfies(ex -> {
+                ResponseStatusException rse = (ResponseStatusException) ex;
+                assertThat(rse.getStatusCode().value()).isEqualTo(409);
+            });
     }
 }

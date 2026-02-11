@@ -16,6 +16,7 @@ public class ApplicationDetailDTO {
     private String email;
     private String pnr;
     private String status;
+    private Long version;
     private List<CompetenceDTO> competences;
     private List<AvailabilityDTO> availabilities;
 
@@ -65,6 +66,14 @@ public class ApplicationDetailDTO {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
     public List<CompetenceDTO> getCompetences() {

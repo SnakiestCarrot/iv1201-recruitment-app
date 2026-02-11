@@ -66,7 +66,7 @@ public class ApplicationController {
     @PutMapping("/{id}/status")
     public ResponseEntity<Void> updateApplicationStatus(@PathVariable Long id,
                                                          @RequestBody StatusUpdateDTO statusUpdateDTO) {
-        applicationService.updateApplicationStatus(id, statusUpdateDTO.getStatus());
+        applicationService.updateApplicationStatus(id, statusUpdateDTO.getStatus(), statusUpdateDTO.getVersion());
         return ResponseEntity.ok().build();
     }
 }
