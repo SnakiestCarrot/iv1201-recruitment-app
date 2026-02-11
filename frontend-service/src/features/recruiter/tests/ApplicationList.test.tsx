@@ -17,6 +17,16 @@ vi.mock('react-i18next', () => ({
 
 vi.mock('../presenters/useApplicationListPresenter');
 
+const baseMock = {
+  loading: false,
+  error: '',
+  statusFilter: 'ALL',
+  setStatusFilter: vi.fn(),
+  nameSearch: '',
+  setNameSearch: vi.fn(),
+  refetch: vi.fn(),
+};
+
 describe('ApplicationList Component', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -24,10 +34,10 @@ describe('ApplicationList Component', () => {
 
   it('shows loading state', () => {
     (useApplicationListPresenter as any).mockReturnValue({
+      ...baseMock,
       applications: [],
+      totalCount: 0,
       loading: true,
-      error: '',
-      refetch: vi.fn(),
     });
 
     render(<ApplicationList />);
@@ -37,10 +47,10 @@ describe('ApplicationList Component', () => {
 
   it('shows error state', () => {
     (useApplicationListPresenter as any).mockReturnValue({
+      ...baseMock,
       applications: [],
-      loading: false,
+      totalCount: 0,
       error: 'Something went wrong',
-      refetch: vi.fn(),
     });
 
     render(<ApplicationList />);
@@ -50,10 +60,9 @@ describe('ApplicationList Component', () => {
 
   it('shows empty state when no applications', () => {
     (useApplicationListPresenter as any).mockReturnValue({
+      ...baseMock,
       applications: [],
-      loading: false,
-      error: '',
-      refetch: vi.fn(),
+      totalCount: 0,
     });
 
     render(<ApplicationList />);
@@ -61,33 +70,45 @@ describe('ApplicationList Component', () => {
     expect(screen.getByText('recruiter.no-applications')).toBeInTheDocument();
   });
 
+  it('shows no-results state when filters match nothing', () => {
+    (useApplicationListPresenter as any).mockReturnValue({
+      ...baseMock,
+      applications: [],
+      totalCount: 3,
+    });
+
+    render(<ApplicationList />);
+
+    expect(screen.getByText('recruiter.no-results')).toBeInTheDocument();
+  });
+
   it('renders applications in a table', () => {
     (useApplicationListPresenter as any).mockReturnValue({
+      ...baseMock,
       applications: [
         { personID: 1, fullName: 'John Doe', status: 'UNHANDLED' },
         { personID: 2, fullName: 'Jane Smith', status: 'ACCEPTED' },
       ],
-      loading: false,
-      error: '',
-      refetch: vi.fn(),
+      totalCount: 2,
     });
 
     render(<ApplicationList />);
 
     expect(screen.getByText('John Doe')).toBeInTheDocument();
     expect(screen.getByText('Jane Smith')).toBeInTheDocument();
-    expect(screen.getByText('recruiter.unhandled')).toBeInTheDocument();
-    expect(screen.getByText('recruiter.accepted')).toBeInTheDocument();
+    const statusBadges = screen.getAllByText('recruiter.unhandled');
+    expect(statusBadges.length).toBeGreaterThanOrEqual(1);
+    const acceptedBadges = screen.getAllByText('recruiter.accepted');
+    expect(acceptedBadges.length).toBeGreaterThanOrEqual(1);
   });
 
   it('navigates to detail page when a row is clicked', () => {
     (useApplicationListPresenter as any).mockReturnValue({
+      ...baseMock,
       applications: [
         { personID: 1, fullName: 'John Doe', status: 'UNHANDLED' },
       ],
-      loading: false,
-      error: '',
-      refetch: vi.fn(),
+      totalCount: 1,
     });
 
     render(<ApplicationList />);
@@ -99,10 +120,9 @@ describe('ApplicationList Component', () => {
 
   it('displays the page title', () => {
     (useApplicationListPresenter as any).mockReturnValue({
+      ...baseMock,
       applications: [],
-      loading: false,
-      error: '',
-      refetch: vi.fn(),
+      totalCount: 0,
     });
 
     render(<ApplicationList />);
@@ -112,18 +132,69 @@ describe('ApplicationList Component', () => {
 
   it('applies correct status CSS classes', () => {
     (useApplicationListPresenter as any).mockReturnValue({
+      ...baseMock,
       applications: [
         { personID: 1, fullName: 'John Doe', status: 'REJECTED' },
       ],
-      loading: false,
-      error: '',
-      refetch: vi.fn(),
+      totalCount: 1,
     });
 
     render(<ApplicationList />);
 
-    const statusBadge = screen.getByText('recruiter.rejected');
-    expect(statusBadge).toHaveClass('recruiter-status');
-    expect(statusBadge).toHaveClass('recruiter-status-rejected');
+    const statusBadges = screen.getAllByText('recruiter.rejected');
+    const tableBadge = statusBadges.find((el) =>
+      el.classList.contains('recruiter-status')
+    );
+    expect(tableBadge).toBeDefined();
+    expect(tableBadge).toHaveClass('recruiter-status-rejected');
+  });
+
+  it('renders search input and status filter', () => {
+    (useApplicationListPresenter as any).mockReturnValue({
+      ...baseMock,
+      applications: [],
+      totalCount: 0,
+    });
+
+    render(<ApplicationList />);
+
+    expect(screen.getByPlaceholderText('recruiter.search-name')).toBeInTheDocument();
+    expect(screen.getByRole('combobox')).toBeInTheDocument();
+  });
+
+  it('calls setNameSearch when typing in search input', () => {
+    const setNameSearch = vi.fn();
+    (useApplicationListPresenter as any).mockReturnValue({
+      ...baseMock,
+      applications: [],
+      totalCount: 0,
+      setNameSearch,
+    });
+
+    render(<ApplicationList />);
+
+    fireEvent.change(screen.getByPlaceholderText('recruiter.search-name'), {
+      target: { value: 'John' },
+    });
+
+    expect(setNameSearch).toHaveBeenCalledWith('John');
+  });
+
+  it('calls setStatusFilter when changing status dropdown', () => {
+    const setStatusFilter = vi.fn();
+    (useApplicationListPresenter as any).mockReturnValue({
+      ...baseMock,
+      applications: [],
+      totalCount: 0,
+      setStatusFilter,
+    });
+
+    render(<ApplicationList />);
+
+    fireEvent.change(screen.getByRole('combobox'), {
+      target: { value: 'ACCEPTED' },
+    });
+
+    expect(setStatusFilter).toHaveBeenCalledWith('ACCEPTED');
   });
 });

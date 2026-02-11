@@ -72,7 +72,10 @@
     "accepted": "Accepted",
     "rejected": "Rejected",
     "detail-title": "Application Details",
-    "detail-error": "Failed to load application details."
+    "detail-error": "Failed to load application details.",
+    "search-name": "Search by name...",
+    "filter-all": "All Statuses",
+    "no-results": "No applications match your filters."
   },
   "common": {
     "username": "Username",

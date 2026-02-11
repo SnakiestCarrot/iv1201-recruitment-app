@@ -72,7 +72,10 @@
     "accepted": "Accepterad",
     "rejected": "Avvisad",
     "detail-title": "Ansökningsdetaljer",
-    "detail-error": "Kunde inte ladda ansökningsdetaljer."
+    "detail-error": "Kunde inte ladda ansökningsdetaljer.",
+    "search-name": "Sök på namn...",
+    "filter-all": "Alla statusar",
+    "no-results": "Inga ansökningar matchar dina filter."
   },
   "common": {
     "username": "Användarnamn",
