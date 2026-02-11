@@ -77,6 +77,11 @@
     "filter-all": "All Statuses",
     "no-results": "No applications match your filters."
   },
+  "competence": {
+    "ticket sales": "Ticket Sales",
+    "lotteries": "Lotteries",
+    "roller coaster operation": "Roller Coaster Operation"
+  },
   "common": {
     "username": "Username",
     "password": "Password"

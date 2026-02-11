@@ -100,8 +100,8 @@ describe('ApplicationForm Component', () => {
     expect(
       screen.getByText('application.select-competence')
     ).toBeInTheDocument();
-    expect(screen.getByText('JavaScript')).toBeInTheDocument();
-    expect(screen.getByText('Python')).toBeInTheDocument();
+    expect(screen.getByText('competence.JavaScript')).toBeInTheDocument();
+    expect(screen.getByText('competence.Python')).toBeInTheDocument();
   });
 
   it('calls setCurrentCompetenceId when competence is selected', () => {
@@ -159,8 +159,8 @@ describe('ApplicationForm Component', () => {
 
     render(<ApplicationForm />);
 
-    expect(screen.getByText('JavaScript')).toBeInTheDocument();
-    expect(screen.getByText('Python')).toBeInTheDocument();
+    expect(screen.getByText('competence.JavaScript')).toBeInTheDocument();
+    expect(screen.getByText('competence.Python')).toBeInTheDocument();
     expect(screen.getByText('3 application.years-exp')).toBeInTheDocument();
     expect(screen.getByText('2 application.years-exp')).toBeInTheDocument();
   });

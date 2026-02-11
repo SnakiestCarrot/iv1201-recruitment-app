@@ -113,7 +113,7 @@ export const ApplicationForm: React.FC = () => {
               <option value="">{t('application.select-competence')}</option>
               {availableCompetences.map((c) => (
                 <option key={c.competenceId} value={c.competenceId}>
-                  {c.name}
+                  {t(`competence.${c.name}`)}
                 </option>
               ))}
             </select>
@@ -140,7 +140,7 @@ export const ApplicationForm: React.FC = () => {
                 <li key={idx} className="application-list-item">
                   <span className="application-list-item-content">
                     <span className="application-list-item-label">
-                      {item.name}
+                      {t(`competence.${item.name}`)}
                     </span>
                     <span className="application-list-item-value">
                       {item.yearsOfExperience} {t('application.years-exp')}

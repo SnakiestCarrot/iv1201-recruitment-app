@@ -87,7 +87,7 @@ export const ApplicationDetail = () => {
                 key={comp.competenceId}
                 className="recruiter-detail-list-item"
               >
-                <span className="recruiter-detail-comp-name">{comp.name}</span>
+                <span className="recruiter-detail-comp-name">{t(`competence.${comp.name}`)}</span>
                 <span className="recruiter-detail-comp-years">
                   {comp.yearsOfExperience} {t('recruiter.years-exp')}
                 </span>
