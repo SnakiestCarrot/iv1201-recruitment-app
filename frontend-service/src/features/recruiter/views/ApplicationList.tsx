@@ -10,7 +10,16 @@ import '../styles/ApplicationList.css';
  * @returns The application list component.
  */
 export const ApplicationList = () => {
-  const { applications, loading, error } = useApplicationListPresenter();
+  const {
+    applications,
+    totalCount,
+    loading,
+    error,
+    statusFilter,
+    setStatusFilter,
+    nameSearch,
+    setNameSearch,
+  } = useApplicationListPresenter();
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -28,8 +37,30 @@ export const ApplicationList = () => {
         {t('recruiter.applications-title')}
       </h1>
 
-      {applications.length === 0 ? (
+      <div className="recruiter-filters">
+        <input
+          type="text"
+          className="recruiter-search-input"
+          placeholder={t('recruiter.search-name')}
+          value={nameSearch}
+          onChange={(e) => setNameSearch(e.target.value)}
+        />
+        <select
+          className="recruiter-status-filter"
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+        >
+          <option value="ALL">{t('recruiter.filter-all')}</option>
+          <option value="UNHANDLED">{t('recruiter.unhandled')}</option>
+          <option value="ACCEPTED">{t('recruiter.accepted')}</option>
+          <option value="REJECTED">{t('recruiter.rejected')}</option>
+        </select>
+      </div>
+
+      {totalCount === 0 ? (
         <p className="recruiter-empty">{t('recruiter.no-applications')}</p>
+      ) : applications.length === 0 ? (
+        <p className="recruiter-empty">{t('recruiter.no-results')}</p>
       ) : (
         <table className="recruiter-table">
           <thead>
