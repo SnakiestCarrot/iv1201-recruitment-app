@@ -100,7 +100,7 @@ describe('ApplicationDetail Component', () => {
 
     render(<ApplicationDetail />);
 
-    expect(screen.getByText('Java')).toBeInTheDocument();
+    expect(screen.getByText('competence.Java')).toBeInTheDocument();
     expect(screen.getByText('3 recruiter.years-exp')).toBeInTheDocument();
   });
 

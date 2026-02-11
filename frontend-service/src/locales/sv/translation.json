@@ -77,6 +77,11 @@
     "filter-all": "Alla statusar",
     "no-results": "Inga ansökningar matchar dina filter."
   },
+  "competence": {
+    "ticket sales": "Biljettförsäljning",
+    "lotteries": "Lotterier",
+    "roller coaster operation": "Berg-och-dalbana"
+  },
   "common": {
     "username": "Användarnamn",
     "password": "Lösenord"
