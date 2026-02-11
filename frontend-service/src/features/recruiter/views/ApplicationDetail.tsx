@@ -22,6 +22,7 @@ export const ApplicationDetail = () => {
     updating,
     updateError,
     updateSuccess,
+    isConflict,
     updateStatus,
   } = useApplicationDetailPresenter(Number(id));
 
@@ -134,12 +135,17 @@ export const ApplicationDetail = () => {
             </button>
           ))}
         </div>
+        {isConflict && (
+          <p className="recruiter-error-msg">
+            {t('recruiter.status-conflict')}
+          </p>
+        )}
         {updateSuccess && (
           <p className="recruiter-success-msg">
             {t('recruiter.status-updated')}
           </p>
         )}
-        {updateError && (
+        {updateError && !isConflict && (
           <p className="recruiter-error-msg">
             {t('recruiter.status-update-error')}
           </p>

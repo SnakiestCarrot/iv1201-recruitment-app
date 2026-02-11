@@ -75,7 +75,8 @@
     "detail-error": "Failed to load application details.",
     "search-name": "Search by name...",
     "filter-all": "All Statuses",
-    "no-results": "No applications match your filters."
+    "no-results": "No applications match your filters.",
+    "status-conflict": "This application was already updated by another recruiter. The page has been refreshed with the latest data."
   },
   "competence": {
     "ticket sales": "Ticket Sales",

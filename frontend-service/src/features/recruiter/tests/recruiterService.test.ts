@@ -92,28 +92,40 @@ describe('recruiterService', () => {
   });
 
   describe('updateApplicationStatus', () => {
-    it('updates status successfully', async () => {
+    it('updates status successfully with version', async () => {
       fetchMock.mockResolvedValue({ ok: true });
 
-      await recruiterService.updateApplicationStatus(1, 'ACCEPTED');
+      await recruiterService.updateApplicationStatus(1, 'ACCEPTED', 0);
 
       expect(fetchMock).toHaveBeenCalledWith(
         expect.stringContaining('/applications/1/status'),
         expect.objectContaining({
           method: 'PUT',
-          body: JSON.stringify({ status: 'ACCEPTED' }),
+          body: JSON.stringify({ status: 'ACCEPTED', version: 0 }),
         })
       );
+    });
+
+    it('throws CONFLICT error on 409 response', async () => {
+      fetchMock.mockResolvedValue({
+        ok: false,
+        status: 409,
+      });
+
+      await expect(
+        recruiterService.updateApplicationStatus(1, 'ACCEPTED', 0)
+      ).rejects.toThrow('CONFLICT');
     });
 
     it('throws an error when status update fails', async () => {
       fetchMock.mockResolvedValue({
         ok: false,
+        status: 400,
         text: async () => 'Invalid status',
       });
 
       await expect(
-        recruiterService.updateApplicationStatus(1, 'INVALID')
+        recruiterService.updateApplicationStatus(1, 'INVALID', 0)
       ).rejects.toThrow('Invalid status');
     });
   });

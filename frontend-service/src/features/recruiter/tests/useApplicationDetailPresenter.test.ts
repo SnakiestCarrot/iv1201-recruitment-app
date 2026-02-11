@@ -12,6 +12,7 @@ const mockApplication = {
   email: 'john@example.com',
   pnr: '19900101-1234',
   status: 'UNHANDLED',
+  version: 0,
   competences: [{ competenceId: 1, name: 'Java', yearsOfExperience: 3 }],
   availabilities: [{ fromDate: '2026-06-01', toDate: '2026-08-31' }],
 };
@@ -51,7 +52,7 @@ describe('useApplicationDetailPresenter', () => {
     expect(result.current.application).toBeNull();
   });
 
-  it('updates status successfully', async () => {
+  it('updates status successfully and increments version', async () => {
     (recruiterService.getApplicationById as any).mockResolvedValue(mockApplication);
     (recruiterService.updateApplicationStatus as any).mockResolvedValue(undefined);
 
@@ -65,9 +66,12 @@ describe('useApplicationDetailPresenter', () => {
       await result.current.updateStatus('ACCEPTED');
     });
 
+    expect(recruiterService.updateApplicationStatus).toHaveBeenCalledWith(1, 'ACCEPTED', 0);
     expect(result.current.application?.status).toBe('ACCEPTED');
+    expect(result.current.application?.version).toBe(1);
     expect(result.current.updateSuccess).toBe(true);
     expect(result.current.updateError).toBe('');
+    expect(result.current.isConflict).toBe(false);
   });
 
   it('handles status update error', async () => {
@@ -88,5 +92,31 @@ describe('useApplicationDetailPresenter', () => {
 
     expect(result.current.updateError).toBe('Update failed');
     expect(result.current.updateSuccess).toBe(false);
+    expect(result.current.isConflict).toBe(false);
+  });
+
+  it('handles version conflict by re-fetching application', async () => {
+    const updatedApplication = { ...mockApplication, status: 'REJECTED', version: 1 };
+    (recruiterService.getApplicationById as any)
+      .mockResolvedValueOnce(mockApplication)
+      .mockResolvedValueOnce(updatedApplication);
+    (recruiterService.updateApplicationStatus as any).mockRejectedValue(
+      new Error('CONFLICT')
+    );
+
+    const { result } = renderHook(() => useApplicationDetailPresenter(1));
+
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false);
+    });
+
+    await act(async () => {
+      await result.current.updateStatus('ACCEPTED');
+    });
+
+    expect(result.current.isConflict).toBe(true);
+    expect(result.current.updateError).toBe('CONFLICT');
+    expect(result.current.application?.status).toBe('REJECTED');
+    expect(result.current.application?.version).toBe(1);
   });
 });

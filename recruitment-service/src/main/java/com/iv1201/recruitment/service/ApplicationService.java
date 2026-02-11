@@ -6,6 +6,7 @@ import com.iv1201.recruitment.repository.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -153,6 +154,7 @@ public class ApplicationService {
         dto.setEmail(person.getEmail());
         dto.setPnr(person.getPnr());
         dto.setStatus(person.getStatus() != null ? person.getStatus() : "UNHANDLED");
+        dto.setVersion(person.getVersion());
 
         dto.setCompetences(profiles.stream().map(p -> {
             CompetenceDTO c = new CompetenceDTO();
@@ -173,17 +175,20 @@ public class ApplicationService {
     }
 
     /**
-     * Updates the status of a specific recruitment application.
+     * Updates the status of a specific recruitment application with optimistic locking.
      *
      * Validates that the new status is one of UNHANDLED, ACCEPTED, or REJECTED.
-     * If valid, updates and persists the new status.
+     * Compares the expected version from the client against the current database version
+     * to detect concurrent modifications. If another user has already modified the
+     * application, a 409 Conflict is returned.
      *
      * @param id the person ID of the application to update
      * @param status the new status value
+     * @param expectedVersion the version the client loaded, used for optimistic locking
      * @throws ResponseStatusException with 404 if no person is found,
-     *         or 400 if the status value is invalid
+     *         400 if the status value is invalid, or 409 if the version does not match
      */
-    public void updateApplicationStatus(Long id, String status) {
+    public void updateApplicationStatus(Long id, String status, Long expectedVersion) {
         if (!VALID_STATUSES.contains(status)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Invalid status. Must be one of: UNHANDLED, ACCEPTED, REJECTED");
@@ -192,8 +197,19 @@ public class ApplicationService {
         Person person = personRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Application not found"));
 
+        Long currentVersion = person.getVersion() != null ? person.getVersion() : 0L;
+        if (!currentVersion.equals(expectedVersion)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "This application has been modified by another user. Please refresh and try again.");
+        }
+
         person.setStatus(status);
-        personRepository.save(person);
+        try {
+            personRepository.save(person);
+        } catch (ObjectOptimisticLockingFailureException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "This application has been modified by another user. Please refresh and try again.");
+        }
     }
 
     /**
