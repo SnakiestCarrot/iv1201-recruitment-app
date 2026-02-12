@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { authService } from '../services/authService';
-import { type AuthRequest, type AuthState } from '../types/authTypes';
+import {
+  type ApplicantRegisterRequest,
+  type AuthRequest,
+  type AuthState,
+} from '../types/authTypes';
 import { AUTH_CHANGED_EVENT } from '../hooks/useAuth';
 
 /**
@@ -21,7 +25,7 @@ export const useAuthPresenter = () => {
    *
    * @param credentials - The user's registration credentials (username and password).
    */
-  const registerUser = async (credentials: AuthRequest) => {
+  const registerUser = async (credentials: ApplicantRegisterRequest) => {
     setState({ status: 'loading', message: 'Registering...' });
     try {
       const successMessage = await authService.register(credentials);

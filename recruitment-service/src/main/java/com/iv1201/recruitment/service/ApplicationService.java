@@ -95,8 +95,6 @@ public class ApplicationService {
         person.setId(userId);
         person.setName(dto.getName());
         person.setSurname(dto.getSurname());
-        person.setEmail(dto.getEmail());
-        person.setPnr(dto.getPnr());
 
         if (person.getStatus() == null) {
             person.setStatus("UNHANDLED");
@@ -126,6 +124,21 @@ public class ApplicationService {
                 availabilityRepository.save(availability);
             });
         }
+    }
+
+    /**
+     * Creates a person record with basic information during registration.
+     * Called by the auth service as part of the registration saga.
+     *
+     * @param dto the person data containing personId, email, and pnr
+     */
+    public void createPerson(PersonCreateDTO dto) {
+        Person person = new Person();
+        person.setId(dto.getPersonId());
+        person.setEmail(dto.getEmail());
+        person.setPnr(dto.getPnr());
+        person.setStatus("UNHANDLED");
+        personRepository.save(person);
     }
 
     private static final Set<String> VALID_STATUSES = Set.of("UNHANDLED", "ACCEPTED", "REJECTED");

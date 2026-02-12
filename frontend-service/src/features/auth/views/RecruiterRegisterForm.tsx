@@ -20,6 +20,8 @@ export const RecruiterRegisterForm = () => {
   const { t } = useTranslation();
 
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [pnr, setPnr] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [secretCode, setSecretCode] = useState('');
@@ -44,7 +46,7 @@ export const RecruiterRegisterForm = () => {
       return;
     }
 
-    registerRecruiter({ username, password, secretCode });
+    registerRecruiter({ username, password, email, pnr, secretCode });
   };
 
   return (
@@ -61,6 +63,30 @@ export const RecruiterRegisterForm = () => {
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            required
+            className="register-input"
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="rec-email">{t('common.email')}</label>
+          <input
+            id="rec-email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="register-input"
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="rec-pnr">{t('common.pnr')}</label>
+          <input
+            id="rec-pnr"
+            type="text"
+            value={pnr}
+            onChange={(e) => setPnr(e.target.value)}
             required
             className="register-input"
           />
