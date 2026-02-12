@@ -5,57 +5,45 @@ import { useTranslation } from 'react-i18next';
 import { LanguageDropdown } from '../../../components/LanguageDropdown';
 import '../styles/RegisterForm.css';
 
-/**
- * Registration form component for new applicant users.
- * Provides input fields for username, password, and password confirmation.
- * Validates password length (minimum 6 characters) and matching passwords.
- * Includes language selection and links to login and recruiter registration.
- *
- * @returns The registration form component.
- */
 export const RegisterForm = () => {
-  const { state, registerUser } = useAuthPresenter();
+  const { state, registerUser, validationErrors, clearError } = useAuthPresenter();
   const { t } = useTranslation();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [validationError, setValidationError] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setValidationError('');
+    registerUser({ username, password, confirmPassword });
+  };
 
-    if (password !== confirmPassword) {
-      setValidationError(t('auth.password-mismatch'));
-      return;
+  // Helper to update state and notify presenter to clear error
+  const handleInputChange = (setter: any, fieldName: string, value: string) => {
+    setter(value);
+    if (validationErrors[fieldName]) {
+      clearError(fieldName);
     }
-
-    if (password.length < 6) {
-      setValidationError(t('auth.insufficient-password-length'));
-      return;
-    }
-
-    registerUser({ username, password });
   };
 
   return (
     <div className="auth-card">
       <LanguageDropdown />
-
       <h2>{t('auth.register')}</h2>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         <div className="form-group">
           <label htmlFor="reg-username">{t('common.username')}</label>
           <input
             id="reg-username"
             type="text"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-            className="register-input"
+            onChange={(e) => handleInputChange(setUsername, 'username', e.target.value)}
+            className={`register-input ${validationErrors.username ? 'register-input-error' : ''}`}
           />
+          {validationErrors.username && (
+            <p className="status-msg error">{validationErrors.username}</p>
+          )}
         </div>
 
         <div className="form-group">
@@ -64,10 +52,12 @@ export const RegisterForm = () => {
             id="reg-password"
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            className="register-input"
+            onChange={(e) => handleInputChange(setPassword, 'password', e.target.value)}
+            className={`register-input ${validationErrors.password ? 'register-input-error' : ''}`}
           />
+          {validationErrors.password && (
+            <p className="status-msg error">{validationErrors.password}</p>
+          )}
         </div>
 
         <div className="form-group">
@@ -76,10 +66,12 @@ export const RegisterForm = () => {
             id="reg-confirm"
             type="password"
             value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-            className={`register-input ${validationError ? 'register-input-error' : ''}`}
+            onChange={(e) => handleInputChange(setConfirmPassword, 'confirmPassword', e.target.value)}
+            className={`register-input ${validationErrors.confirmPassword ? 'register-input-error' : ''}`}
           />
+          {validationErrors.confirmPassword && (
+            <p className="status-msg error">{validationErrors.confirmPassword}</p>
+          )}
         </div>
 
         <button type="submit" disabled={state.status === 'loading'}>
@@ -87,9 +79,7 @@ export const RegisterForm = () => {
         </button>
       </form>
 
-      {validationError && <p className="status-msg error">{validationError}</p>}
-
-      {state.message && !validationError && (
+      {state.message && Object.keys(validationErrors).length === 0 && (
         <p className={`status-msg ${state.status}`}>{state.message}</p>
       )}
 
@@ -97,7 +87,6 @@ export const RegisterForm = () => {
         <p>{t('auth.already-have-account')}</p>
         <Link to="/login">{t('auth.login-here')}</Link>
       </div>
-
       <div className="register-footer">
         <p>{t('auth.register-as-recruiter')}</p>
         <Link to="/register/recruiter">{t('auth.recruiter-register')}</Link>

@@ -5,32 +5,28 @@ import {
   type ChangeEvent,
   type FormEvent,
 } from 'react';
-import { applicationService } from '../services/applicationService';
+import { applicationService } from '../../application/services/applicationService'; // Check this path matches your structure
 import type {
   Competence,
   CompetenceProfileDTO,
   AvailabilityDTO,
   ApplicationCreateDTO,
   ApplicationStatus,
-} from '../types/applicationTypes';
+} from '../../application/types/applicationTypes'; // Check this path matches your structure
+import { ApplicationSchema } from '../../../utils/validation'; // Importing the Zod schema
 
 /**
  * Custom React hook for managing job application form state and operations.
  * Handles fetching available competences, managing personal information,
  * adding/removing competences and availability periods, and submitting applications.
- *
- * @returns An object containing:
- * - State variables for competences, status, personal info, and form inputs
- * - Setter functions for form inputs
- * - Handler functions for managing competences and availabilities
- * - Submit function for the application
  */
 export const useApplicationPresenter = () => {
-  const [availableCompetences, setAvailableCompetences] = useState<
-    Competence[]
-  >([]);
+  const [availableCompetences, setAvailableCompetences] = useState<Competence[]>([]);
   const [status, setStatus] = useState<ApplicationStatus>('idle');
   const [errorMessage, setErrorMessage] = useState<string>('');
+  
+  // NEW: State to hold validation errors
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const [personalInfo, setPersonalInfo] = useState({
     name: '',
@@ -39,12 +35,8 @@ export const useApplicationPresenter = () => {
     pnr: '',
   });
 
-  const [addedCompetences, setAddedCompetences] = useState<
-    CompetenceProfileDTO[]
-  >([]);
-  const [addedAvailabilities, setAddedAvailabilities] = useState<
-    AvailabilityDTO[]
-  >([]);
+  const [addedCompetences, setAddedCompetences] = useState<CompetenceProfileDTO[]>([]);
+  const [addedAvailabilities, setAddedAvailabilities] = useState<AvailabilityDTO[]>([]);
 
   const [currentCompetenceId, setCurrentCompetenceId] = useState<string>('');
   const [currentYoe, setCurrentYoe] = useState<string>('');
@@ -70,23 +62,28 @@ export const useApplicationPresenter = () => {
   }, []);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadCompetences();
   }, [loadCompetences]);
 
   /**
    * Handles changes to personal information input fields.
-   *
-   * @param e - The change event from an input element.
    */
   const handleInfoChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setPersonalInfo({ ...personalInfo, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setPersonalInfo({ ...personalInfo, [name]: value });
+    
+    // Optional: Clear error for this field as the user types
+    if (errors[name]) {
+      setErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
   };
 
   /**
    * Adds a competence with years of experience to the application.
-   * Validates that both competenceId and years of experience are provided.
-   * Clears the current input fields after adding.
    */
   const addCompetence = () => {
     if (!currentCompetenceId || !currentYoe) return;
@@ -111,8 +108,6 @@ export const useApplicationPresenter = () => {
 
   /**
    * Removes a competence from the application at the specified index.
-   *
-   * @param index - The index of the competence to remove.
    */
   const removeCompetence = (index: number) => {
     setAddedCompetences((prev) => prev.filter((_, i) => i !== index));
@@ -120,8 +115,6 @@ export const useApplicationPresenter = () => {
 
   /**
    * Adds an availability period to the application.
-   * Validates that both from date and to date are provided.
-   * Clears the current date input fields after adding.
    */
   const addAvailability = () => {
     if (!currentFromDate || !currentToDate) return;
@@ -137,8 +130,6 @@ export const useApplicationPresenter = () => {
 
   /**
    * Removes an availability period from the application at the specified index.
-   *
-   * @param index - The index of the availability period to remove.
    */
   const removeAvailability = (index: number) => {
     setAddedAvailabilities((prev) => prev.filter((_, i) => i !== index));
@@ -146,13 +137,28 @@ export const useApplicationPresenter = () => {
 
   /**
    * Submits the complete job application to the server.
-   * Combines personal information, competences, and availabilities into a single payload.
-   * Updates status to loading, success, or error based on the result.
-   *
-   * @param e - The form submit event.
+   * NOW INCLUDES FRONTEND VALIDATION.
    */
   const submitApplication = async (e: FormEvent) => {
     e.preventDefault();
+    
+    // 1. Zod Validation
+    const validationResult = ApplicationSchema.safeParse(personalInfo);
+
+    if (!validationResult.success) {
+      // Transform Zod array into a simple object { field: message }
+      const formattedErrors: Record<string, string> = {};
+      validationResult.error.issues.forEach((issue) => {
+        const fieldName = issue.path[0] as string;
+        formattedErrors[fieldName] = issue.message;
+      });
+      setErrors(formattedErrors);
+      // Stop execution here so we don't call the API
+      return; 
+    }
+
+    // 2. Clear errors if validation passed
+    setErrors({});
     setStatus('loading');
     setErrorMessage('');
 
@@ -176,6 +182,7 @@ export const useApplicationPresenter = () => {
     availableCompetences,
     status,
     errorMessage,
+    errors,
     personalInfo,
     addedCompetences,
     addedAvailabilities,
