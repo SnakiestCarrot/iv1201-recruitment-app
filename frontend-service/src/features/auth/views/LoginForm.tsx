@@ -103,9 +103,7 @@ export const LoginForm = () => {
             </div>
 
             <button type="submit" disabled={state.status === 'loading'}>
-              {state.status === 'loading'
-                ? 'Sending...'
-                : 'Send Instructions'}
+              {state.status === 'loading' ? 'Sending...' : 'Send Instructions'}
             </button>
 
             <p

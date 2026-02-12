@@ -64,9 +64,9 @@ export const authService = {
 
   /**
    * Requests password reset instructions for migrated (old) users.
-   * 
+   *
    * Always returns a generic message for security reasons.
-   * 
+   *
    * @param email - The email address of the old user.
    * @returns A promise that resolves to a success message.
    */

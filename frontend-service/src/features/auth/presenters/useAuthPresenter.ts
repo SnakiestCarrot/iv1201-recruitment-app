@@ -62,23 +62,23 @@ export const useAuthPresenter = () => {
   };
 
   const requestOldUserReset = async (email: string) => {
-  setState({ status: 'loading', message: 'Sending instructions...' });
+    setState({ status: 'loading', message: 'Sending instructions...' });
 
-  try {
-    const message = await authService.requestOldUserReset(email);
+    try {
+      const message = await authService.requestOldUserReset(email);
 
-    setState({
-      status: 'success',
-      message,
-    });
-  } catch (error: unknown) {
-    setState({
-      status: 'success',
-      message:
-        'If this email exists in our system, you will receive password reset instructions shortly.',
-    });
-  }
-};
+      setState({
+        status: 'success',
+        message,
+      });
+    } catch {
+      setState({
+        status: 'success',
+        message:
+          'If this email exists in our system, you will receive password reset instructions shortly.',
+      });
+    }
+  };
 
   return {
     state,
