@@ -24,6 +24,8 @@ describe('useApplicationPresenter', () => {
     expect(result.current.personalInfo).toEqual({
       name: '',
       surname: '',
+      email: '',
+      pnr: '',
     });
     expect(result.current.addedCompetences).toEqual([]);
     expect(result.current.addedAvailabilities).toEqual([]);
@@ -295,6 +297,18 @@ describe('useApplicationPresenter', () => {
     });
 
     act(() => {
+      result.current.handleInfoChange({
+        target: { name: 'email', value: 'john@example.com' },
+      } as any);
+    });
+
+    act(() => {
+      result.current.handleInfoChange({
+        target: { name: 'pnr', value: '19900101-1234' },
+      } as any);
+    });
+
+    act(() => {
       result.current.setCurrentCompetenceId('1');
       result.current.setCurrentYoe('5');
     });
@@ -322,6 +336,8 @@ describe('useApplicationPresenter', () => {
     expect(applicationService.submitApplication).toHaveBeenCalledWith({
       name: 'John',
       surname: 'Doe',
+      email: 'john@example.com',
+      pnr: '19900101-1234',
       competences: [
         {
           competenceId: 1,
@@ -347,6 +363,19 @@ describe('useApplicationPresenter', () => {
     const { result } = renderHook(() => useApplicationPresenter());
 
     act(() => {
+      result.current.handleInfoChange({ target: { name: 'name', value: 'John' } } as any);
+    });
+    act(() => {
+      result.current.handleInfoChange({ target: { name: 'surname', value: 'Doe' } } as any);
+    });
+    act(() => {
+      result.current.handleInfoChange({ target: { name: 'email', value: 'john@example.com' } } as any);
+    });
+    act(() => {
+      result.current.handleInfoChange({ target: { name: 'pnr', value: '19900101-1234' } } as any);
+    });
+
+    act(() => {
       result.current.submitApplication({
         preventDefault: vi.fn(),
       } as any);
@@ -362,6 +391,19 @@ describe('useApplicationPresenter', () => {
     );
 
     const { result } = renderHook(() => useApplicationPresenter());
+
+    act(() => {
+      result.current.handleInfoChange({ target: { name: 'name', value: 'John' } } as any);
+    });
+    act(() => {
+      result.current.handleInfoChange({ target: { name: 'surname', value: 'Doe' } } as any);
+    });
+    act(() => {
+      result.current.handleInfoChange({ target: { name: 'email', value: 'john@example.com' } } as any);
+    });
+    act(() => {
+      result.current.handleInfoChange({ target: { name: 'pnr', value: '19900101-1234' } } as any);
+    });
 
     await act(async () => {
       await result.current.submitApplication({

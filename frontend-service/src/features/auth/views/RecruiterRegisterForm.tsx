@@ -1,12 +1,15 @@
+import '../styles/RegisterForm.css';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useRecruiterAuthPresenter } from '../presenters/useRecruiterAuthPresenter';
 import { useTranslation } from 'react-i18next';
 import { LanguageDropdown } from '../../../components/LanguageDropdown';
+import { RecruiterRegisterSchema } from '../../../utils/validation';
 import '../styles/RegisterForm.css';
 
 /**
  * Registration form component for new recruiter users.
+ * Uses Zod to validate username, password, and the required secret code.
  * Requires a secret registration code in addition to standard credentials.
  * Provides input fields for username, password, password confirmation, and secret code.
  * Validates password length (minimum 6 characters) and matching passwords.
@@ -25,24 +28,32 @@ export const RecruiterRegisterForm = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [secretCode, setSecretCode] = useState('');
-  const [validationError, setValidationError] = useState('');
+  const [validationErrors, setValidationErrors] = useState<
+    Record<string, string>
+  >({});
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setValidationError('');
+    setValidationErrors({});
 
     if (password !== confirmPassword) {
-      setValidationError(t('auth.password-mismatch'));
+      setValidationErrors({ confirmPassword: 'auth.password-mismatch' });
       return;
     }
 
-    if (password.length < 6) {
-      setValidationError(t('auth.insufficient-password-length'));
-      return;
-    }
+    const result = RecruiterRegisterSchema.safeParse({
+      username,
+      password,
+      secretCode,
+    });
 
-    if (!secretCode.trim()) {
-      setValidationError(t('auth.secret-code-required'));
+    if (!result.success) {
+      const fieldErrors: Record<string, string> = {};
+      result.error.issues.forEach((issue) => {
+        const path = issue.path[0] as string;
+        fieldErrors[path] = issue.message;
+      });
+      setValidationErrors(fieldErrors);
       return;
     }
 
@@ -55,7 +66,7 @@ export const RecruiterRegisterForm = () => {
 
       <h2>{t('auth.recruiter-register')}</h2>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         <div className="form-group">
           <label htmlFor="rec-username">{t('common.username')}</label>
           <input
@@ -63,9 +74,11 @@ export const RecruiterRegisterForm = () => {
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            required
-            className="register-input"
+            className={`register-input ${validationErrors.username ? 'register-input-error' : ''}`}
           />
+          {validationErrors.username && (
+            <p className="status-msg error">{t(validationErrors.username)}</p>
+          )}
         </div>
 
         <div className="form-group">
@@ -99,9 +112,11 @@ export const RecruiterRegisterForm = () => {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
-            className="register-input"
+            className={`register-input ${validationErrors.password ? 'register-input-error' : ''}`}
           />
+          {validationErrors.password && (
+            <p className="status-msg error">{t(validationErrors.password)}</p>
+          )}
         </div>
 
         <div className="form-group">
@@ -111,9 +126,13 @@ export const RecruiterRegisterForm = () => {
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-            className={`register-input ${validationError ? 'register-input-error' : ''}`}
+            className={`register-input ${validationErrors.confirmPassword ? 'register-input-error' : ''}`}
           />
+          {validationErrors.confirmPassword && (
+            <p className="status-msg error">
+              {t(validationErrors.confirmPassword)}
+            </p>
+          )}
         </div>
 
         <div className="form-group">
@@ -124,9 +143,11 @@ export const RecruiterRegisterForm = () => {
             value={secretCode}
             onChange={(e) => setSecretCode(e.target.value)}
             placeholder={t('auth.secret-code-placeholder')}
-            required
-            className="register-input"
+            className={`register-input ${validationErrors.secretCode ? 'register-input-error' : ''}`}
           />
+          {validationErrors.secretCode && (
+            <p className="status-msg error">{t(validationErrors.secretCode)}</p>
+          )}
         </div>
 
         <button type="submit" disabled={state.status === 'loading'}>
@@ -134,9 +155,7 @@ export const RecruiterRegisterForm = () => {
         </button>
       </form>
 
-      {validationError && <p className="status-msg error">{validationError}</p>}
-
-      {state.message && !validationError && (
+      {state.message && Object.keys(validationErrors).length === 0 && (
         <p className={`status-msg ${state.status}`}>{state.message}</p>
       )}
 

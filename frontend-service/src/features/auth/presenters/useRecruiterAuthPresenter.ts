@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '../services/authService';
+import { RecruiterRegisterSchema } from '../../../utils/validation';
 import type { AuthState, RecruiterRegisterRequest } from '../types/authTypes';
 
 /**
@@ -15,6 +16,9 @@ export const useRecruiterAuthPresenter = () => {
     status: 'idle',
     message: '',
   });
+  const [validationErrors, setValidationErrors] = useState<
+    Record<string, string>
+  >({});
   const navigate = useNavigate();
 
   /**
@@ -24,14 +28,40 @@ export const useRecruiterAuthPresenter = () => {
    *
    * @param credentials - The recruiter's registration data including username, password, and secret code.
    */
-  const registerRecruiter = async (credentials: RecruiterRegisterRequest) => {
+  const registerRecruiter = async (
+    credentials: RecruiterRegisterRequest & { confirmPassword?: string }
+  ) => {
+    setValidationErrors({});
+
+    if (credentials.password !== credentials.confirmPassword) {
+      setValidationErrors({ confirmPassword: 'auth.password-mismatch' });
+      return;
+    }
+
+    const result = RecruiterRegisterSchema.safeParse(credentials);
+
+    if (!result.success) {
+      const fieldErrors: Record<string, string> = {};
+      result.error.issues.forEach((issue) => {
+        const path = issue.path[0] as string;
+        fieldErrors[path] = issue.message;
+      });
+      setValidationErrors(fieldErrors);
+      return;
+    }
+
     setState({ status: 'loading', message: '' });
 
     try {
-      const message = await authService.registerRecruiter(credentials);
+      const payload = {
+        username: credentials.username,
+        password: credentials.password,
+        secretCode: credentials.secretCode,
+      };
+
+      const message = await authService.registerRecruiter(payload);
       setState({ status: 'success', message });
 
-      // Navigate to login after successful registration
       setTimeout(() => {
         navigate('/login');
       }, 2000);
@@ -42,8 +72,20 @@ export const useRecruiterAuthPresenter = () => {
     }
   };
 
+  /**
+   * Clears the validation error for a specific field.
+   * * @param field - The name of the field to clear the error for.
+   */
+  const clearError = (field: string) => {
+    setValidationErrors((prev) =>
+      Object.fromEntries(Object.entries(prev).filter(([key]) => key !== field))
+    );
+  };
+
   return {
     state,
+    validationErrors,
     registerRecruiter,
+    clearError,
   };
 };

@@ -5,25 +5,20 @@ import {
   type ChangeEvent,
   type FormEvent,
 } from 'react';
-import { applicationService } from '../services/applicationService';
+import { applicationService } from '../../application/services/applicationService'; // Check this path matches your structure
 import type {
   Competence,
   CompetenceProfileDTO,
   AvailabilityDTO,
   ApplicationCreateDTO,
   ApplicationStatus,
-} from '../types/applicationTypes';
+} from '../../application/types/applicationTypes'; // Check this path matches your structure
+import { ApplicationSchema } from '../../../utils/validation';
 
 /**
  * Custom React hook for managing job application form state and operations.
  * Handles fetching available competences, managing personal information,
  * adding/removing competences and availability periods, and submitting applications.
- *
- * @returns An object containing:
- * - State variables for competences, status, personal info, and form inputs
- * - Setter functions for form inputs
- * - Handler functions for managing competences and availabilities
- * - Submit function for the application
  */
 export const useApplicationPresenter = () => {
   const [availableCompetences, setAvailableCompetences] = useState<
@@ -32,9 +27,14 @@ export const useApplicationPresenter = () => {
   const [status, setStatus] = useState<ApplicationStatus>('idle');
   const [errorMessage, setErrorMessage] = useState<string>('');
 
+  // NEW: State to hold validation errors
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
   const [personalInfo, setPersonalInfo] = useState({
     name: '',
     surname: '',
+    email: '',
+    pnr: '',
   });
 
   const [addedCompetences, setAddedCompetences] = useState<
@@ -53,38 +53,46 @@ export const useApplicationPresenter = () => {
    * Loads available competences from the server.
    * Filters out duplicates based on competenceId.
    */
-  const loadCompetences = useCallback(async () => {
-    try {
-      const data = await applicationService.getCompetences();
-      const uniqueData = data.filter(
-        (item: Competence, index: number, self: Competence[]) =>
-          index === self.findIndex((t) => t.competenceId === item.competenceId)
-      );
-
-      setAvailableCompetences(uniqueData);
-    } catch (error) {
-      console.error('Failed to load competences', error);
-    }
+  const fetchCompetences = useCallback(async () => {
+    const data = await applicationService.getCompetences();
+    return data.filter(
+      (item: Competence, index: number, self: Competence[]) =>
+        index === self.findIndex((t) => t.competenceId === item.competenceId)
+    );
   }, []);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    loadCompetences();
-  }, [loadCompetences]);
+    let alive = true;
+
+    void fetchCompetences()
+      .then((uniqueData) => {
+        if (alive) setAvailableCompetences(uniqueData);
+      })
+      .catch((error) => {
+        console.error('Failed to load competences', error);
+      });
+
+    return () => {
+      alive = false;
+    };
+  }, [fetchCompetences]);
 
   /**
    * Handles changes to personal information input fields.
-   *
-   * @param e - The change event from an input element.
    */
   const handleInfoChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setPersonalInfo({ ...personalInfo, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setPersonalInfo({ ...personalInfo, [name]: value });
+
+    if (errors[name]) {
+      setErrors((prev) =>
+        Object.fromEntries(Object.entries(prev).filter(([key]) => key !== name))
+      );
+    }
   };
 
   /**
    * Adds a competence with years of experience to the application.
-   * Validates that both competenceId and years of experience are provided.
-   * Clears the current input fields after adding.
    */
   const addCompetence = () => {
     if (!currentCompetenceId || !currentYoe) return;
@@ -109,8 +117,6 @@ export const useApplicationPresenter = () => {
 
   /**
    * Removes a competence from the application at the specified index.
-   *
-   * @param index - The index of the competence to remove.
    */
   const removeCompetence = (index: number) => {
     setAddedCompetences((prev) => prev.filter((_, i) => i !== index));
@@ -118,8 +124,6 @@ export const useApplicationPresenter = () => {
 
   /**
    * Adds an availability period to the application.
-   * Validates that both from date and to date are provided.
-   * Clears the current date input fields after adding.
    */
   const addAvailability = () => {
     if (!currentFromDate || !currentToDate) return;
@@ -135,8 +139,6 @@ export const useApplicationPresenter = () => {
 
   /**
    * Removes an availability period from the application at the specified index.
-   *
-   * @param index - The index of the availability period to remove.
    */
   const removeAvailability = (index: number) => {
     setAddedAvailabilities((prev) => prev.filter((_, i) => i !== index));
@@ -144,13 +146,28 @@ export const useApplicationPresenter = () => {
 
   /**
    * Submits the complete job application to the server.
-   * Combines personal information, competences, and availabilities into a single payload.
-   * Updates status to loading, success, or error based on the result.
-   *
-   * @param e - The form submit event.
+   * NOW INCLUDES FRONTEND VALIDATION.
    */
   const submitApplication = async (e: FormEvent) => {
     e.preventDefault();
+
+    // 1. Zod Validation
+    const validationResult = ApplicationSchema.safeParse(personalInfo);
+
+    if (!validationResult.success) {
+      // Transform Zod array into a simple object { field: message }
+      const formattedErrors: Record<string, string> = {};
+      validationResult.error.issues.forEach((issue) => {
+        const fieldName = issue.path[0] as string;
+        formattedErrors[fieldName] = issue.message;
+      });
+      setErrors(formattedErrors);
+      // Stop execution here so we don't call the API
+      return;
+    }
+
+    // 2. Clear errors if validation passed
+    setErrors({});
     setStatus('loading');
     setErrorMessage('');
 
@@ -174,6 +191,7 @@ export const useApplicationPresenter = () => {
     availableCompetences,
     status,
     errorMessage,
+    errors,
     personalInfo,
     addedCompetences,
     addedAvailabilities,

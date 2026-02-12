@@ -96,7 +96,8 @@ describe('useAuthPresenter', () => {
     await act(async () => {
       await result.current.registerUser({
         username: 'new',
-        password: 'pw',
+        password: 'password123',
+        confirmPassword: 'password123',
         email: 'new@example.com',
         pnr: '19900101-1234',
       });
@@ -104,9 +105,7 @@ describe('useAuthPresenter', () => {
 
     expect(authService.register).toHaveBeenCalledWith({
       username: 'new',
-      password: 'pw',
-      email: 'new@example.com',
-      pnr: '19900101-1234',
+      password: 'password123',
     });
 
     expect(result.current.state).toEqual({
@@ -123,7 +122,8 @@ describe('useAuthPresenter', () => {
     await act(async () => {
       await result.current.registerUser({
         username: 'exists',
-        password: 'pw',
+        password: 'password123',
+        confirmPassword: 'password123',
         email: 'exists@example.com',
         pnr: '19900101-1234',
       });

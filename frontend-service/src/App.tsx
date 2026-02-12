@@ -3,7 +3,7 @@ import { LoginForm } from './features/auth/views/LoginForm';
 import { RegisterForm } from './features/auth/views/RegisterForm';
 import { RecruiterRegisterForm } from './features/auth/views/RecruiterRegisterForm';
 import { Dashboard } from './features/dashboard/views/Dashboard';
-import { ApplicationForm } from './features/application/views/ApplicationForm.tsx';
+import { ApplicationForm } from './features/application/views/ApplicationForm';
 import { ApplicationList } from './features/recruiter/views/ApplicationList';
 import { ApplicationDetail } from './features/recruiter/views/ApplicationDetail';
 import { AuthenticatedTopbar } from './components/AuthenticatedTopbar';

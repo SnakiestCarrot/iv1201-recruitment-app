@@ -19,7 +19,10 @@
     "invalid-secret-code": "Ogiltig registreringskod",
     "recruiter-register-success": "Rekryterarkonto skapat!",
     "register-as-applicant": "Registrera som Sökande",
-    "register-as-recruiter": "Registrera som Rekryterare"
+    "register-as-recruiter": "Registrera som Rekryterare",
+    "insufficient-username-length": "Användarnamnet måste vara minst 3 tecken.",
+    "username-required": "Användarnamn krävs",
+    "password-required": "Lösenord krävs"
   },
   "dash": {
     "title": "Välkommen, ",
@@ -82,6 +85,14 @@
     "ticket sales": "Biljettförsäljning",
     "lotteries": "Lotterier",
     "roller coaster operation": "Berg-och-dalbana"
+  },
+  "validation": {
+    "name-required": "Förnamn krävs",
+    "surname-required": "Efternamn krävs",
+    "email-required": "E-post krävs",
+    "email-invalid": "Ange en giltig e-postadress",
+    "pnr-required": "Personnummer krävs",
+    "pnr-format": "Måste vara i formatet ÅÅÅÅMMDD-XXXX"
   },
   "common": {
     "username": "Användarnamn",

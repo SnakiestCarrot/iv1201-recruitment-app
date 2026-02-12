@@ -19,8 +19,11 @@
     "invalid-secret-code": "Invalid registration code",
     "recruiter-register-success": "Recruiter account created successfully!",
     "register-as-applicant": "Register as Applicant",
-    "register-as-recruiter": "Register as Recruiter"
-},
+    "register-as-recruiter": "Register as Recruiter",
+    "insufficient-username-length": "Username must be at least 3 characters.",
+    "username-required": "Username is required",
+    "password-required": "Password is required"
+  },
   "dash": {
     "title": "Welcome, ",
     "logged-in-state": "You are successfully logged in.",
@@ -82,6 +85,14 @@
     "ticket sales": "Ticket Sales",
     "lotteries": "Lotteries",
     "roller coaster operation": "Roller Coaster Operation"
+  },
+  "validation": {
+    "name-required": "First name is required",
+    "surname-required": "Surname is required",
+    "email-required": "Email is required",
+    "email-invalid": "Please enter a valid email address",
+    "pnr-required": "Personal number is required",
+    "pnr-format": "Must be in format YYYYMMDD-XXXX"
   },
   "common": {
     "username": "Username",

@@ -3,15 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuthPresenter } from '../presenters/useAuthPresenter';
 import { useTranslation } from 'react-i18next';
 import { LanguageDropdown } from '../../../components/LanguageDropdown';
+import { LoginSchema } from '../../../utils/validation';
 import '../styles/LoginForm.css';
 
 /**
- * Login form component for user authentication.
- * Provides username and password input fields and handles login submission.
- * Redirects to dashboard upon successful authentication.
- * Includes language selection and links to registration pages.
- *
- * @returns The login form component.
+ * Login form component.
+ * Uses Zod to ensure fields are not empty before sending the request.
  */
 export const LoginForm = () => {
   const { state, loginUser, requestOldUserReset } = useAuthPresenter();
@@ -20,6 +17,9 @@ export const LoginForm = () => {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [validationErrors, setValidationErrors] = useState<
+    Record<string, string>
+  >({});
   const [showOldUser, setShowOldUser] = useState(false);
   const [oldUserEmail, setOldUserEmail] = useState('');
 
@@ -31,6 +31,20 @@ export const LoginForm = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setValidationErrors({});
+
+    const result = LoginSchema.safeParse({ username, password });
+
+    if (!result.success) {
+      const fieldErrors: Record<string, string> = {};
+      result.error.issues.forEach((issue) => {
+        const path = issue.path[0] as string;
+        fieldErrors[path] = issue.message;
+      });
+      setValidationErrors(fieldErrors);
+      return;
+    }
+
     loginUser({ username, password });
   };
 
@@ -45,7 +59,7 @@ export const LoginForm = () => {
 
       <h2>{t('auth.login')}</h2>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         <div className="form-group">
           <label htmlFor="username">{t('common.username')}</label>
           <input
@@ -53,10 +67,14 @@ export const LoginForm = () => {
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            required
             autoComplete="username"
-            className="login-input"
+            className={`login-input ${validationErrors.username ? 'input-error' : ''}`}
           />
+          {validationErrors.username && (
+            <span style={{ color: 'red', fontSize: '0.85em' }}>
+              {validationErrors.username}
+            </span>
+          )}
         </div>
 
         <div className="form-group">
@@ -66,10 +84,14 @@ export const LoginForm = () => {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
             autoComplete="current-password"
-            className="login-input"
+            className={`login-input ${validationErrors.password ? 'input-error' : ''}`}
           />
+          {validationErrors.password && (
+            <span style={{ color: 'red', fontSize: '0.85em' }}>
+              {validationErrors.password}
+            </span>
+          )}
         </div>
 
         <button type="submit" disabled={state.status === 'loading'}>
@@ -117,7 +139,7 @@ export const LoginForm = () => {
         )}
       </div>
 
-      {state.message && (
+      {state.message && Object.keys(validationErrors).length === 0 && (
         <p className={`status-msg ${state.status}`}>{state.message}</p>
       )}
 
