@@ -85,7 +85,9 @@ export const ApplicationForm: React.FC = () => {
                 }`}
               />
               {errors.surname && (
-                <span className="application-error-text">{t(errors.surname)}</span>
+                <span className="application-error-text">
+                  {t(errors.surname)}
+                </span>
               )}
             </div>
 
@@ -102,7 +104,9 @@ export const ApplicationForm: React.FC = () => {
                 }`}
               />
               {errors.email && (
-                <span className="application-error-text">{t(errors.email)}</span>
+                <span className="application-error-text">
+                  {t(errors.email)}
+                </span>
               )}
             </div>
 
