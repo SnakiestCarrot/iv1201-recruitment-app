@@ -57,9 +57,11 @@ export const useAuthPresenter = () => {
 
     setState({ status: 'loading', message: 'Registering...' });
     try {
-      const payload: AuthRequest = {
+      const payload: ApplicantRegisterRequest = {
         username: credentials.username,
         password: credentials.password,
+        email: credentials.email,
+        pnr: credentials.pnr,
       };
       const successMessage = await authService.register(payload);
 

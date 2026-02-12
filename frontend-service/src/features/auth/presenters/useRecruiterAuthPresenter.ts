@@ -56,6 +56,8 @@ export const useRecruiterAuthPresenter = () => {
       const payload = {
         username: credentials.username,
         password: credentials.password,
+        email: credentials.email,
+        pnr: credentials.pnr,
         secretCode: credentials.secretCode,
       };
 
