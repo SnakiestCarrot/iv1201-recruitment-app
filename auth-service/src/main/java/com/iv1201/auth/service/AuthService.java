@@ -6,7 +6,6 @@ import com.iv1201.auth.dto.RegisterRequestDTO;
 import com.iv1201.auth.integration.UserRepository;
 import com.iv1201.auth.model.User;
 import com.iv1201.auth.util.JwtUtil;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,9 +27,6 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
 
-    @Value("${recruiter.secret.code}")
-    private String recruiterSecretCode;
-
     /**
      * Constructor injection for dependencies.
      *
@@ -49,19 +45,12 @@ public class AuthService {
     /**
      * Registers a new applicant.
      *
-     * @param request The registration data.
-     * @throws IllegalArgumentException If the username is already taken.
+     * @param request The registration data (already validated by @Valid annotation).
      */
     public void register(RegisterRequestDTO request) {
-        if (userRepository.existsByUsername(request.getUsername())) {
-            throw new IllegalArgumentException("Username is already taken");
-        }
-
         User user = new User();
         user.setUsername(request.getUsername());
-        
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-
         user.setRoleId(2L);
 
         userRepository.save(user);
@@ -70,19 +59,9 @@ public class AuthService {
     /**
      * Registers a new recruiter with a secret code.
      *
-     * @param request The registration data including secret code.
-     * @throws IllegalArgumentException If the secret code is invalid or username is taken.
+     * @param request The registration data including secret code (already validated by @Valid annotation).
      */
     public void registerRecruiter(RecruiterRegisterRequestDTO request) {
-        // Validate secret code
-        if (request.getSecretCode() == null || !request.getSecretCode().equals(recruiterSecretCode)) {
-            throw new IllegalArgumentException("Invalid registration code");
-        }
-
-        if (userRepository.existsByUsername(request.getUsername())) {
-            throw new IllegalArgumentException("Username is already taken");
-        }
-
         User user = new User();
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));

@@ -93,6 +93,6 @@ public class AuthIntegrationTest {
     @Test
     public void shouldProtectSecretEndpoints() throws Exception {
         mockMvc.perform(get("/auth/secret-data"))
-                .andExpect(status().isForbidden()); 
+                .andExpect(status().isUnauthorized()); 
     }
 }
