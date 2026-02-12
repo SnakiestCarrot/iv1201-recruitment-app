@@ -13,7 +13,7 @@ import type {
   ApplicationCreateDTO,
   ApplicationStatus,
 } from '../../application/types/applicationTypes'; // Check this path matches your structure
-import { ApplicationSchema } from '../../../utils/validation'; // Importing the Zod schema
+import { ApplicationSchema } from '../../../utils/validation';
 
 /**
  * Custom React hook for managing job application form state and operations.

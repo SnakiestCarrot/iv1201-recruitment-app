@@ -35,7 +35,7 @@ export const RecruiterRegisterForm = () => {
     setValidationErrors({});
 
     if (password !== confirmPassword) {
-      setValidationErrors({ confirmPassword: t('auth.password-mismatch') });
+      setValidationErrors({ confirmPassword: 'auth.password-mismatch' });
       return;
     }
 
@@ -75,7 +75,7 @@ export const RecruiterRegisterForm = () => {
             className={`register-input ${validationErrors.username ? 'register-input-error' : ''}`}
           />
           {validationErrors.username && (
-            <p className="status-msg error">{validationErrors.username}</p>
+            <p className="status-msg error">{t(validationErrors.username)}</p>
           )}
         </div>
 
@@ -89,7 +89,7 @@ export const RecruiterRegisterForm = () => {
             className={`register-input ${validationErrors.password ? 'register-input-error' : ''}`}
           />
           {validationErrors.password && (
-            <p className="status-msg error">{validationErrors.password}</p>
+            <p className="status-msg error">{t(validationErrors.password)}</p>
           )}
         </div>
 
@@ -104,7 +104,7 @@ export const RecruiterRegisterForm = () => {
           />
           {validationErrors.confirmPassword && (
             <p className="status-msg error">
-              {validationErrors.confirmPassword}
+              {t(validationErrors.confirmPassword)}
             </p>
           )}
         </div>
@@ -120,7 +120,7 @@ export const RecruiterRegisterForm = () => {
             className={`register-input ${validationErrors.secretCode ? 'register-input-error' : ''}`}
           />
           {validationErrors.secretCode && (
-            <p className="status-msg error">{validationErrors.secretCode}</p>
+            <p className="status-msg error">{t(validationErrors.secretCode)}</p>
           )}
         </div>
 

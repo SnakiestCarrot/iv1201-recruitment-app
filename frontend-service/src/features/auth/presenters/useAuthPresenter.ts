@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { authService } from '../services/authService';
 import { LoginSchema, RegisterUserSchema } from '../../../utils/validation';
-import { useTranslation } from 'react-i18next';
 import { type AuthRequest, type AuthState } from '../types/authTypes';
 import { AUTH_CHANGED_EVENT } from '../hooks/useAuth';
 
@@ -20,7 +19,6 @@ export const useAuthPresenter = () => {
   const [validationErrors, setValidationErrors] = useState<
     Record<string, string>
   >({});
-  const { t } = useTranslation();
 
   /**
    * Registers a new applicant user with the provided credentials.
@@ -34,7 +32,7 @@ export const useAuthPresenter = () => {
     setValidationErrors({});
 
     if (credentials.password !== credentials.confirmPassword) {
-      setValidationErrors({ confirmPassword: t('auth.password-mismatch') });
+      setValidationErrors({ confirmPassword: 'auth.password-mismatch' });
       return;
     }
 

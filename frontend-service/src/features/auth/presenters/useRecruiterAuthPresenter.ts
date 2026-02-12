@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '../services/authService';
 import { RecruiterRegisterSchema } from '../../../utils/validation';
-import { useTranslation } from 'react-i18next';
 import type { AuthState, RecruiterRegisterRequest } from '../types/authTypes';
 
 /**
@@ -21,7 +20,6 @@ export const useRecruiterAuthPresenter = () => {
     Record<string, string>
   >({});
   const navigate = useNavigate();
-  const { t } = useTranslation();
 
   /**
    * Registers a new recruiter with the provided credentials and secret code.
@@ -36,7 +34,7 @@ export const useRecruiterAuthPresenter = () => {
     setValidationErrors({});
 
     if (credentials.password !== credentials.confirmPassword) {
-      setValidationErrors({ confirmPassword: t('auth.password-mismatch') });
+      setValidationErrors({ confirmPassword: 'auth.password-mismatch' });
       return;
     }
 

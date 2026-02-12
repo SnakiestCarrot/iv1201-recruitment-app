@@ -44,6 +44,7 @@ describe('ApplicationForm Component', () => {
       currentYoe: '',
       currentFromDate: '',
       currentToDate: '',
+      errors: {},
       setCurrentCompetenceId: mockSetCurrentCompetenceId,
       setCurrentYoe: mockSetCurrentYoe,
       setCurrentFromDate: mockSetCurrentFromDate,
@@ -145,6 +146,7 @@ describe('ApplicationForm Component', () => {
       currentYoe: '',
       currentFromDate: '',
       currentToDate: '',
+      errors: {},
       setCurrentCompetenceId: mockSetCurrentCompetenceId,
       setCurrentYoe: mockSetCurrentYoe,
       setCurrentFromDate: mockSetCurrentFromDate,
@@ -159,10 +161,10 @@ describe('ApplicationForm Component', () => {
 
     render(<ApplicationForm />);
 
-    expect(screen.getByText('competence.JavaScript')).toBeInTheDocument();
-    expect(screen.getByText('competence.Python')).toBeInTheDocument();
-    expect(screen.getByText('3 application.years-exp')).toBeInTheDocument();
-    expect(screen.getByText('2 application.years-exp')).toBeInTheDocument();
+    expect(screen.getByText(/competence\.JavaScript/)).toBeInTheDocument();
+    expect(screen.getByText(/competence\.Python/)).toBeInTheDocument();
+    expect(screen.getByText(/3\s+application\.years-exp/)).toBeInTheDocument();
+    expect(screen.getByText(/2\s+application\.years-exp/)).toBeInTheDocument();
   });
 
   it('calls removeCompetence when remove button is clicked', () => {
@@ -178,6 +180,7 @@ describe('ApplicationForm Component', () => {
       currentYoe: '',
       currentFromDate: '',
       currentToDate: '',
+      errors: {},
       setCurrentCompetenceId: mockSetCurrentCompetenceId,
       setCurrentYoe: mockSetCurrentYoe,
       setCurrentFromDate: mockSetCurrentFromDate,
@@ -198,10 +201,10 @@ describe('ApplicationForm Component', () => {
     expect(mockRemoveCompetence).toHaveBeenCalledWith(0);
   });
 
-  it('displays empty message when no competences are added', () => {
+  it('does not display competence list when none are added', () => {
     render(<ApplicationForm />);
 
-    expect(screen.getByText('application.no-competences')).toBeInTheDocument();
+    expect(screen.queryByRole('list')).not.toBeInTheDocument();
   });
 
   it('renders availability date inputs', () => {
@@ -273,6 +276,7 @@ describe('ApplicationForm Component', () => {
       currentYoe: '',
       currentFromDate: '',
       currentToDate: '',
+      errors: {},
       setCurrentCompetenceId: mockSetCurrentCompetenceId,
       setCurrentYoe: mockSetCurrentYoe,
       setCurrentFromDate: mockSetCurrentFromDate,
@@ -304,6 +308,7 @@ describe('ApplicationForm Component', () => {
       currentYoe: '',
       currentFromDate: '',
       currentToDate: '',
+      errors: {},
       setCurrentCompetenceId: mockSetCurrentCompetenceId,
       setCurrentYoe: mockSetCurrentYoe,
       setCurrentFromDate: mockSetCurrentFromDate,
@@ -324,12 +329,10 @@ describe('ApplicationForm Component', () => {
     expect(mockRemoveAvailability).toHaveBeenCalledWith(0);
   });
 
-  it('displays empty message when no availabilities are added', () => {
+  it('does not display availability list when none are added', () => {
     render(<ApplicationForm />);
 
-    expect(
-      screen.getByText('application.no-availability')
-    ).toBeInTheDocument();
+    expect(screen.queryByText(/→/)).not.toBeInTheDocument();
   });
 
   it('calls submitApplication when form is submitted', () => {
@@ -355,6 +358,7 @@ describe('ApplicationForm Component', () => {
       currentYoe: '',
       currentFromDate: '',
       currentToDate: '',
+      errors: {},
       setCurrentCompetenceId: mockSetCurrentCompetenceId,
       setCurrentYoe: mockSetCurrentYoe,
       setCurrentFromDate: mockSetCurrentFromDate,
@@ -387,6 +391,7 @@ describe('ApplicationForm Component', () => {
       currentYoe: '',
       currentFromDate: '',
       currentToDate: '',
+      errors: {},
       setCurrentCompetenceId: mockSetCurrentCompetenceId,
       setCurrentYoe: mockSetCurrentYoe,
       setCurrentFromDate: mockSetCurrentFromDate,
@@ -417,6 +422,7 @@ describe('ApplicationForm Component', () => {
       currentYoe: '',
       currentFromDate: '',
       currentToDate: '',
+      errors: {},
       setCurrentCompetenceId: mockSetCurrentCompetenceId,
       setCurrentYoe: mockSetCurrentYoe,
       setCurrentFromDate: mockSetCurrentFromDate,
@@ -436,20 +442,6 @@ describe('ApplicationForm Component', () => {
       screen.getByText('application.success-message')
     ).toBeInTheDocument();
     expect(screen.queryByText('application.title')).not.toBeInTheDocument();
-  });
-
-  it('has required attribute on personal info inputs', () => {
-    render(<ApplicationForm />);
-
-    const nameInput = screen.getByPlaceholderText('application.name');
-    const surnameInput = screen.getByPlaceholderText('application.surname');
-    const emailInput = screen.getByPlaceholderText('application.email');
-    const pnrInput = screen.getByPlaceholderText('application.pnr');
-
-    expect(nameInput).toHaveAttribute('required');
-    expect(surnameInput).toHaveAttribute('required');
-    expect(emailInput).toHaveAttribute('required');
-    expect(pnrInput).toHaveAttribute('required');
   });
 
   it('email input has correct type', () => {

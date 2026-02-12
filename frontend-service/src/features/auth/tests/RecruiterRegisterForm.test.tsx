@@ -270,23 +270,6 @@ describe('RecruiterRegisterForm Component', () => {
     expect(screen.queryByText('auth.password-mismatch')).not.toBeInTheDocument();
   });
 
-  it('has required attribute on all input fields', () => {
-    render(<RecruiterRegisterForm />);
-
-    expect(screen.getByLabelText('common.username')).toHaveAttribute(
-      'required'
-    );
-    expect(screen.getByLabelText('common.password')).toHaveAttribute(
-      'required'
-    );
-    expect(screen.getByLabelText('auth.confirm-password')).toHaveAttribute(
-      'required'
-    );
-    expect(screen.getByLabelText('auth.secret-code')).toHaveAttribute(
-      'required'
-    );
-  });
-
   it('secret code field has password type', () => {
     render(<RecruiterRegisterForm />);
 

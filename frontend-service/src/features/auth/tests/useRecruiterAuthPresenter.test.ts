@@ -45,6 +45,7 @@ describe('useRecruiterAuthPresenter', () => {
       await result.current.registerRecruiter({
         username: 'recruiter1',
         password: 'password123',
+        confirmPassword: 'password123',
         secretCode: 'secret123',
       });
     });
@@ -72,6 +73,7 @@ describe('useRecruiterAuthPresenter', () => {
       await result.current.registerRecruiter({
         username: 'recruiter1',
         password: 'password123',
+        confirmPassword: 'password123',
         secretCode: 'secret123',
       });
     });
@@ -94,6 +96,7 @@ describe('useRecruiterAuthPresenter', () => {
       await result.current.registerRecruiter({
         username: 'recruiter1',
         password: 'password123',
+        confirmPassword: 'password123',
         secretCode: 'wrongcode',
       });
     });
@@ -115,6 +118,7 @@ describe('useRecruiterAuthPresenter', () => {
       await result.current.registerRecruiter({
         username: 'recruiter1',
         password: 'password123',
+        confirmPassword: 'password123',
         secretCode: 'secret123',
       });
     });
@@ -139,6 +143,7 @@ describe('useRecruiterAuthPresenter', () => {
       result.current.registerRecruiter({
         username: 'recruiter1',
         password: 'password123',
+        confirmPassword: 'password123',
         secretCode: 'secret123',
       });
     });
@@ -165,6 +170,7 @@ describe('useRecruiterAuthPresenter', () => {
       await result.current.registerRecruiter({
         username: 'recruiter1',
         password: 'password123',
+        confirmPassword: 'password123',
         secretCode: 'wrongcode',
       });
     });

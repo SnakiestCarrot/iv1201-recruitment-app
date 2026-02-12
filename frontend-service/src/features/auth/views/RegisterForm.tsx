@@ -49,7 +49,7 @@ export const RegisterForm = () => {
             className={`register-input ${validationErrors.username ? 'register-input-error' : ''}`}
           />
           {validationErrors.username && (
-            <p className="status-msg error">{validationErrors.username}</p>
+            <p className="status-msg error">{t(validationErrors.username)}</p>
           )}
         </div>
 
@@ -65,7 +65,7 @@ export const RegisterForm = () => {
             className={`register-input ${validationErrors.password ? 'register-input-error' : ''}`}
           />
           {validationErrors.password && (
-            <p className="status-msg error">{validationErrors.password}</p>
+            <p className="status-msg error">{t(validationErrors.password)}</p>
           )}
         </div>
 
@@ -86,7 +86,7 @@ export const RegisterForm = () => {
           />
           {validationErrors.confirmPassword && (
             <p className="status-msg error">
-              {validationErrors.confirmPassword}
+              {t(validationErrors.confirmPassword)}
             </p>
           )}
         </div>

@@ -363,6 +363,19 @@ describe('useApplicationPresenter', () => {
     const { result } = renderHook(() => useApplicationPresenter());
 
     act(() => {
+      result.current.handleInfoChange({ target: { name: 'name', value: 'John' } } as any);
+    });
+    act(() => {
+      result.current.handleInfoChange({ target: { name: 'surname', value: 'Doe' } } as any);
+    });
+    act(() => {
+      result.current.handleInfoChange({ target: { name: 'email', value: 'john@example.com' } } as any);
+    });
+    act(() => {
+      result.current.handleInfoChange({ target: { name: 'pnr', value: '19900101-1234' } } as any);
+    });
+
+    act(() => {
       result.current.submitApplication({
         preventDefault: vi.fn(),
       } as any);
@@ -378,6 +391,19 @@ describe('useApplicationPresenter', () => {
     );
 
     const { result } = renderHook(() => useApplicationPresenter());
+
+    act(() => {
+      result.current.handleInfoChange({ target: { name: 'name', value: 'John' } } as any);
+    });
+    act(() => {
+      result.current.handleInfoChange({ target: { name: 'surname', value: 'Doe' } } as any);
+    });
+    act(() => {
+      result.current.handleInfoChange({ target: { name: 'email', value: 'john@example.com' } } as any);
+    });
+    act(() => {
+      result.current.handleInfoChange({ target: { name: 'pnr', value: '19900101-1234' } } as any);
+    });
 
     await act(async () => {
       await result.current.submitApplication({

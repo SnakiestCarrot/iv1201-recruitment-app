@@ -93,12 +93,12 @@ describe('useAuthPresenter', () => {
     const { result } = renderHook(() => useAuthPresenter());
 
     await act(async () => {
-      await result.current.registerUser({ username: 'new', password: 'pw' });
+      await result.current.registerUser({ username: 'new', password: 'password123', confirmPassword: 'password123' });
     });
 
     expect(authService.register).toHaveBeenCalledWith({
       username: 'new',
-      password: 'pw',
+      password: 'password123',
     });
 
     expect(result.current.state).toEqual({
@@ -113,7 +113,7 @@ describe('useAuthPresenter', () => {
     const { result } = renderHook(() => useAuthPresenter());
 
     await act(async () => {
-      await result.current.registerUser({ username: 'exists', password: 'pw' });
+      await result.current.registerUser({ username: 'exists', password: 'password123', confirmPassword: 'password123' });
     });
 
     expect(result.current.state).toEqual({

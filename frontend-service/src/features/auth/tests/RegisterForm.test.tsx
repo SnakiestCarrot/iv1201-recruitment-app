@@ -26,7 +26,9 @@ describe('RegisterForm Component', () => {
     vi.clearAllMocks();
     (useAuthPresenter as any).mockReturnValue({
       state: { status: 'idle', message: '' },
+      validationErrors: {},
       registerUser: mockRegisterUser,
+      clearError: vi.fn(),
     });
   });
 
@@ -62,44 +64,32 @@ describe('RegisterForm Component', () => {
     expect(confirmInput.value).toBe('pass123');
   });
 
-  it('shows error and does not call register if passwords mismatch', () => {
+  it('displays password mismatch error from presenter', () => {
+    (useAuthPresenter as any).mockReturnValue({
+      state: { status: 'idle', message: '' },
+      validationErrors: { confirmPassword: 'auth.password-mismatch' },
+      registerUser: mockRegisterUser,
+      clearError: vi.fn(),
+    });
+
     render(<RegisterForm />);
-
-    fireEvent.change(screen.getByLabelText('common.username'), {
-      target: { value: 'user' },
-    });
-    fireEvent.change(screen.getByLabelText('common.password'), {
-      target: { value: 'password123' },
-    });
-    fireEvent.change(screen.getByLabelText('auth.confirm-password'), {
-      target: { value: 'WRONG' },
-    });
-
-    fireEvent.click(screen.getByRole('button', { name: 'auth.register' }));
 
     expect(screen.getByText('auth.password-mismatch')).toBeInTheDocument();
-    expect(mockRegisterUser).not.toHaveBeenCalled();
   });
 
-  it('shows error if password is too short', () => {
+  it('displays password length error from presenter', () => {
+    (useAuthPresenter as any).mockReturnValue({
+      state: { status: 'idle', message: '' },
+      validationErrors: { password: 'auth.insufficient-password-length' },
+      registerUser: mockRegisterUser,
+      clearError: vi.fn(),
+    });
+
     render(<RegisterForm />);
-
-    fireEvent.change(screen.getByLabelText('common.username'), {
-      target: { value: 'user' },
-    });
-    fireEvent.change(screen.getByLabelText('common.password'), {
-      target: { value: '123' },
-    }); // < 6 chars
-    fireEvent.change(screen.getByLabelText('auth.confirm-password'), {
-      target: { value: '123' },
-    });
-
-    fireEvent.click(screen.getByRole('button', { name: 'auth.register' }));
 
     expect(
       screen.getByText('auth.insufficient-password-length')
     ).toBeInTheDocument();
-    expect(mockRegisterUser).not.toHaveBeenCalled();
   });
 
   it('calls registerUser when inputs are valid', () => {
@@ -120,13 +110,16 @@ describe('RegisterForm Component', () => {
     expect(mockRegisterUser).toHaveBeenCalledWith({
       username: 'validUser',
       password: 'validPass123',
+      confirmPassword: 'validPass123',
     });
   });
 
   it('displays backend error message', () => {
     (useAuthPresenter as any).mockReturnValue({
       state: { status: 'error', message: 'Username taken' },
+      validationErrors: {},
       registerUser: mockRegisterUser,
+      clearError: vi.fn(),
     });
 
     render(<RegisterForm />);
