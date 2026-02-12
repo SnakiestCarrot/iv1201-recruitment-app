@@ -71,10 +71,8 @@ class ApplicationServiceTest {
 
         when(dto.getName()).thenReturn("Alice");
         when(dto.getSurname()).thenReturn("Doe");
-        when(dto.getEmail()).thenReturn("alice@example.com");
-        when(dto.getPnr()).thenReturn("19900101-1234");
 
-        
+
         when(compDto.getCompetenceId()).thenReturn(1L);
         when(compDto.getYearsOfExperience()).thenReturn(BigDecimal.valueOf(2.5));
         when(dto.getCompetences()).thenReturn(List.of(compDto));
