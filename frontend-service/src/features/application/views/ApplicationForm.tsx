@@ -200,7 +200,9 @@ export const ApplicationForm: React.FC = () => {
 
           <div className="application-input-group">
             <div>
-              <label className="application-label">{t('application.from')}</label>
+              <label className="application-label">
+                {t('application.from')}
+              </label>
               <input
                 type="date"
                 value={currentFromDate}
