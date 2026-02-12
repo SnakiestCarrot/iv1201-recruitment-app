@@ -7,34 +7,52 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.stream.Collectors;
 
+/**
+ * Global exception handler for the authentication service.
+ * Centralizes error handling and returns consistent error responses 
+ * formatted as plain strings to match frontend requirements.
+ */
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Handles validation errors (e.g., Username taken, Invalid code format)
+    /**
+     * Handles validation errors (e.g., @NotBlank, @UniqueUsername, @ValidSecretCode).
+     * Extracts the error messages and returns them as a single string.
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getFieldErrors().forEach(error -> 
-            errors.put(error.getField(), error.getDefaultMessage()));
+    public ResponseEntity<String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        // Collect all error messages and join them with a semicolon, or just take the first one
+        String errorMessage = ex.getBindingResult().getFieldErrors().stream()
+                .map(error -> error.getDefaultMessage())
+                .collect(Collectors.joining("; "));
+
+        // Check if this is a recruiter secret code failure to maintain 403 logic
+        if (errorMessage.contains("Invalid registration code")) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorMessage);
+        }
         
-        return ResponseEntity.badRequest().body(errors);
+        return ResponseEntity.badRequest().body(errorMessage);
     }
 
-    // Handles Spring Security authentication failures
+    /**
+     * Handles Spring Security authentication failures (wrong password/username).
+     */
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<String> handleBadCredentials(BadCredentialsException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
     }
 
-    // Handles logic errors from AuthService (e.g. Invalid Login, User not found)
+    /**
+     * Handles business logic errors thrown by AuthService.
+     * Maps specific message contents to correct HTTP Status codes.
+     */
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException e) {
         String message = e.getMessage();
 
-        // 1. Login failed -> 401 Unauthorized
+        // 1. Login failed or User missing -> 401 Unauthorized
         if (message.contains("Invalid credentials") || message.contains("User not found")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(message);
         }
@@ -48,7 +66,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(message);
     }
     
-    // Catch-all for unexpected errors (prevents 500 stack traces)
+    /**
+     * Catch-all for unexpected errors to prevent leaking stack traces.
+     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGlobalException(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");

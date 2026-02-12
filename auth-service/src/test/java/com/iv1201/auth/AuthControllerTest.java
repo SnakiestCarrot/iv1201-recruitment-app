@@ -84,31 +84,33 @@ public class AuthControllerTest {
 
 
     @Test
-    public void shouldReturnBadRequest_WhenRecruiterSecretCodeIsEmpty() throws Exception {
+    @WithMockUser
+    public void shouldReturnForbidden_WhenRecruiterSecretCodeIsEmpty() throws Exception {
         RecruiterRegisterRequestDTO request = new RecruiterRegisterRequestDTO();
         request.setUsername("newRecruiter");
         request.setPassword("password123");
-        request.setSecretCode("");
+        request.setSecretCode(""); // Triggers validation
 
         mockMvc.perform(post("/auth/register/recruiter")
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isForbidden()); 
     }
 
     @Test
-    public void shouldReturnBadRequest_WhenRecruiterSecretCodeIsNull() throws Exception {
+    @WithMockUser
+    public void shouldReturnForbidden_WhenRecruiterSecretCodeIsNull() throws Exception {
         RecruiterRegisterRequestDTO request = new RecruiterRegisterRequestDTO();
         request.setUsername("newRecruiter");
         request.setPassword("password123");
-        request.setSecretCode(null);
+        request.setSecretCode(null); // Triggers validation
 
         mockMvc.perform(post("/auth/register/recruiter")
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -148,7 +150,7 @@ public class AuthControllerTest {
         RecruiterRegisterRequestDTO request = new RecruiterRegisterRequestDTO();
         request.setUsername("recruiter");
         request.setPassword("pass");
-        request.setSecretCode("correctCode"); // Matches your @TestPropertySource
+        request.setSecretCode("correctCode"); 
 
         // Mock void method doing nothing (success)
         // No "doThrow", just let it pass
@@ -167,7 +169,6 @@ public class AuthControllerTest {
         RecruiterRegisterRequestDTO request = new RecruiterRegisterRequestDTO();
         request.setUsername("recruiter");
         request.setPassword("pass");
-        // CHANGE: Use "correctCode" so it passes the @Valid check and hits the Service Mock
         request.setSecretCode("correctCode"); 
 
         // We force the service to throw the exception ANYWAY to test the 403 mapping
@@ -178,11 +179,10 @@ public class AuthControllerTest {
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isForbidden()) // Now this will be 403!
+                .andExpect(status().isForbidden())
                 .andExpect(content().string("Invalid registration code"));
     }
-    
-    // 3. Covers GlobalExceptionHandler Line 48 (Error: 400 Bad Request Fallback)
+
     @Test
     @WithMockUser
     public void shouldReturnBadRequest_WhenUsernameTaken() throws Exception {
@@ -203,7 +203,6 @@ public class AuthControllerTest {
                 .andExpect(content().string("Username is already taken"));
     }
 
-    // 4. Covers GlobalExceptionHandler Line 53-54 (Error: 500 Internal Server Error)
     @Test
     @WithMockUser
     public void shouldReturnInternalServerError_OnUnexpectedCrash() throws Exception {
