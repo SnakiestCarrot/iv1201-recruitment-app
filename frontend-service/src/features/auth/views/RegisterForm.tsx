@@ -6,7 +6,8 @@ import { LanguageDropdown } from '../../../components/LanguageDropdown';
 import '../styles/RegisterForm.css';
 
 export const RegisterForm = () => {
-  const { state, registerUser, validationErrors, clearError } = useAuthPresenter();
+  const { state, registerUser, validationErrors, clearError } =
+    useAuthPresenter();
   const { t } = useTranslation();
 
   const [username, setUsername] = useState('');
@@ -19,7 +20,11 @@ export const RegisterForm = () => {
   };
 
   // Helper to update state and notify presenter to clear error
-  const handleInputChange = (setter: any, fieldName: string, value: string) => {
+  const handleInputChange = (
+    setter: React.Dispatch<React.SetStateAction<string>>,
+    fieldName: string,
+    value: string
+  ) => {
     setter(value);
     if (validationErrors[fieldName]) {
       clearError(fieldName);
@@ -38,7 +43,9 @@ export const RegisterForm = () => {
             id="reg-username"
             type="text"
             value={username}
-            onChange={(e) => handleInputChange(setUsername, 'username', e.target.value)}
+            onChange={(e) =>
+              handleInputChange(setUsername, 'username', e.target.value)
+            }
             className={`register-input ${validationErrors.username ? 'register-input-error' : ''}`}
           />
           {validationErrors.username && (
@@ -52,7 +59,9 @@ export const RegisterForm = () => {
             id="reg-password"
             type="password"
             value={password}
-            onChange={(e) => handleInputChange(setPassword, 'password', e.target.value)}
+            onChange={(e) =>
+              handleInputChange(setPassword, 'password', e.target.value)
+            }
             className={`register-input ${validationErrors.password ? 'register-input-error' : ''}`}
           />
           {validationErrors.password && (
@@ -66,11 +75,19 @@ export const RegisterForm = () => {
             id="reg-confirm"
             type="password"
             value={confirmPassword}
-            onChange={(e) => handleInputChange(setConfirmPassword, 'confirmPassword', e.target.value)}
+            onChange={(e) =>
+              handleInputChange(
+                setConfirmPassword,
+                'confirmPassword',
+                e.target.value
+              )
+            }
             className={`register-input ${validationErrors.confirmPassword ? 'register-input-error' : ''}`}
           />
           {validationErrors.confirmPassword && (
-            <p className="status-msg error">{validationErrors.confirmPassword}</p>
+            <p className="status-msg error">
+              {validationErrors.confirmPassword}
+            </p>
           )}
         </div>
 

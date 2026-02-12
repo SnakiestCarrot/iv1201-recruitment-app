@@ -17,7 +17,9 @@ export const useAuthPresenter = () => {
     message: '',
   });
 
-  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const [validationErrors, setValidationErrors] = useState<
+    Record<string, string>
+  >({});
   const { t } = useTranslation();
 
   /**
@@ -26,7 +28,9 @@ export const useAuthPresenter = () => {
    *
    * @param credentials - The user's registration credentials (username, password, and confirmation).
    */
-  const registerUser = async (credentials: AuthRequest & { confirmPassword?: string }) => {
+  const registerUser = async (
+    credentials: AuthRequest & { confirmPassword?: string }
+  ) => {
     setValidationErrors({});
 
     if (credentials.password !== credentials.confirmPassword) {
@@ -51,8 +55,12 @@ export const useAuthPresenter = () => {
 
     setState({ status: 'loading', message: 'Registering...' });
     try {
-      const { confirmPassword, ...payload } = credentials;
+      const payload: AuthRequest = {
+        username: credentials.username,
+        password: credentials.password,
+      };
       const successMessage = await authService.register(payload);
+
       setState({ status: 'success', message: successMessage });
     } catch (error: unknown) {
       setState({
@@ -107,11 +115,9 @@ export const useAuthPresenter = () => {
    * @param field - The name of the field to clear.
    */
   const clearError = (field: string) => {
-    setValidationErrors((prev) => {
-      const newErrors = { ...prev };
-      delete newErrors[field];
-      return newErrors;
-    });
+    setValidationErrors((prev) =>
+      Object.fromEntries(Object.entries(prev).filter(([key]) => key !== field))
+    );
   };
 
   return {

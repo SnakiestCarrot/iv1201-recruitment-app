@@ -21,10 +21,12 @@ import { ApplicationSchema } from '../../../utils/validation'; // Importing the 
  * adding/removing competences and availability periods, and submitting applications.
  */
 export const useApplicationPresenter = () => {
-  const [availableCompetences, setAvailableCompetences] = useState<Competence[]>([]);
+  const [availableCompetences, setAvailableCompetences] = useState<
+    Competence[]
+  >([]);
   const [status, setStatus] = useState<ApplicationStatus>('idle');
   const [errorMessage, setErrorMessage] = useState<string>('');
-  
+
   // NEW: State to hold validation errors
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -35,8 +37,12 @@ export const useApplicationPresenter = () => {
     pnr: '',
   });
 
-  const [addedCompetences, setAddedCompetences] = useState<CompetenceProfileDTO[]>([]);
-  const [addedAvailabilities, setAddedAvailabilities] = useState<AvailabilityDTO[]>([]);
+  const [addedCompetences, setAddedCompetences] = useState<
+    CompetenceProfileDTO[]
+  >([]);
+  const [addedAvailabilities, setAddedAvailabilities] = useState<
+    AvailabilityDTO[]
+  >([]);
 
   const [currentCompetenceId, setCurrentCompetenceId] = useState<string>('');
   const [currentYoe, setCurrentYoe] = useState<string>('');
@@ -47,23 +53,29 @@ export const useApplicationPresenter = () => {
    * Loads available competences from the server.
    * Filters out duplicates based on competenceId.
    */
-  const loadCompetences = useCallback(async () => {
-    try {
-      const data = await applicationService.getCompetences();
-      const uniqueData = data.filter(
-        (item: Competence, index: number, self: Competence[]) =>
-          index === self.findIndex((t) => t.competenceId === item.competenceId)
-      );
-
-      setAvailableCompetences(uniqueData);
-    } catch (error) {
-      console.error('Failed to load competences', error);
-    }
+  const fetchCompetences = useCallback(async () => {
+    const data = await applicationService.getCompetences();
+    return data.filter(
+      (item: Competence, index: number, self: Competence[]) =>
+        index === self.findIndex((t) => t.competenceId === item.competenceId)
+    );
   }, []);
 
   useEffect(() => {
-    loadCompetences();
-  }, [loadCompetences]);
+    let alive = true;
+
+    void fetchCompetences()
+      .then((uniqueData) => {
+        if (alive) setAvailableCompetences(uniqueData);
+      })
+      .catch((error) => {
+        console.error('Failed to load competences', error);
+      });
+
+    return () => {
+      alive = false;
+    };
+  }, [fetchCompetences]);
 
   /**
    * Handles changes to personal information input fields.
@@ -71,14 +83,11 @@ export const useApplicationPresenter = () => {
   const handleInfoChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setPersonalInfo({ ...personalInfo, [name]: value });
-    
-    // Optional: Clear error for this field as the user types
+
     if (errors[name]) {
-      setErrors((prev) => {
-        const newErrors = { ...prev };
-        delete newErrors[name];
-        return newErrors;
-      });
+      setErrors((prev) =>
+        Object.fromEntries(Object.entries(prev).filter(([key]) => key !== name))
+      );
     }
   };
 
@@ -141,7 +150,7 @@ export const useApplicationPresenter = () => {
    */
   const submitApplication = async (e: FormEvent) => {
     e.preventDefault();
-    
+
     // 1. Zod Validation
     const validationResult = ApplicationSchema.safeParse(personalInfo);
 
@@ -154,7 +163,7 @@ export const useApplicationPresenter = () => {
       });
       setErrors(formattedErrors);
       // Stop execution here so we don't call the API
-      return; 
+      return;
     }
 
     // 2. Clear errors if validation passed

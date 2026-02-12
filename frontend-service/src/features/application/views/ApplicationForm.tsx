@@ -5,7 +5,7 @@ import '../styles/ApplicationForm.css';
 
 export const ApplicationForm: React.FC = () => {
   const { t } = useTranslation();
-    const {
+  const {
     availableCompetences,
     status,
     personalInfo,
@@ -15,7 +15,7 @@ export const ApplicationForm: React.FC = () => {
     currentYoe,
     currentFromDate,
     currentToDate,
-    errors, 
+    errors,
     setCurrentCompetenceId,
     setCurrentYoe,
     setCurrentFromDate,
@@ -57,7 +57,9 @@ export const ApplicationForm: React.FC = () => {
                 onChange={handleInfoChange}
                 className={`application-input ${errors.name ? 'application-input-error' : ''}`}
               />
-              {errors.name && <span className="application-error-text">{errors.name}</span>}
+              {errors.name && (
+                <span className="application-error-text">{errors.name}</span>
+              )}
             </div>
 
             {/* Surname */}
@@ -69,7 +71,9 @@ export const ApplicationForm: React.FC = () => {
                 onChange={handleInfoChange}
                 className={`application-input ${errors.surname ? 'application-input-error' : ''}`}
               />
-              {errors.surname && <span className="application-error-text">{errors.surname}</span>}
+              {errors.surname && (
+                <span className="application-error-text">{errors.surname}</span>
+              )}
             </div>
 
             {/* Email */}
@@ -82,7 +86,9 @@ export const ApplicationForm: React.FC = () => {
                 onChange={handleInfoChange}
                 className={`application-input ${errors.email ? 'application-input-error' : ''}`}
               />
-              {errors.email && <span className="application-error-text">{errors.email}</span>}
+              {errors.email && (
+                <span className="application-error-text">{errors.email}</span>
+              )}
             </div>
 
             {/* PNR */}
@@ -94,16 +100,20 @@ export const ApplicationForm: React.FC = () => {
                 onChange={handleInfoChange}
                 className={`application-input ${errors.pnr ? 'application-input-error' : ''}`}
               />
-              {errors.pnr && <span className="application-error-text">{errors.pnr}</span>}
+              {errors.pnr && (
+                <span className="application-error-text">{errors.pnr}</span>
+              )}
             </div>
           </div>
         </section>
 
         {/* Competences & Availability sections remain the same... */}
-        
+
         {/* Competence Section */}
         <section className="application-section">
-          <h3 className="application-section-title">{t('application.competence-profile')}</h3>
+          <h3 className="application-section-title">
+            {t('application.competence-profile')}
+          </h3>
           <div className="application-input-group">
             <select
               value={currentCompetenceId}
@@ -125,7 +135,11 @@ export const ApplicationForm: React.FC = () => {
               onChange={(e) => setCurrentYoe(e.target.value)}
               className="application-input application-input-small"
             />
-            <button type="button" onClick={addCompetence} className="application-btn application-btn-add">
+            <button
+              type="button"
+              onClick={addCompetence}
+              className="application-btn application-btn-add"
+            >
               {t('application.add')}
             </button>
           </div>
@@ -133,8 +147,17 @@ export const ApplicationForm: React.FC = () => {
             <ul className="application-list">
               {addedCompetences.map((item, idx) => (
                 <li key={idx} className="application-list-item">
-                  <span>{t(`competence.${item.name}`)} - {item.yearsOfExperience} {t('application.years-exp')}</span>
-                  <button type="button" onClick={() => removeCompetence(idx)} className="application-btn-remove">{t('application.remove')}</button>
+                  <span>
+                    {t(`competence.${item.name}`)} - {item.yearsOfExperience}{' '}
+                    {t('application.years-exp')}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => removeCompetence(idx)}
+                    className="application-btn-remove"
+                  >
+                    {t('application.remove')}
+                  </button>
                 </li>
               ))}
             </ul>
@@ -143,17 +166,35 @@ export const ApplicationForm: React.FC = () => {
 
         {/* Availability Section */}
         <section className="application-section">
-          <h3 className="application-section-title">{t('application.availability')}</h3>
+          <h3 className="application-section-title">
+            {t('application.availability')}
+          </h3>
           <div className="application-input-group">
             <div>
-              <label className="application-label">{t('application.from')}</label>
-              <input type="date" value={currentFromDate} onChange={(e) => setCurrentFromDate(e.target.value)} className="application-input" />
+              <label className="application-label">
+                {t('application.from')}
+              </label>
+              <input
+                type="date"
+                value={currentFromDate}
+                onChange={(e) => setCurrentFromDate(e.target.value)}
+                className="application-input"
+              />
             </div>
             <div>
               <label className="application-label">{t('application.to')}</label>
-              <input type="date" value={currentToDate} onChange={(e) => setCurrentToDate(e.target.value)} className="application-input" />
+              <input
+                type="date"
+                value={currentToDate}
+                onChange={(e) => setCurrentToDate(e.target.value)}
+                className="application-input"
+              />
             </div>
-            <button type="button" onClick={addAvailability} className="application-btn application-btn-add application-align-end">
+            <button
+              type="button"
+              onClick={addAvailability}
+              className="application-btn application-btn-add application-align-end"
+            >
               {t('application.add')}
             </button>
           </div>
@@ -161,19 +202,37 @@ export const ApplicationForm: React.FC = () => {
             <ul className="application-list">
               {addedAvailabilities.map((item, idx) => (
                 <li key={idx} className="application-list-item">
-                  <span>{item.fromDate} → {item.toDate}</span>
-                  <button type="button" onClick={() => removeAvailability(idx)} className="application-btn-remove">{t('application.remove')}</button>
+                  <span>
+                    {item.fromDate} → {item.toDate}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => removeAvailability(idx)}
+                    className="application-btn-remove"
+                  >
+                    {t('application.remove')}
+                  </button>
                 </li>
               ))}
             </ul>
           )}
         </section>
 
-        <button type="submit" disabled={status === 'loading'} className="application-btn application-btn-submit">
-          {status === 'loading' ? t('application.submitting') : t('application.submit')}
+        <button
+          type="submit"
+          disabled={status === 'loading'}
+          className="application-btn application-btn-submit"
+        >
+          {status === 'loading'
+            ? t('application.submitting')
+            : t('application.submit')}
         </button>
 
-        {status === 'error' && <div className="application-error">{t('application.error-message')}</div>}
+        {status === 'error' && (
+          <div className="application-error">
+            {t('application.error-message')}
+          </div>
+        )}
       </form>
     </div>
   );

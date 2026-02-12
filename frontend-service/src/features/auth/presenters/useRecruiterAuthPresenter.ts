@@ -17,7 +17,9 @@ export const useRecruiterAuthPresenter = () => {
     status: 'idle',
     message: '',
   });
-  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const [validationErrors, setValidationErrors] = useState<
+    Record<string, string>
+  >({});
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -28,7 +30,9 @@ export const useRecruiterAuthPresenter = () => {
    *
    * @param credentials - The recruiter's registration data including username, password, and secret code.
    */
-  const registerRecruiter = async (credentials: RecruiterRegisterRequest & { confirmPassword?: string }) => {
+  const registerRecruiter = async (
+    credentials: RecruiterRegisterRequest & { confirmPassword?: string }
+  ) => {
     setValidationErrors({});
 
     if (credentials.password !== credentials.confirmPassword) {
@@ -51,7 +55,12 @@ export const useRecruiterAuthPresenter = () => {
     setState({ status: 'loading', message: '' });
 
     try {
-      const { confirmPassword, ...payload } = credentials;
+      const payload = {
+        username: credentials.username,
+        password: credentials.password,
+        secretCode: credentials.secretCode,
+      };
+
       const message = await authService.registerRecruiter(payload);
       setState({ status: 'success', message });
 
@@ -70,11 +79,9 @@ export const useRecruiterAuthPresenter = () => {
    * * @param field - The name of the field to clear the error for.
    */
   const clearError = (field: string) => {
-    setValidationErrors((prev) => {
-      const newErrors = { ...prev };
-      delete newErrors[field];
-      return newErrors;
-    });
+    setValidationErrors((prev) =>
+      Object.fromEntries(Object.entries(prev).filter(([key]) => key !== field))
+    );
   };
 
   return {

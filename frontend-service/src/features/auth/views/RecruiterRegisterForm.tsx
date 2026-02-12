@@ -26,7 +26,9 @@ export const RecruiterRegisterForm = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [secretCode, setSecretCode] = useState('');
-  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const [validationErrors, setValidationErrors] = useState<
+    Record<string, string>
+  >({});
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,7 +39,11 @@ export const RecruiterRegisterForm = () => {
       return;
     }
 
-    const result = RecruiterRegisterSchema.safeParse({ username, password, secretCode });
+    const result = RecruiterRegisterSchema.safeParse({
+      username,
+      password,
+      secretCode,
+    });
 
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
@@ -97,7 +103,9 @@ export const RecruiterRegisterForm = () => {
             className={`register-input ${validationErrors.confirmPassword ? 'register-input-error' : ''}`}
           />
           {validationErrors.confirmPassword && (
-            <p className="status-msg error">{validationErrors.confirmPassword}</p>
+            <p className="status-msg error">
+              {validationErrors.confirmPassword}
+            </p>
           )}
         </div>
 

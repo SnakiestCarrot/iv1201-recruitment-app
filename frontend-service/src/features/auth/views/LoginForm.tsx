@@ -17,7 +17,9 @@ export const LoginForm = () => {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const [validationErrors, setValidationErrors] = useState<
+    Record<string, string>
+  >({});
 
   useEffect(() => {
     if (state.status === 'success') {
@@ -62,7 +64,9 @@ export const LoginForm = () => {
             className={`login-input ${validationErrors.username ? 'input-error' : ''}`}
           />
           {validationErrors.username && (
-             <span style={{color: 'red', fontSize: '0.85em'}}>{validationErrors.username}</span>
+            <span style={{ color: 'red', fontSize: '0.85em' }}>
+              {validationErrors.username}
+            </span>
           )}
         </div>
 
@@ -77,7 +81,9 @@ export const LoginForm = () => {
             className={`login-input ${validationErrors.password ? 'input-error' : ''}`}
           />
           {validationErrors.password && (
-             <span style={{color: 'red', fontSize: '0.85em'}}>{validationErrors.password}</span>
+            <span style={{ color: 'red', fontSize: '0.85em' }}>
+              {validationErrors.password}
+            </span>
           )}
         </div>
 
