@@ -64,6 +64,33 @@ export const authService = {
   },
 
   /**
+   * Requests password reset instructions for migrated (old) users.
+   *
+   * Always returns a generic message for security reasons.
+   *
+   * @param email - The email address of the old user.
+   * @returns A promise that resolves to a success message.
+   */
+  async requestOldUserReset(email: string): Promise<string> {
+    const baseUrl = import.meta.env.VITE_API_URL
+      ? `${import.meta.env.VITE_API_URL}/api/recruitment`
+      : 'http://localhost:8080/api/recruitment';
+
+    const response = await fetch(`${baseUrl}/migrated-user`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+
+    // We intentionally do NOT expose whether the emails exists
+    if (!response.ok) {
+      return 'If this email exists in our system, you will receive password reset instructions shortly.';
+    }
+
+    return await response.text();
+  },
+
+  /**
    * Authenticates a user and returns a JWT token.
    *
    * @param data - The login credentials containing username and password.

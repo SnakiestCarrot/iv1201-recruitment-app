@@ -14,22 +14,29 @@ import '../styles/LoginForm.css';
  * @returns The login form component.
  */
 export const LoginForm = () => {
-  const { state, loginUser } = useAuthPresenter();
+  const { state, loginUser, requestOldUserReset } = useAuthPresenter();
   const navigate = useNavigate();
   const { t } = useTranslation();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showOldUser, setShowOldUser] = useState(false);
+  const [oldUserEmail, setOldUserEmail] = useState('');
 
   useEffect(() => {
-    if (state.status === 'success') {
+    if (state.status === 'success' && !showOldUser) {
       navigate('/dashboard');
     }
-  }, [state.status, navigate]);
+  }, [state.status, navigate, showOldUser]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     loginUser({ username, password });
+  };
+
+  const handleOldUserSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    requestOldUserReset(oldUserEmail);
   };
 
   return (
@@ -71,6 +78,44 @@ export const LoginForm = () => {
             : t('auth.login')}
         </button>
       </form>
+
+      <div className="old-user-section">
+        {!showOldUser ? (
+          <p
+            className="old-user-link"
+            onClick={() => setShowOldUser(true)}
+            style={{ cursor: 'pointer' }}
+          >
+            Old user?
+          </p>
+        ) : (
+          <form onSubmit={handleOldUserSubmit} className="old-user-form">
+            <div className="form-group">
+              <label htmlFor="oldUserEmail">Email</label>
+              <input
+                id="oldUserEmail"
+                type="email"
+                value={oldUserEmail}
+                onChange={(e) => setOldUserEmail(e.target.value)}
+                required
+                className="login-input"
+              />
+            </div>
+
+            <button type="submit" disabled={state.status === 'loading'}>
+              {state.status === 'loading' ? 'Sending...' : 'Send Instructions'}
+            </button>
+
+            <p
+              className="old-user-link"
+              onClick={() => setShowOldUser(false)}
+              style={{ cursor: 'pointer' }}
+            >
+              Back to login
+            </p>
+          </form>
+        )}
+      </div>
 
       {state.message && (
         <p className={`status-msg ${state.status}`}>{state.message}</p>

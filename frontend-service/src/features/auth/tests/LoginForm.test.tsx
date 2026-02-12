@@ -104,4 +104,45 @@ describe('LoginForm Component', () => {
 
     expect(screen.getByText('Invalid credentials')).toBeInTheDocument();
   });
+
+  const mockRequestOldUserReset = vi.fn();
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+
+    (useAuthPresenter as any).mockReturnValue({
+      state: { status: 'idle', message: '' },
+      loginUser: mockLoginUser,
+      requestOldUserReset: mockRequestOldUserReset,
+    });
+  });
+
+  it('renders Old user? link', () => {
+    render(<LoginForm />);
+    expect(screen.getByText('Old user?')).toBeInTheDocument();
+  });
+
+  it('shows old user email form when clicked', () => {
+    render(<LoginForm />);
+
+    fireEvent.click(screen.getByText('Old user?'));
+
+    expect(screen.getByLabelText('Email')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Send Instructions' })).toBeInTheDocument();
+  });
+
+
+  it('calls requestOldUserReset when old user form submitted', () => {
+    render(<LoginForm />);
+
+    fireEvent.click(screen.getByText('Old user?'));
+
+    fireEvent.change(screen.getByLabelText('Email'), {
+      target: { value: 'old@test.com' },
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Send Instructions' }));
+
+    expect(mockRequestOldUserReset).toHaveBeenCalledWith('old@test.com');
+  });
 });

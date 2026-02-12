@@ -214,4 +214,35 @@ describe('authService', () => {
       authService.login({ username: 'user', password: 'pw' })
     ).rejects.toThrow('Login failed');
   });
+  it('requestOldUserReset sends correct request and returns backend message', async () => {
+    fetchMock.mockResolvedValue({
+      ok: true,
+      text: () => Promise.resolve('Reset instructions sent'),
+    });
+
+    const result = await authService.requestOldUserReset('test@mail.com');
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining('/api/recruitment/migrated-user'),
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: 'test@mail.com' }),
+      }
+    );
+
+    expect(result).toBe('Reset instructions sent');
+  });
+
+  it('requestOldUserReset returns generic message when request fails', async () => {
+    fetchMock.mockResolvedValue({
+      ok: false,
+    });
+
+    const result = await authService.requestOldUserReset('test@mail.com');
+
+    expect(result).toBe(
+      'If this email exists in our system, you will receive password reset instructions shortly.'
+    );
+  });
 });
