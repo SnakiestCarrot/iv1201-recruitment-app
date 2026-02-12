@@ -8,6 +8,7 @@ vi.mock('../services/authService', () => ({
   authService: {
     login: vi.fn(),
     register: vi.fn(),
+    requestOldUserReset: vi.fn(),
   },
 }));
 
@@ -120,5 +121,42 @@ describe('useAuthPresenter', () => {
       status: 'error',
       message: 'User exists',
     });
+  });
+
+  it('handles successful old user reset request', async () => {
+    (authService.requestOldUserReset as any).mockResolvedValue(
+      'If this email exists in our system, you will receive password reset instructions shortly.'
+    );
+
+    const { result } = renderHook(() => useAuthPresenter());
+
+    await act(async () => {
+      await result.current.requestOldUserReset('old@test.com');
+    });
+
+    expect(authService.requestOldUserReset).toHaveBeenCalledWith('old@test.com');
+
+    expect(result.current.state).toEqual({
+      status: 'success',
+      message:
+        'If this email exists in our system, you will receive password reset instructions shortly.',
+    });
+  });
+
+  it('returns generic success message even if old user reset fails', async () => {
+    (authService.requestOldUserReset as any).mockRejectedValue(
+      new Error('Network error')
+    );
+
+    const { result } = renderHook(() => useAuthPresenter());
+
+    await act(async () => {
+      await result.current.requestOldUserReset('old@test.com');
+    });
+
+    expect(result.current.state.status).toBe('success');
+    expect(result.current.state.message).toContain(
+      'If this email exists'
+    );
   });
 });

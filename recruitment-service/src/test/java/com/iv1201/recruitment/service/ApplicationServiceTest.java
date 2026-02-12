@@ -72,7 +72,7 @@ class ApplicationServiceTest {
         when(dto.getSurname()).thenReturn("Doe");
         when(dto.getEmail()).thenReturn("alice@example.com");
         when(dto.getPnr()).thenReturn("19900101-1234");
-        
+
         when(compDto.getCompetenceId()).thenReturn(1L);
         when(compDto.getYearsOfExperience()).thenReturn(BigDecimal.valueOf(2.5));
         when(dto.getCompetences()).thenReturn(List.of(compDto));
@@ -83,7 +83,7 @@ class ApplicationServiceTest {
 
         Person existingPerson = new Person();
         when(personRepository.findById(100L)).thenReturn(Optional.of(existingPerson));
-        
+
         Competence mockCompetence = new Competence();
         when(competenceRepository.findById(1L)).thenReturn(Optional.of(mockCompetence));
 
@@ -93,22 +93,18 @@ class ApplicationServiceTest {
         assertThat(existingPerson.getName()).isEqualTo("Alice");
         assertThat(existingPerson.getStatus()).isEqualTo("UNHANDLED");
 
-        verify(competenceProfileRepository).save(argThat(profile -> 
-            profile.getPerson() == existingPerson &&
-            profile.getCompetence() == mockCompetence &&
-            profile.getYearsOfExperience().equals(BigDecimal.valueOf(2.5))
-        ));
+        verify(competenceProfileRepository).save(argThat(profile -> profile.getPerson() == existingPerson &&
+                profile.getCompetence() == mockCompetence &&
+                profile.getYearsOfExperience().equals(BigDecimal.valueOf(2.5))));
 
-        verify(availabilityRepository).save(argThat(avail -> 
-            avail.getPerson() == existingPerson &&
-            avail.getFromDate().equals(LocalDate.parse("2023-01-01"))
-        ));
+        verify(availabilityRepository).save(argThat(avail -> avail.getPerson() == existingPerson &&
+                avail.getFromDate().equals(LocalDate.parse("2023-01-01"))));
     }
 
     @Test
     void createApplication_handlesNullListsAndExistingStatus() {
         ApplicationsCreateDTO dto = mock(ApplicationsCreateDTO.class);
-        
+
         Person person = new Person();
         person.setStatus("ACCEPTED");
         when(personRepository.findById(100L)).thenReturn(Optional.of(person));
@@ -130,13 +126,13 @@ class ApplicationServiceTest {
 
         when(compDto.getCompetenceId()).thenReturn(99L);
         when(dto.getCompetences()).thenReturn(List.of(compDto));
-        
+
         when(personRepository.findById(any())).thenReturn(Optional.of(new Person()));
         when(competenceRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> applicationService.createApplication(dto, 1L))
-            .isInstanceOf(RuntimeException.class)
-            .hasMessage("Competence not found");
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("Competence not found");
     }
 
     @Test
@@ -162,11 +158,11 @@ class ApplicationServiceTest {
         when(personRepository.findById(1L)).thenReturn(Optional.of(person));
 
         assertThatThrownBy(() -> applicationService.updateApplicationStatus(1L, "ACCEPTED", 1L))
-            .isInstanceOf(ResponseStatusException.class)
-            .satisfies(ex -> {
-                ResponseStatusException rse = (ResponseStatusException) ex;
-                assertThat(rse.getStatusCode().value()).isEqualTo(409);
-            });
+                .isInstanceOf(ResponseStatusException.class)
+                .satisfies(ex -> {
+                    ResponseStatusException rse = (ResponseStatusException) ex;
+                    assertThat(rse.getStatusCode().value()).isEqualTo(409);
+                });
 
         verify(personRepository, never()).save(any());
     }
@@ -179,13 +175,33 @@ class ApplicationServiceTest {
         person.setVersion(0L);
         when(personRepository.findById(1L)).thenReturn(Optional.of(person));
         when(personRepository.save(any())).thenThrow(
-            new ObjectOptimisticLockingFailureException(Person.class.getName(), 1L));
+                new ObjectOptimisticLockingFailureException(Person.class.getName(), 1L));
 
         assertThatThrownBy(() -> applicationService.updateApplicationStatus(1L, "ACCEPTED", 0L))
-            .isInstanceOf(ResponseStatusException.class)
-            .satisfies(ex -> {
-                ResponseStatusException rse = (ResponseStatusException) ex;
-                assertThat(rse.getStatusCode().value()).isEqualTo(409);
-            });
+                .isInstanceOf(ResponseStatusException.class)
+                .satisfies(ex -> {
+                    ResponseStatusException rse = (ResponseStatusException) ex;
+                    assertThat(rse.getStatusCode().value()).isEqualTo(409);
+                });
+    }
+
+    @Test
+    void emailExists_returnsTrue_whenRepositoryReturnsTrue() {
+        when(personRepository.existsByEmail("exists@test.com")).thenReturn(true);
+
+        boolean result = applicationService.emailExists("exists@test.com");
+
+        assertThat(result).isTrue();
+        verify(personRepository).existsByEmail("exists@test.com");
+    }
+
+    @Test
+    void emailExists_returnsFalse_whenRepositoryReturnsFalse() {
+        when(personRepository.existsByEmail("unknown@test.com")).thenReturn(false);
+
+        boolean result = applicationService.emailExists("unknown@test.com");
+
+        assertThat(result).isFalse();
+        verify(personRepository).existsByEmail("unknown@test.com");
     }
 }
