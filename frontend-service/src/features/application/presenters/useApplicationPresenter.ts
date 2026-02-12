@@ -35,8 +35,6 @@ export const useApplicationPresenter = () => {
   const [personalInfo, setPersonalInfo] = useState({
     name: '',
     surname: '',
-    email: '',
-    pnr: '',
   });
 
   const [addedCompetences, setAddedCompetences] = useState<

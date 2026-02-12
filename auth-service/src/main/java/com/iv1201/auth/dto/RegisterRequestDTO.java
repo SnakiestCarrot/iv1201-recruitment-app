@@ -16,6 +16,12 @@ public class RegisterRequestDTO {
     @NotBlank(message = "Password is required")
     private String password;
 
+    @NotBlank(message = "Email is required")
+    private String email;
+
+    @NotBlank(message = "Personal number is required")
+    private String pnr;
+
 
     /**
      * Sets the username.
@@ -48,5 +54,37 @@ public class RegisterRequestDTO {
      */
     public String getPassword() {
         return password;
+    }
+
+    /**
+     * Gets the email.
+     * @return The email.
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * Sets the email.
+     * @param email The email address.
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /**
+     * Gets the personal number.
+     * @return The personal number.
+     */
+    public String getPnr() {
+        return pnr;
+    }
+
+    /**
+     * Sets the personal number.
+     * @param pnr The personal number.
+     */
+    public void setPnr(String pnr) {
+        this.pnr = pnr;
     }
 }

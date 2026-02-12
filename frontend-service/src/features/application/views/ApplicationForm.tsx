@@ -79,23 +79,6 @@ export const ApplicationForm: React.FC = () => {
               required
               className="application-input"
             />
-            <input
-              name="email"
-              type="email"
-              placeholder={t('application.email')}
-              value={personalInfo.email}
-              onChange={handleInfoChange}
-              required
-              className="application-input"
-            />
-            <input
-              name="pnr"
-              placeholder={t('application.pnr')}
-              value={personalInfo.pnr}
-              onChange={handleInfoChange}
-              required
-              className="application-input"
-            />
           </div>
         </section>
 

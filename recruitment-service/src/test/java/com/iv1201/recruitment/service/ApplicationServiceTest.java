@@ -4,6 +4,7 @@ import com.iv1201.recruitment.dto.ApplicationSummaryDTO;
 import com.iv1201.recruitment.dto.ApplicationsCreateDTO;
 import com.iv1201.recruitment.dto.CompetenceDTO;
 import com.iv1201.recruitment.dto.AvailabilityDTO;
+import com.iv1201.recruitment.dto.PersonCreateDTO;
 import com.iv1201.recruitment.model.*;
 import com.iv1201.recruitment.repository.*;
 
@@ -70,8 +71,6 @@ class ApplicationServiceTest {
 
         when(dto.getName()).thenReturn("Alice");
         when(dto.getSurname()).thenReturn("Doe");
-        when(dto.getEmail()).thenReturn("alice@example.com");
-        when(dto.getPnr()).thenReturn("19900101-1234");
         
         when(compDto.getCompetenceId()).thenReturn(1L);
         when(compDto.getYearsOfExperience()).thenReturn(BigDecimal.valueOf(2.5));
@@ -187,5 +186,22 @@ class ApplicationServiceTest {
                 ResponseStatusException rse = (ResponseStatusException) ex;
                 assertThat(rse.getStatusCode().value()).isEqualTo(409);
             });
+    }
+
+    @Test
+    void createPerson_savesPersonWithCorrectFields() {
+        PersonCreateDTO dto = new PersonCreateDTO();
+        dto.setPersonId(42L);
+        dto.setEmail("test@example.com");
+        dto.setPnr("19900101-1234");
+
+        applicationService.createPerson(dto);
+
+        verify(personRepository).save(argThat(person ->
+            person.getId().equals(42L)
+            && "test@example.com".equals(person.getEmail())
+            && "19900101-1234".equals(person.getPnr())
+            && "UNHANDLED".equals(person.getStatus())
+        ));
     }
 }

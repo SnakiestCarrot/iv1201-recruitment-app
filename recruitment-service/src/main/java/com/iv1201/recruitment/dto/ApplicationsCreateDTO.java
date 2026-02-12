@@ -4,17 +4,15 @@ import java.util.List;
 
 /**
  * Data Transfer Object used when an applicant submits a recruitment application.
- * 
+ *
  * Contains personal information as well as lists of competences and
- * availability periods provided by the applicant. 
+ * availability periods provided by the applicant.
+ * Email and pnr are no longer included here as they are collected during registration.
  */
-
 public class ApplicationsCreateDTO {
 
     private String name;
     private String surname;
-    private String email;
-    private String pnr;
 
     private List<CompetenceDTO> competences;
     private List<AvailabilityDTO> availabilities;
@@ -33,22 +31,6 @@ public class ApplicationsCreateDTO {
 
     public void setSurname(String surname) {
         this.surname = surname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPnr() {
-        return pnr;
-    }
-
-    public void setPnr(String pnr) {
-        this.pnr = pnr;
     }
 
     public List<CompetenceDTO> getCompetences() {

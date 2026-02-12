@@ -18,6 +18,8 @@ export const RegisterForm = () => {
   const { t } = useTranslation();
 
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [pnr, setPnr] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [validationError, setValidationError] = useState('');
@@ -36,7 +38,7 @@ export const RegisterForm = () => {
       return;
     }
 
-    registerUser({ username, password });
+    registerUser({ username, password, email, pnr });
   };
 
   return (
@@ -53,6 +55,30 @@ export const RegisterForm = () => {
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            required
+            className="register-input"
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="reg-email">{t('common.email')}</label>
+          <input
+            id="reg-email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="register-input"
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="reg-pnr">{t('common.pnr')}</label>
+          <input
+            id="reg-pnr"
+            type="text"
+            value={pnr}
+            onChange={(e) => setPnr(e.target.value)}
             required
             className="register-input"
           />

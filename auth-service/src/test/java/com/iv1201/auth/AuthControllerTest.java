@@ -46,6 +46,8 @@ public class AuthControllerTest {
         RegisterRequestDTO request = new RegisterRequestDTO();
         request.setUsername("newUser");
         request.setPassword("password123");
+        request.setEmail("test@example.com");
+        request.setPnr("19900101-1234");
 
         mockMvc.perform(post("/auth/register")
                 .with(csrf())
@@ -60,6 +62,8 @@ public class AuthControllerTest {
         RegisterRequestDTO request = new RegisterRequestDTO();
         request.setUsername("");
         request.setPassword("password123");
+        request.setEmail("test@example.com");
+        request.setPnr("19900101-1234");
 
         mockMvc.perform(post("/auth/register")
                 .with(csrf())
@@ -73,6 +77,8 @@ public class AuthControllerTest {
         RegisterRequestDTO request = new RegisterRequestDTO();
         request.setUsername("newUser");
         request.setPassword("");
+        request.setEmail("test@example.com");
+        request.setPnr("19900101-1234");
 
         mockMvc.perform(post("/auth/register")
                 .with(csrf())
@@ -89,6 +95,8 @@ public class AuthControllerTest {
         RecruiterRegisterRequestDTO request = new RecruiterRegisterRequestDTO();
         request.setUsername("newRecruiter");
         request.setPassword("password123");
+        request.setEmail("recruiter@example.com");
+        request.setPnr("19900101-1234");
         request.setSecretCode(""); // Triggers validation
 
         mockMvc.perform(post("/auth/register/recruiter")
@@ -104,6 +112,8 @@ public class AuthControllerTest {
         RecruiterRegisterRequestDTO request = new RecruiterRegisterRequestDTO();
         request.setUsername("newRecruiter");
         request.setPassword("password123");
+        request.setEmail("recruiter@example.com");
+        request.setPnr("19900101-1234");
         request.setSecretCode(null); // Triggers validation
 
         mockMvc.perform(post("/auth/register/recruiter")
@@ -150,11 +160,13 @@ public class AuthControllerTest {
         RecruiterRegisterRequestDTO request = new RecruiterRegisterRequestDTO();
         request.setUsername("recruiter");
         request.setPassword("pass");
-        request.setSecretCode("correctCode"); 
+        request.setEmail("recruiter@example.com");
+        request.setPnr("19900101-1234");
+        request.setSecretCode("correctCode");
 
         // Mock void method doing nothing (success)
         // No "doThrow", just let it pass
-        
+
         mockMvc.perform(post("/auth/register/recruiter")
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -169,7 +181,9 @@ public class AuthControllerTest {
         RecruiterRegisterRequestDTO request = new RecruiterRegisterRequestDTO();
         request.setUsername("recruiter");
         request.setPassword("pass");
-        request.setSecretCode("correctCode"); 
+        request.setEmail("recruiter@example.com");
+        request.setPnr("19900101-1234");
+        request.setSecretCode("correctCode");
 
         // We force the service to throw the exception ANYWAY to test the 403 mapping
         doThrow(new IllegalArgumentException("Invalid registration code"))
@@ -189,6 +203,8 @@ public class AuthControllerTest {
         RecruiterRegisterRequestDTO request = new RecruiterRegisterRequestDTO();
         request.setUsername("takenUser");
         request.setPassword("pass");
+        request.setEmail("taken@example.com");
+        request.setPnr("19900101-1234");
         request.setSecretCode("correctCode");
 
         // Force a generic IllegalArgumentException (not "Invalid code")
