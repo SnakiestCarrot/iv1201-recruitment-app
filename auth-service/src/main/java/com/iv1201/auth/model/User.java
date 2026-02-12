@@ -1,13 +1,19 @@
 package com.iv1201.auth.model;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Represents a user in the Authentication Database.
+ * Implements Spring Security's UserDetails for authentication.
  */
 @Entity
 @Table(name = "person")
-public class User {
+public class User implements UserDetails {
 
     /**
      * The unique identifier for the user.
@@ -55,6 +61,7 @@ public class User {
      * Gets the username.
      * @return The username.
      */
+    @Override
     public String getUsername() {
         return username;
     }
@@ -71,6 +78,7 @@ public class User {
      * Gets the hashed password.
      * @return The encrypted password string.
      */
+    @Override
     public String getPassword() {
         return password;
     }
@@ -97,5 +105,30 @@ public class User {
      */
     public void setRoleId(Long roleId) {
         this.roleId = roleId;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

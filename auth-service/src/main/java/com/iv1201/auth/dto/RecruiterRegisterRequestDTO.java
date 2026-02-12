@@ -1,13 +1,24 @@
 package com.iv1201.auth.dto;
 
+import com.iv1201.auth.validation.UniqueUsername;
+import com.iv1201.auth.validation.ValidSecretCode;
+import jakarta.validation.constraints.NotBlank;
+
 /**
  * Data Transfer Object for recruiter registration.
  * Includes a secret code field to restrict registration.
  */
 public class RecruiterRegisterRequestDTO {
 
+    @NotBlank(message = "Username is required")
+    @UniqueUsername
     private String username;
+
+    @NotBlank(message = "Password is required")
     private String password;
+
+    @NotBlank(message = "Registration code is required")
+    @ValidSecretCode
     private String secretCode;
 
     /**

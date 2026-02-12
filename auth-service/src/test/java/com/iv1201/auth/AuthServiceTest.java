@@ -13,12 +13,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -34,97 +35,77 @@ class AuthServiceTest {
     @Mock
     private JwtUtil jwtUtil;
 
+    @Mock
+    private AuthenticationManager authenticationManager;
+
     @InjectMocks
     private AuthService authService;
 
-    private final String TEST_SECRET = "correctSecret";
-
     @BeforeEach
     void setUp() {
-        ReflectionTestUtils.setField(authService, "recruiterSecretCode", TEST_SECRET);
+        // Setup mock behaviors
     }
 
     @Test
-    void testRegister_UsernameAlreadyTaken_ShouldThrowException() {
+    void testRegister_Success() {
         RegisterRequestDTO request = new RegisterRequestDTO();
-        request.setUsername("existingUser");
-        request.setPassword("pass");
+        request.setUsername("newUser");
+        request.setPassword("password123");
 
-        when(userRepository.existsByUsername("existingUser")).thenReturn(true);
+        when(passwordEncoder.encode("password123")).thenReturn("encodedPassword");
 
-        assertThrows(IllegalArgumentException.class, () -> authService.register(request));
+        authService.register(request);
 
-        verify(userRepository, never()).save(any());
-    }
-
-    @Test
-    void testRegisterRecruiter_InvalidSecretCode_ShouldThrowException() {
-        RecruiterRegisterRequestDTO request = new RecruiterRegisterRequestDTO();
-        request.setUsername("recruiter");
-        request.setSecretCode("wrongSecret"); 
-
-        assertThrows(IllegalArgumentException.class, () -> authService.registerRecruiter(request));
-    }
-
-    @Test
-    void testRegisterRecruiter_NullSecretCode_ShouldThrowException() {
-        RecruiterRegisterRequestDTO request = new RecruiterRegisterRequestDTO();
-        request.setUsername("recruiter");
-        request.setSecretCode(null); 
-
-        assertThrows(IllegalArgumentException.class, () -> authService.registerRecruiter(request));
-    }
-
-    @Test
-    void testRegisterRecruiter_UsernameAlreadyTaken_ShouldThrowException() {
-        RecruiterRegisterRequestDTO request = new RecruiterRegisterRequestDTO();
-        request.setUsername("existingRecruiter");
-        request.setSecretCode(TEST_SECRET); 
-
-        when(userRepository.existsByUsername("existingRecruiter")).thenReturn(true);
-
-        assertThrows(IllegalArgumentException.class, () -> authService.registerRecruiter(request));
-    }
-
-    @Test
-    void testLogin_UserNotFound_ShouldThrowException() {
-        LoginRequestDTO request = new LoginRequestDTO();
-        request.setUsername("unknownUser");
-        request.setPassword("pass");
-
-        when(userRepository.findByUsername("unknownUser")).thenReturn(Optional.empty());
-
-        assertThrows(IllegalArgumentException.class, () -> authService.login(request));
-    }
-
-    @Test
-    void testLogin_WrongPassword_ShouldThrowException() {
-        LoginRequestDTO request = new LoginRequestDTO();
-        request.setUsername("validUser");
-        request.setPassword("wrongPass");
-
-        User mockUser = new User();
-        mockUser.setUsername("validUser");
-        mockUser.setPassword("hashedRealPassword");
-
-        when(userRepository.findByUsername("validUser")).thenReturn(Optional.of(mockUser));
-
-        when(passwordEncoder.matches("wrongPass", "hashedRealPassword")).thenReturn(false);
-
-        assertThrows(IllegalArgumentException.class, () -> authService.login(request));
+        verify(userRepository, times(1)).save(any(User.class));
+        verify(passwordEncoder, times(1)).encode("password123");
     }
 
     @Test
     void testRegisterRecruiter_Success() {
         RecruiterRegisterRequestDTO request = new RecruiterRegisterRequestDTO();
         request.setUsername("newRecruiter");
-        request.setPassword("pass");
-        request.setSecretCode(TEST_SECRET); // Correct Secret
+        request.setPassword("password123");
 
-        when(userRepository.existsByUsername("newRecruiter")).thenReturn(false);
+        when(passwordEncoder.encode("password123")).thenReturn("encodedPassword");
 
         authService.registerRecruiter(request);
 
         verify(userRepository, times(1)).save(any(User.class));
+        verify(passwordEncoder, times(1)).encode("password123");
+    }
+
+    @Test
+    void testLogin_Success() {
+        LoginRequestDTO request = new LoginRequestDTO();
+        request.setUsername("testUser");
+        request.setPassword("password123");
+
+        User mockUser = new User();
+        mockUser.setUsername("testUser");
+
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn(new UsernamePasswordAuthenticationToken("testUser", "password123"));
+        when(userRepository.findByUsername("testUser")).thenReturn(Optional.of(mockUser));
+        when(jwtUtil.generateToken(mockUser)).thenReturn("jwtToken");
+
+        String token = authService.login(request);
+
+        assertNotNull(token);
+        assertEquals("jwtToken", token);
+        verify(authenticationManager, times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));
+        verify(jwtUtil, times(1)).generateToken(mockUser);
+    }
+
+    @Test
+    void testLogin_UserNotFound_ShouldThrowException() {
+        LoginRequestDTO request = new LoginRequestDTO();
+        request.setUsername("unknownUser");
+        request.setPassword("password123");
+
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn(new UsernamePasswordAuthenticationToken("unknownUser", "password123"));
+        when(userRepository.findByUsername("unknownUser")).thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class, () -> authService.login(request));
     }
 }

@@ -6,7 +6,8 @@ import com.iv1201.auth.dto.RegisterRequestDTO;
 import com.iv1201.auth.integration.UserRepository;
 import com.iv1201.auth.model.User;
 import com.iv1201.auth.util.JwtUtil;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,9 +25,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
-
-    @Value("${recruiter.secret.code}")
-    private String recruiterSecretCode;
+    private final AuthenticationManager authenticationManager;
 
     /**
      * Constructor injection for dependencies.
@@ -34,29 +33,24 @@ public class AuthService {
      * @param userRepository  The database interface.
      * @param passwordEncoder The BCrypt password hasher.
      * @param jwtUtil         The utility to generate JWT tokens.
+     * @param authenticationManager The Spring Security authentication manager.
      */
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
+        this.authenticationManager = authenticationManager;
     }
 
     /**
      * Registers a new applicant.
      *
-     * @param request The registration data.
-     * @throws IllegalArgumentException If the username is already taken.
+     * @param request The registration data (already validated by @Valid annotation).
      */
     public void register(RegisterRequestDTO request) {
-        if (userRepository.existsByUsername(request.getUsername())) {
-            throw new IllegalArgumentException("Username is already taken");
-        }
-
         User user = new User();
         user.setUsername(request.getUsername());
-        
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-
         user.setRoleId(2L);
 
         userRepository.save(user);
@@ -65,19 +59,9 @@ public class AuthService {
     /**
      * Registers a new recruiter with a secret code.
      *
-     * @param request The registration data including secret code.
-     * @throws IllegalArgumentException If the secret code is invalid or username is taken.
+     * @param request The registration data including secret code (already validated by @Valid annotation).
      */
     public void registerRecruiter(RecruiterRegisterRequestDTO request) {
-        // Validate secret code
-        if (request.getSecretCode() == null || !request.getSecretCode().equals(recruiterSecretCode)) {
-            throw new IllegalArgumentException("Invalid registration code");
-        }
-
-        if (userRepository.existsByUsername(request.getUsername())) {
-            throw new IllegalArgumentException("Username is already taken");
-        }
-
         User user = new User();
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -91,15 +75,17 @@ public class AuthService {
      *
      * @param request The login credentials (username/password).
      * @return A signed JWT token string.
-     * @throws IllegalArgumentException If credentials are invalid.
+     * @throws org.springframework.security.core.AuthenticationException If credentials are invalid.
      */
     public String login(LoginRequestDTO request) {
-        User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid credentials"));;
+        // Delegate authentication to Spring Security's AuthenticationManager
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+        );
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-                throw new IllegalArgumentException("Invalid credentials");
-            }
+        // If we get here, authentication was successful. Load user and generate token.
+        User user = userRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         return jwtUtil.generateToken(user);
     }
