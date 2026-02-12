@@ -28,6 +28,14 @@ export const ApplicationForm: React.FC = () => {
     submitApplication,
   } = useApplicationPresenter();
 
+  const unknownCompetenceLabel = 'Unknown competence';
+
+  const getCompetenceNameById = (competenceId: number) =>
+    availableCompetences.find((c) => c.competenceId === competenceId)?.name;
+
+  const renderCompetenceLabel = (name?: string) =>
+    name ? t(`competence.${name}`) : unknownCompetenceLabel;
+
   if (status === 'success') {
     return (
       <div className="application-success-container">
@@ -47,6 +55,7 @@ export const ApplicationForm: React.FC = () => {
           <h3 className="application-section-title">
             {t('application.personal-details')}
           </h3>
+
           <div className="application-grid">
             {/* Name */}
             <div className="application-field-wrapper">
@@ -55,7 +64,9 @@ export const ApplicationForm: React.FC = () => {
                 placeholder={t('application.name')}
                 value={personalInfo.name}
                 onChange={handleInfoChange}
-                className={`application-input ${errors.name ? 'application-input-error' : ''}`}
+                className={`application-input ${
+                  errors.name ? 'application-input-error' : ''
+                }`}
               />
               {errors.name && (
                 <span className="application-error-text">{errors.name}</span>
@@ -69,7 +80,9 @@ export const ApplicationForm: React.FC = () => {
                 placeholder={t('application.surname')}
                 value={personalInfo.surname}
                 onChange={handleInfoChange}
-                className={`application-input ${errors.surname ? 'application-input-error' : ''}`}
+                className={`application-input ${
+                  errors.surname ? 'application-input-error' : ''
+                }`}
               />
               {errors.surname && (
                 <span className="application-error-text">{errors.surname}</span>
@@ -84,7 +97,9 @@ export const ApplicationForm: React.FC = () => {
                 placeholder={t('application.email')}
                 value={personalInfo.email}
                 onChange={handleInfoChange}
-                className={`application-input ${errors.email ? 'application-input-error' : ''}`}
+                className={`application-input ${
+                  errors.email ? 'application-input-error' : ''
+                }`}
               />
               {errors.email && (
                 <span className="application-error-text">{errors.email}</span>
@@ -98,7 +113,9 @@ export const ApplicationForm: React.FC = () => {
                 placeholder={t('application.pnr')}
                 value={personalInfo.pnr}
                 onChange={handleInfoChange}
-                className={`application-input ${errors.pnr ? 'application-input-error' : ''}`}
+                className={`application-input ${
+                  errors.pnr ? 'application-input-error' : ''
+                }`}
               />
               {errors.pnr && (
                 <span className="application-error-text">{errors.pnr}</span>
@@ -107,13 +124,12 @@ export const ApplicationForm: React.FC = () => {
           </div>
         </section>
 
-        {/* Competences & Availability sections remain the same... */}
-
         {/* Competence Section */}
         <section className="application-section">
           <h3 className="application-section-title">
             {t('application.competence-profile')}
           </h3>
+
           <div className="application-input-group">
             <select
               value={currentCompetenceId}
@@ -123,10 +139,11 @@ export const ApplicationForm: React.FC = () => {
               <option value="">{t('application.select-competence')}</option>
               {availableCompetences.map((c) => (
                 <option key={c.competenceId} value={c.competenceId}>
-                  {t(`competence.${c.name}`)}
+                  {renderCompetenceLabel(c.name)}
                 </option>
               ))}
             </select>
+
             <input
               type="number"
               step="0.1"
@@ -135,6 +152,7 @@ export const ApplicationForm: React.FC = () => {
               onChange={(e) => setCurrentYoe(e.target.value)}
               className="application-input application-input-small"
             />
+
             <button
               type="button"
               onClick={addCompetence}
@@ -143,23 +161,33 @@ export const ApplicationForm: React.FC = () => {
               {t('application.add')}
             </button>
           </div>
+
           {addedCompetences.length > 0 && (
             <ul className="application-list">
-              {addedCompetences.map((item, idx) => (
-                <li key={idx} className="application-list-item">
-                  <span>
-                    {t(`competence.${item.name}`)} - {item.yearsOfExperience}{' '}
-                    {t('application.years-exp')}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => removeCompetence(idx)}
-                    className="application-btn-remove"
-                  >
-                    {t('application.remove')}
-                  </button>
-                </li>
-              ))}
+              {addedCompetences.map((item, idx) => {
+                const nameFromLookup =
+                  typeof item.competenceId === 'number'
+                    ? getCompetenceNameById(item.competenceId)
+                    : undefined;
+
+                const label = nameFromLookup ?? item.name;
+
+                return (
+                  <li key={idx} className="application-list-item">
+                    <span>
+                      {renderCompetenceLabel(label)} - {item.yearsOfExperience}{' '}
+                      {t('application.years-exp')}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => removeCompetence(idx)}
+                      className="application-btn-remove"
+                    >
+                      {t('application.remove')}
+                    </button>
+                  </li>
+                );
+              })}
             </ul>
           )}
         </section>
@@ -169,11 +197,10 @@ export const ApplicationForm: React.FC = () => {
           <h3 className="application-section-title">
             {t('application.availability')}
           </h3>
+
           <div className="application-input-group">
             <div>
-              <label className="application-label">
-                {t('application.from')}
-              </label>
+              <label className="application-label">{t('application.from')}</label>
               <input
                 type="date"
                 value={currentFromDate}
@@ -181,6 +208,7 @@ export const ApplicationForm: React.FC = () => {
                 className="application-input"
               />
             </div>
+
             <div>
               <label className="application-label">{t('application.to')}</label>
               <input
@@ -190,6 +218,7 @@ export const ApplicationForm: React.FC = () => {
                 className="application-input"
               />
             </div>
+
             <button
               type="button"
               onClick={addAvailability}
@@ -198,6 +227,7 @@ export const ApplicationForm: React.FC = () => {
               {t('application.add')}
             </button>
           </div>
+
           {addedAvailabilities.length > 0 && (
             <ul className="application-list">
               {addedAvailabilities.map((item, idx) => (
