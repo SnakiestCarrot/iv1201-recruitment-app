@@ -117,6 +117,8 @@ describe('RegisterForm Component', () => {
       username: 'validUser',
       password: 'validPass123',
       confirmPassword: 'validPass123',
+      email: 'valid@example.com',
+      pnr: '19900101-1234',
     });
   });
 
