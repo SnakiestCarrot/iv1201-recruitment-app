@@ -35,6 +35,8 @@ describe('RecruiterRegisterForm Component', () => {
 
     expect(screen.getByText('auth.recruiter-register')).toBeInTheDocument();
     expect(screen.getByLabelText('common.username')).toBeInTheDocument();
+    expect(screen.getByLabelText('common.email')).toBeInTheDocument();
+    expect(screen.getByLabelText('common.pnr')).toBeInTheDocument();
     expect(screen.getByLabelText('common.password')).toBeInTheDocument();
     expect(screen.getByLabelText('auth.confirm-password')).toBeInTheDocument();
     expect(screen.getByLabelText('auth.secret-code')).toBeInTheDocument();
@@ -49,6 +51,12 @@ describe('RecruiterRegisterForm Component', () => {
     const usernameInput = screen.getByLabelText(
       'common.username'
     ) as HTMLInputElement;
+    const emailInput = screen.getByLabelText(
+      'common.email'
+    ) as HTMLInputElement;
+    const pnrInput = screen.getByLabelText(
+      'common.pnr'
+    ) as HTMLInputElement;
     const passwordInput = screen.getByLabelText(
       'common.password'
     ) as HTMLInputElement;
@@ -60,11 +68,15 @@ describe('RecruiterRegisterForm Component', () => {
     ) as HTMLInputElement;
 
     fireEvent.change(usernameInput, { target: { value: 'recruiter1' } });
+    fireEvent.change(emailInput, { target: { value: 'recruiter@example.com' } });
+    fireEvent.change(pnrInput, { target: { value: '19900101-1234' } });
     fireEvent.change(passwordInput, { target: { value: 'password123' } });
     fireEvent.change(confirmInput, { target: { value: 'password123' } });
     fireEvent.change(secretCodeInput, { target: { value: 'secret123' } });
 
     expect(usernameInput.value).toBe('recruiter1');
+    expect(emailInput.value).toBe('recruiter@example.com');
+    expect(pnrInput.value).toBe('19900101-1234');
     expect(passwordInput.value).toBe('password123');
     expect(confirmInput.value).toBe('password123');
     expect(secretCodeInput.value).toBe('secret123');
@@ -75,6 +87,12 @@ describe('RecruiterRegisterForm Component', () => {
 
     fireEvent.change(screen.getByLabelText('common.username'), {
       target: { value: 'recruiter1' },
+    });
+    fireEvent.change(screen.getByLabelText('common.email'), {
+      target: { value: 'recruiter@example.com' },
+    });
+    fireEvent.change(screen.getByLabelText('common.pnr'), {
+      target: { value: '19900101-1234' },
     });
     fireEvent.change(screen.getByLabelText('common.password'), {
       target: { value: 'password123' },
@@ -97,6 +115,12 @@ describe('RecruiterRegisterForm Component', () => {
 
     fireEvent.change(screen.getByLabelText('common.username'), {
       target: { value: 'recruiter1' },
+    });
+    fireEvent.change(screen.getByLabelText('common.email'), {
+      target: { value: 'recruiter@example.com' },
+    });
+    fireEvent.change(screen.getByLabelText('common.pnr'), {
+      target: { value: '19900101-1234' },
     });
     fireEvent.change(screen.getByLabelText('common.password'), {
       target: { value: '123' },
@@ -122,6 +146,12 @@ describe('RecruiterRegisterForm Component', () => {
     fireEvent.change(screen.getByLabelText('common.username'), {
       target: { value: 'recruiter1' },
     });
+    fireEvent.change(screen.getByLabelText('common.email'), {
+      target: { value: 'recruiter@example.com' },
+    });
+    fireEvent.change(screen.getByLabelText('common.pnr'), {
+      target: { value: '19900101-1234' },
+    });
     fireEvent.change(screen.getByLabelText('common.password'), {
       target: { value: 'password123' },
     });
@@ -144,6 +174,12 @@ describe('RecruiterRegisterForm Component', () => {
     fireEvent.change(screen.getByLabelText('common.username'), {
       target: { value: 'recruiter1' },
     });
+    fireEvent.change(screen.getByLabelText('common.email'), {
+      target: { value: 'recruiter@example.com' },
+    });
+    fireEvent.change(screen.getByLabelText('common.pnr'), {
+      target: { value: '19900101-1234' },
+    });
     fireEvent.change(screen.getByLabelText('common.password'), {
       target: { value: 'password123' },
     });
@@ -159,6 +195,8 @@ describe('RecruiterRegisterForm Component', () => {
     expect(mockRegisterRecruiter).toHaveBeenCalledWith({
       username: 'recruiter1',
       password: 'password123',
+      email: 'recruiter@example.com',
+      pnr: '19900101-1234',
       secretCode: 'secret123',
     });
   });
@@ -224,6 +262,12 @@ describe('RecruiterRegisterForm Component', () => {
     fireEvent.change(screen.getByLabelText('common.username'), {
       target: { value: 'recruiter1' },
     });
+    fireEvent.change(screen.getByLabelText('common.email'), {
+      target: { value: 'recruiter@example.com' },
+    });
+    fireEvent.change(screen.getByLabelText('common.pnr'), {
+      target: { value: '19900101-1234' },
+    });
     fireEvent.change(screen.getByLabelText('common.password'), {
       target: { value: 'password123' },
     });
@@ -246,6 +290,12 @@ describe('RecruiterRegisterForm Component', () => {
 
     fireEvent.change(screen.getByLabelText('common.username'), {
       target: { value: 'recruiter1' },
+    });
+    fireEvent.change(screen.getByLabelText('common.email'), {
+      target: { value: 'recruiter@example.com' },
+    });
+    fireEvent.change(screen.getByLabelText('common.pnr'), {
+      target: { value: '19900101-1234' },
     });
     fireEvent.change(screen.getByLabelText('common.password'), {
       target: { value: 'password123' },
@@ -270,7 +320,7 @@ describe('RecruiterRegisterForm Component', () => {
     expect(screen.queryByText('auth.password-mismatch')).not.toBeInTheDocument();
   });
 
-  it('secret code field has password type', () => {
+it('secret code field has password type', () => {
     render(<RecruiterRegisterForm />);
 
     const secretCodeInput = screen.getByLabelText('auth.secret-code');

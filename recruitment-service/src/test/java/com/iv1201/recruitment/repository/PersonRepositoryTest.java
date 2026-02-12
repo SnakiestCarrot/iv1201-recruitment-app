@@ -1,6 +1,8 @@
 package com.iv1201.recruitment.repository;
 
 import com.iv1201.recruitment.model.Person;
+import com.iv1201.recruitment.repository.PersonRepository;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -33,5 +35,12 @@ class PersonRepositoryTest {
         assertThat(found.getSurname()).isEqualTo("Grahn");
         assertThat(found.getEmail()).isEqualTo("gustav.grahn@test.com");
         assertThat(found.getPnr()).isEqualTo("199001011234");
+    }
+
+    @Test
+    void existsByEmail_returnsFalse_whenEmailDoesNotExist() {
+        boolean result = personRepository.existsByEmail("unknown@test.com");
+        
+        assertThat(result).isFalse();
     }
 }

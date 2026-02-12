@@ -3,6 +3,7 @@ package com.iv1201.recruitment.service;
 import com.iv1201.recruitment.dto.*;
 import com.iv1201.recruitment.model.*;
 import com.iv1201.recruitment.repository.*;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +13,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 /**
  * Service that handles the core workflow for recruitment applications.
  *
@@ -51,6 +51,17 @@ public class ApplicationService {
         this.competenceRepository = competenceRepository;
         this.competenceProfileRepository = competenceProfileRepository;
         this.availabilityRepository = availabilityRepository;
+    }
+
+    /**
+     * Checks whether a person with the given email exists.
+     * 
+     * Used for migrated user password reset flow.
+     * @param email the email address to check for existence
+     * @return true if a person with the email exists, false otherwise
+     */
+    public boolean emailExists(String email) {
+        return personRepository.existsByEmail(email);
     }
 
     /**
@@ -95,8 +106,6 @@ public class ApplicationService {
         person.setId(userId);
         person.setName(dto.getName());
         person.setSurname(dto.getSurname());
-        person.setEmail(dto.getEmail());
-        person.setPnr(dto.getPnr());
 
         if (person.getStatus() == null) {
             person.setStatus("UNHANDLED");
@@ -126,6 +135,21 @@ public class ApplicationService {
                 availabilityRepository.save(availability);
             });
         }
+    }
+
+    /**
+     * Creates a person record with basic information during registration.
+     * Called by the auth service as part of the registration saga.
+     *
+     * @param dto the person data containing personId, email, and pnr
+     */
+    public void createPerson(PersonCreateDTO dto) {
+        Person person = new Person();
+        person.setId(dto.getPersonId());
+        person.setEmail(dto.getEmail());
+        person.setPnr(dto.getPnr());
+        person.setStatus("UNHANDLED");
+        personRepository.save(person);
     }
 
     private static final Set<String> VALID_STATUSES = Set.of("UNHANDLED", "ACCEPTED", "REJECTED");

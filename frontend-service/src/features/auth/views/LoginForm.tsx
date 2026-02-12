@@ -11,7 +11,7 @@ import '../styles/LoginForm.css';
  * Uses Zod to ensure fields are not empty before sending the request.
  */
 export const LoginForm = () => {
-  const { state, loginUser } = useAuthPresenter();
+  const { state, loginUser, requestOldUserReset } = useAuthPresenter();
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -20,12 +20,14 @@ export const LoginForm = () => {
   const [validationErrors, setValidationErrors] = useState<
     Record<string, string>
   >({});
+  const [showOldUser, setShowOldUser] = useState(false);
+  const [oldUserEmail, setOldUserEmail] = useState('');
 
   useEffect(() => {
-    if (state.status === 'success') {
+    if (state.status === 'success' && !showOldUser) {
       navigate('/dashboard');
     }
-  }, [state.status, navigate]);
+  }, [state.status, navigate, showOldUser]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,6 +46,11 @@ export const LoginForm = () => {
     }
 
     loginUser({ username, password });
+  };
+
+  const handleOldUserSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    requestOldUserReset(oldUserEmail);
   };
 
   return (
@@ -93,6 +100,44 @@ export const LoginForm = () => {
             : t('auth.login')}
         </button>
       </form>
+
+      <div className="old-user-section">
+        {!showOldUser ? (
+          <p
+            className="old-user-link"
+            onClick={() => setShowOldUser(true)}
+            style={{ cursor: 'pointer' }}
+          >
+            Old user?
+          </p>
+        ) : (
+          <form onSubmit={handleOldUserSubmit} className="old-user-form">
+            <div className="form-group">
+              <label htmlFor="oldUserEmail">Email</label>
+              <input
+                id="oldUserEmail"
+                type="email"
+                value={oldUserEmail}
+                onChange={(e) => setOldUserEmail(e.target.value)}
+                required
+                className="login-input"
+              />
+            </div>
+
+            <button type="submit" disabled={state.status === 'loading'}>
+              {state.status === 'loading' ? 'Sending...' : 'Send Instructions'}
+            </button>
+
+            <p
+              className="old-user-link"
+              onClick={() => setShowOldUser(false)}
+              style={{ cursor: 'pointer' }}
+            >
+              Back to login
+            </p>
+          </form>
+        )}
+      </div>
 
       {state.message && Object.keys(validationErrors).length === 0 && (
         <p className={`status-msg ${state.status}`}>{state.message}</p>

@@ -22,6 +22,8 @@ describe('authService', () => {
     const result = await authService.register({
       username: 'new',
       password: 'pw',
+      email: 'new@example.com',
+      pnr: '19900101-1234',
     });
 
     expect(fetchMock).toHaveBeenCalledWith(
@@ -29,7 +31,12 @@ describe('authService', () => {
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: 'new', password: 'pw' }),
+        body: JSON.stringify({
+          username: 'new',
+          password: 'pw',
+          email: 'new@example.com',
+          pnr: '19900101-1234',
+        }),
       }
     );
 
@@ -43,7 +50,12 @@ describe('authService', () => {
     });
 
     await expect(
-      authService.register({ username: 'taken', password: 'pw' })
+      authService.register({
+        username: 'taken',
+        password: 'pw',
+        email: 'taken@example.com',
+        pnr: '19900101-1234',
+      })
     ).rejects.toThrow('Username already taken');
   });
 
@@ -54,7 +66,12 @@ describe('authService', () => {
     });
 
     await expect(
-      authService.register({ username: 'user', password: 'pw' })
+      authService.register({
+        username: 'user',
+        password: 'pw',
+        email: 'user@example.com',
+        pnr: '19900101-1234',
+      })
     ).rejects.toThrow('Registration failed');
   });
 
@@ -69,6 +86,8 @@ describe('authService', () => {
     const result = await authService.registerRecruiter({
       username: 'recruiter',
       password: 'pw',
+      email: 'recruiter@example.com',
+      pnr: '19900101-1234',
       secretCode: 'code123',
     });
 
@@ -80,6 +99,8 @@ describe('authService', () => {
         body: JSON.stringify({
           username: 'recruiter',
           password: 'pw',
+          email: 'recruiter@example.com',
+          pnr: '19900101-1234',
           secretCode: 'code123',
         }),
       }
@@ -99,6 +120,8 @@ describe('authService', () => {
       authService.registerRecruiter({
         username: 'recruiter',
         password: 'pw',
+        email: 'recruiter@example.com',
+        pnr: '19900101-1234',
         secretCode: 'bad_code',
       })
     ).rejects.toThrow('Invalid registration code');
@@ -190,5 +213,36 @@ describe('authService', () => {
     await expect(
       authService.login({ username: 'user', password: 'pw' })
     ).rejects.toThrow('Login failed');
+  });
+  it('requestOldUserReset sends correct request and returns backend message', async () => {
+    fetchMock.mockResolvedValue({
+      ok: true,
+      text: () => Promise.resolve('Reset instructions sent'),
+    });
+
+    const result = await authService.requestOldUserReset('test@mail.com');
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining('/api/recruitment/migrated-user'),
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: 'test@mail.com' }),
+      }
+    );
+
+    expect(result).toBe('Reset instructions sent');
+  });
+
+  it('requestOldUserReset returns generic message when request fails', async () => {
+    fetchMock.mockResolvedValue({
+      ok: false,
+    });
+
+    const result = await authService.requestOldUserReset('test@mail.com');
+
+    expect(result).toBe(
+      'If this email exists in our system, you will receive password reset instructions shortly.'
+    );
   });
 });

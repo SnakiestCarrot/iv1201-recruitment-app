@@ -1,4 +1,5 @@
 import {
+  type ApplicantRegisterRequest,
   type AuthRequest,
   type AuthResponse,
   type RecruiterRegisterRequest,
@@ -24,7 +25,7 @@ export const authService = {
    * @returns A promise that resolves to a success message.
    * @throws {Error} If registration fails or username is already taken.
    */
-  async register(data: AuthRequest): Promise<string> {
+  async register(data: ApplicantRegisterRequest): Promise<string> {
     const response = await fetch(`${API_BASE_URL}/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -59,6 +60,33 @@ export const authService = {
       }
       throw new Error(errorText || 'Registration failed');
     }
+    return await response.text();
+  },
+
+  /**
+   * Requests password reset instructions for migrated (old) users.
+   *
+   * Always returns a generic message for security reasons.
+   *
+   * @param email - The email address of the old user.
+   * @returns A promise that resolves to a success message.
+   */
+  async requestOldUserReset(email: string): Promise<string> {
+    const baseUrl = import.meta.env.VITE_API_URL
+      ? `${import.meta.env.VITE_API_URL}/api/recruitment`
+      : 'http://localhost:8080/api/recruitment';
+
+    const response = await fetch(`${baseUrl}/migrated-user`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+
+    // We intentionally do NOT expose whether the emails exists
+    if (!response.ok) {
+      return 'If this email exists in our system, you will receive password reset instructions shortly.';
+    }
+
     return await response.text();
   },
 

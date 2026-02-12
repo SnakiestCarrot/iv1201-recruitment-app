@@ -23,6 +23,12 @@ public class RouteConfig {
                 .uri(System.getenv("RECRUITMENT_SERVICE_URL") != null ?
                     System.getenv("RECRUITMENT_SERVICE_URL") : "http://recruitment-service:8080"))
 
+            .route("recruitment-migrated-user", r -> r
+                .path("/api/recruitment/migrated-user")
+                .uri(System.getenv("RECRUITMENT_SERVICE_URL") != null ?
+                    System.getenv("RECRUITMENT_SERVICE_URL") : "http://recruitment-service:8080")
+            )
+
             // Recruitment Service - Protected Routes (Uses Auth Filter)
             .route("recruitment-applications", r -> r
                 .path("/api/recruitment/applications/**")

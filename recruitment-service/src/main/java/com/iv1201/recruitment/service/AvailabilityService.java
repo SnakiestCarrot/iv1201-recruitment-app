@@ -19,6 +19,11 @@ public class AvailabilityService {
         this.AvailabilityRepository = AvailabilityRepository;
     }
 
+    /** 
+     * Retrieves all availability periods as DTOs.
+     * 
+     * @return List of availability DTOs.
+     */
     public List<AvailabilityDTO> getAllAvailabilities() {
         return AvailabilityRepository.findAll()
             .stream()

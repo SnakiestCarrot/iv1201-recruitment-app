@@ -11,12 +11,14 @@ export const RegisterForm = () => {
   const { t } = useTranslation();
 
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [pnr, setPnr] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    registerUser({ username, password, confirmPassword });
+    registerUser({ username, password, confirmPassword, email, pnr });
   };
 
   // Helper to update state and notify presenter to clear error
@@ -51,6 +53,30 @@ export const RegisterForm = () => {
           {validationErrors.username && (
             <p className="status-msg error">{t(validationErrors.username)}</p>
           )}
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="reg-email">{t('common.email')}</label>
+          <input
+            id="reg-email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="register-input"
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="reg-pnr">{t('common.pnr')}</label>
+          <input
+            id="reg-pnr"
+            type="text"
+            value={pnr}
+            onChange={(e) => setPnr(e.target.value)}
+            required
+            className="register-input"
+          />
         </div>
 
         <div className="form-group">

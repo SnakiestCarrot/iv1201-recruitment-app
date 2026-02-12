@@ -96,6 +96,8 @@
   },
   "common": {
     "username": "Användarnamn",
-    "password": "Lösenord"
+    "password": "Lösenord",
+    "email": "E-post",
+    "pnr": "Personnummer"
   }
 }

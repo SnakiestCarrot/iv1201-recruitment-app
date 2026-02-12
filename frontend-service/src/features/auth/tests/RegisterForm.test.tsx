@@ -98,6 +98,12 @@ describe('RegisterForm Component', () => {
     fireEvent.change(screen.getByLabelText('common.username'), {
       target: { value: 'validUser' },
     });
+    fireEvent.change(screen.getByLabelText('common.email'), {
+      target: { value: 'valid@example.com' },
+    });
+    fireEvent.change(screen.getByLabelText('common.pnr'), {
+      target: { value: '19900101-1234' },
+    });
     fireEvent.change(screen.getByLabelText('common.password'), {
       target: { value: 'validPass123' },
     });

@@ -8,4 +8,5 @@ import com.iv1201.recruitment.model.Person;
  */
 public interface PersonRepository extends JpaRepository<Person, Long> {
     
+    boolean existsByEmail(String email);
 }

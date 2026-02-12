@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import { authService } from '../services/authService';
 import { LoginSchema, RegisterUserSchema } from '../../../utils/validation';
-import { type AuthRequest, type AuthState } from '../types/authTypes';
+import {
+  type ApplicantRegisterRequest,
+  type AuthRequest,
+  type AuthState,
+} from '../types/authTypes';
 import { AUTH_CHANGED_EVENT } from '../hooks/useAuth';
 
 /**
@@ -26,8 +30,8 @@ export const useAuthPresenter = () => {
    *
    * @param credentials - The user's registration credentials (username, password, and confirmation).
    */
-  const registerUser = async (
-    credentials: AuthRequest & { confirmPassword?: string }
+const registerUser = async (
+    credentials: ApplicantRegisterRequest & { confirmPassword?: string }
   ) => {
     setValidationErrors({});
 
@@ -107,7 +111,7 @@ export const useAuthPresenter = () => {
     }
   };
 
-  /**
+/**
    * Clears the validation error for a specific field.
    *
    * @param field - The name of the field to clear.
@@ -118,11 +122,31 @@ export const useAuthPresenter = () => {
     );
   };
 
+  const requestOldUserReset = async (email: string) => {
+    setState({ status: 'loading', message: 'Sending instructions...' });
+
+    try {
+      const message = await authService.requestOldUserReset(email);
+
+      setState({
+        status: 'success',
+        message,
+      });
+    } catch {
+      setState({
+        status: 'success',
+        message:
+          'If this email exists in our system, you will receive password reset instructions shortly.',
+      });
+    }
+  };
+
   return {
     state,
     validationErrors,
     registerUser,
     loginUser,
     clearError,
+    requestOldUserReset,
   };
 };

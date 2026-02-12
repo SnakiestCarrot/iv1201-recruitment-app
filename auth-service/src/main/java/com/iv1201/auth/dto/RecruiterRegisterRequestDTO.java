@@ -1,13 +1,30 @@
 package com.iv1201.auth.dto;
 
+import com.iv1201.auth.validation.UniqueUsername;
+import com.iv1201.auth.validation.ValidSecretCode;
+import jakarta.validation.constraints.NotBlank;
+
 /**
  * Data Transfer Object for recruiter registration.
  * Includes a secret code field to restrict registration.
  */
 public class RecruiterRegisterRequestDTO {
 
+    @NotBlank(message = "Username is required")
+    @UniqueUsername
     private String username;
+
+    @NotBlank(message = "Password is required")
     private String password;
+
+    @NotBlank(message = "Email is required")
+    private String email;
+
+    @NotBlank(message = "Personal number is required")
+    private String pnr;
+
+    @NotBlank(message = "Registration code is required")
+    @ValidSecretCode
     private String secretCode;
 
     /**
@@ -40,6 +57,38 @@ public class RecruiterRegisterRequestDTO {
      */
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    /**
+     * Gets the email.
+     * @return The email address.
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * Sets the email.
+     * @param email The email address.
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /**
+     * Gets the personal number.
+     * @return The personal number.
+     */
+    public String getPnr() {
+        return pnr;
+    }
+
+    /**
+     * Sets the personal number.
+     * @param pnr The personal number.
+     */
+    public void setPnr(String pnr) {
+        this.pnr = pnr;
     }
 
     /**

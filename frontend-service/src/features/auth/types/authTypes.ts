@@ -1,11 +1,25 @@
 /**
- * Represents user credentials for authentication requests (login or registration).
+ * Represents user credentials for login requests.
  */
 export interface AuthRequest {
   /** The user's username. */
   username: string;
   /** The user's password. */
   password: string;
+}
+
+/**
+ * Represents registration data for a new applicant, including email and personal number.
+ */
+export interface ApplicantRegisterRequest {
+  /** The applicant's username. */
+  username: string;
+  /** The applicant's password. */
+  password: string;
+  /** The applicant's email address. */
+  email: string;
+  /** The applicant's personal number (personnummer). */
+  pnr: string;
 }
 
 /**
@@ -16,6 +30,10 @@ export interface RecruiterRegisterRequest {
   username: string;
   /** The recruiter's password. */
   password: string;
+  /** The recruiter's email address. */
+  email: string;
+  /** The recruiter's personal number (personnummer). */
+  pnr: string;
   /** The secret registration code required for recruiter registration. */
   secretCode: string;
 }

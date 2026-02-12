@@ -84,8 +84,6 @@ describe('applicationService', () => {
     const mockApplicationData: ApplicationCreateDTO = {
       name: 'John',
       surname: 'Doe',
-      email: 'john@example.com',
-      pnr: '19900101-1234',
       competences: [
         { competenceId: 1, yearsOfExperience: 5, name: 'JavaScript' },
       ],

@@ -1,7 +1,7 @@
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { useRecruiterAuthPresenter } from '../presenters/useRecruiterAuthPresenter';
 import { authService } from '../services/authService';
-import { vi, describe, it, expect, beforeEach } from 'vitest';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 const mockNavigate = vi.fn();
 
@@ -45,7 +45,8 @@ describe('useRecruiterAuthPresenter', () => {
       await result.current.registerRecruiter({
         username: 'recruiter1',
         password: 'password123',
-        confirmPassword: 'password123',
+        email: 'recruiter1@example.com',
+        pnr: '19900101-1234',
         secretCode: 'secret123',
       });
     });
@@ -53,6 +54,8 @@ describe('useRecruiterAuthPresenter', () => {
     expect(authService.registerRecruiter).toHaveBeenCalledWith({
       username: 'recruiter1',
       password: 'password123',
+      email: 'recruiter1@example.com',
+      pnr: '19900101-1234',
       secretCode: 'secret123',
     });
 
@@ -73,7 +76,8 @@ describe('useRecruiterAuthPresenter', () => {
       await result.current.registerRecruiter({
         username: 'recruiter1',
         password: 'password123',
-        confirmPassword: 'password123',
+        email: 'recruiter1@example.com',
+        pnr: '19900101-1234',
         secretCode: 'secret123',
       });
     });
@@ -96,7 +100,8 @@ describe('useRecruiterAuthPresenter', () => {
       await result.current.registerRecruiter({
         username: 'recruiter1',
         password: 'password123',
-        confirmPassword: 'password123',
+        email: 'recruiter1@example.com',
+        pnr: '19900101-1234',
         secretCode: 'wrongcode',
       });
     });
@@ -118,7 +123,8 @@ describe('useRecruiterAuthPresenter', () => {
       await result.current.registerRecruiter({
         username: 'recruiter1',
         password: 'password123',
-        confirmPassword: 'password123',
+        email: 'recruiter1@example.com',
+        pnr: '19900101-1234',
         secretCode: 'secret123',
       });
     });
@@ -143,7 +149,8 @@ describe('useRecruiterAuthPresenter', () => {
       result.current.registerRecruiter({
         username: 'recruiter1',
         password: 'password123',
-        confirmPassword: 'password123',
+        email: 'recruiter1@example.com',
+        pnr: '19900101-1234',
         secretCode: 'secret123',
       });
     });
@@ -170,7 +177,8 @@ describe('useRecruiterAuthPresenter', () => {
       await result.current.registerRecruiter({
         username: 'recruiter1',
         password: 'password123',
-        confirmPassword: 'password123',
+        email: 'recruiter1@example.com',
+        pnr: '19900101-1234',
         secretCode: 'wrongcode',
       });
     });

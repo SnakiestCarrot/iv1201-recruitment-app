@@ -96,6 +96,8 @@
   },
   "common": {
     "username": "Username",
-    "password": "Password"
+    "password": "Password",
+    "email": "Email",
+    "pnr": "Personal Number"
   }
 }
