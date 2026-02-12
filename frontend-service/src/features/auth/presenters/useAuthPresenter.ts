@@ -30,7 +30,7 @@ export const useAuthPresenter = () => {
    *
    * @param credentials - The user's registration credentials (username, password, and confirmation).
    */
-const registerUser = async (
+  const registerUser = async (
     credentials: ApplicantRegisterRequest & { confirmPassword?: string }
   ) => {
     setValidationErrors({});
@@ -111,7 +111,7 @@ const registerUser = async (
     }
   };
 
-/**
+  /**
    * Clears the validation error for a specific field.
    *
    * @param field - The name of the field to clear.
