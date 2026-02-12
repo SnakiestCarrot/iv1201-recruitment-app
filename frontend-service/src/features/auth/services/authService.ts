@@ -1,4 +1,5 @@
 import {
+  type ApplicantRegisterRequest,
   type AuthRequest,
   type AuthResponse,
   type RecruiterRegisterRequest,
@@ -24,7 +25,7 @@ export const authService = {
    * @returns A promise that resolves to a success message.
    * @throws {Error} If registration fails or username is already taken.
    */
-  async register(data: AuthRequest): Promise<string> {
+  async register(data: ApplicantRegisterRequest): Promise<string> {
     const response = await fetch(`${API_BASE_URL}/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

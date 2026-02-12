@@ -35,8 +35,6 @@ describe('ApplicationForm Component', () => {
       personalInfo: {
         name: '',
         surname: '',
-        email: '',
-        pnr: '',
       },
       addedCompetences: [],
       addedAvailabilities: [],
@@ -79,10 +77,6 @@ describe('ApplicationForm Component', () => {
     expect(
       screen.getByPlaceholderText('application.surname')
     ).toBeInTheDocument();
-    expect(
-      screen.getByPlaceholderText('application.email')
-    ).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('application.pnr')).toBeInTheDocument();
   });
 
   it('calls handleInfoChange when typing in personal info fields', () => {
@@ -443,20 +437,8 @@ describe('ApplicationForm Component', () => {
 
     const nameInput = screen.getByPlaceholderText('application.name');
     const surnameInput = screen.getByPlaceholderText('application.surname');
-    const emailInput = screen.getByPlaceholderText('application.email');
-    const pnrInput = screen.getByPlaceholderText('application.pnr');
 
     expect(nameInput).toHaveAttribute('required');
     expect(surnameInput).toHaveAttribute('required');
-    expect(emailInput).toHaveAttribute('required');
-    expect(pnrInput).toHaveAttribute('required');
-  });
-
-  it('email input has correct type', () => {
-    render(<ApplicationForm />);
-
-    const emailInput = screen.getByPlaceholderText('application.email');
-
-    expect(emailInput).toHaveAttribute('type', 'email');
   });
 });

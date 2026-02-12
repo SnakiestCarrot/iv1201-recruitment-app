@@ -41,6 +41,7 @@ services:
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
       - JWT_SECRET=${JWT_SECRET}
       - RECRUITER_SECRET_CODE=${RECRUITER_SECRET_CODE}
+      - RECRUITMENT_SERVICE_URL=http://recruitment-service:8080
     networks:
       - app-network
 

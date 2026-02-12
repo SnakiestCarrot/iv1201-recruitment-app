@@ -45,6 +45,8 @@ describe('useRecruiterAuthPresenter', () => {
       await result.current.registerRecruiter({
         username: 'recruiter1',
         password: 'password123',
+        email: 'recruiter1@example.com',
+        pnr: '19900101-1234',
         secretCode: 'secret123',
       });
     });
@@ -52,6 +54,8 @@ describe('useRecruiterAuthPresenter', () => {
     expect(authService.registerRecruiter).toHaveBeenCalledWith({
       username: 'recruiter1',
       password: 'password123',
+      email: 'recruiter1@example.com',
+      pnr: '19900101-1234',
       secretCode: 'secret123',
     });
 
@@ -72,6 +76,8 @@ describe('useRecruiterAuthPresenter', () => {
       await result.current.registerRecruiter({
         username: 'recruiter1',
         password: 'password123',
+        email: 'recruiter1@example.com',
+        pnr: '19900101-1234',
         secretCode: 'secret123',
       });
     });
@@ -94,6 +100,8 @@ describe('useRecruiterAuthPresenter', () => {
       await result.current.registerRecruiter({
         username: 'recruiter1',
         password: 'password123',
+        email: 'recruiter1@example.com',
+        pnr: '19900101-1234',
         secretCode: 'wrongcode',
       });
     });
@@ -115,6 +123,8 @@ describe('useRecruiterAuthPresenter', () => {
       await result.current.registerRecruiter({
         username: 'recruiter1',
         password: 'password123',
+        email: 'recruiter1@example.com',
+        pnr: '19900101-1234',
         secretCode: 'secret123',
       });
     });
@@ -139,6 +149,8 @@ describe('useRecruiterAuthPresenter', () => {
       result.current.registerRecruiter({
         username: 'recruiter1',
         password: 'password123',
+        email: 'recruiter1@example.com',
+        pnr: '19900101-1234',
         secretCode: 'secret123',
       });
     });
@@ -165,6 +177,8 @@ describe('useRecruiterAuthPresenter', () => {
       await result.current.registerRecruiter({
         username: 'recruiter1',
         password: 'password123',
+        email: 'recruiter1@example.com',
+        pnr: '19900101-1234',
         secretCode: 'wrongcode',
       });
     });

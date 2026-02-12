@@ -38,10 +38,6 @@ export interface ApplicationCreateDTO {
   name: string;
   /** The applicant's last name. */
   surname: string;
-  /** The applicant's email address. */
-  email: string;
-  /** The applicant's personal number (personnummer). */
-  pnr: string;
   /** Array of competences with years of experience. */
   competences: CompetenceProfileDTO[];
   /** Array of availability periods. */
