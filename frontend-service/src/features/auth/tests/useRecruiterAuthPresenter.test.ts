@@ -55,6 +55,8 @@ describe('useRecruiterAuthPresenter', () => {
     expect(authService.registerRecruiter).toHaveBeenCalledWith({
       username: 'recruiter1',
       password: 'password123',
+      email: 'recruiter1@example.com',
+      pnr: '19900101-1234',
       secretCode: 'secret123',
     });
 

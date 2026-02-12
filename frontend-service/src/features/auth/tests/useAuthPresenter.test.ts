@@ -106,6 +106,8 @@ describe('useAuthPresenter', () => {
     expect(authService.register).toHaveBeenCalledWith({
       username: 'new',
       password: 'password123',
+      email: 'new@example.com',
+      pnr: '19900101-1234',
     });
 
     expect(result.current.state).toEqual({
