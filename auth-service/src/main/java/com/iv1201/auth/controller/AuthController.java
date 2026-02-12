@@ -70,17 +70,12 @@ public class AuthController {
      * </p>
      *
      * @param request The JSON body containing username and password.
-     * @return 200 OK with JWT token, or 401 Unauthorized.
+     * @return 200 OK with JWT token.
+     * @throws org.springframework.security.core.AuthenticationException If credentials are invalid.
      */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO request) {
-        try {
-            String token = authService.login(request);
-            return ResponseEntity.ok(new AuthResponseDTO(token));
-        } catch (IllegalArgumentException e) { 
-            return ResponseEntity.status(401).body(e.getMessage());      
-        } catch (Exception e) { 
-            return ResponseEntity.status(500).body("Internal Server Error");
-        }
+        String token = authService.login(request);
+        return ResponseEntity.ok(new AuthResponseDTO(token));
     }
 }
