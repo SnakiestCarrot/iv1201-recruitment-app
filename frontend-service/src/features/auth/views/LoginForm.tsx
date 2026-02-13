@@ -72,7 +72,7 @@ export const LoginForm = () => {
           />
           {validationErrors.username && (
             <span style={{ color: 'red', fontSize: '0.85em' }}>
-              {validationErrors.username}
+              {t(validationErrors.username)}
             </span>
           )}
         </div>
@@ -89,7 +89,7 @@ export const LoginForm = () => {
           />
           {validationErrors.password && (
             <span style={{ color: 'red', fontSize: '0.85em' }}>
-              {validationErrors.password}
+              {t(validationErrors.password)}
             </span>
           )}
         </div>
