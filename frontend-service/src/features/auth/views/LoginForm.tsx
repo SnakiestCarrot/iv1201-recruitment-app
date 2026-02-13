@@ -108,12 +108,12 @@ export const LoginForm = () => {
             onClick={() => setShowOldUser(true)}
             style={{ cursor: 'pointer' }}
           >
-            Old user?
+            {t('auth.old-user')}
           </p>
         ) : (
           <form onSubmit={handleOldUserSubmit} className="old-user-form">
             <div className="form-group">
-              <label htmlFor="oldUserEmail">Email</label>
+              <label htmlFor="oldUserEmail">{t('auth.old-user-email')}</label>
               <input
                 id="oldUserEmail"
                 type="email"
@@ -125,7 +125,9 @@ export const LoginForm = () => {
             </div>
 
             <button type="submit" disabled={state.status === 'loading'}>
-              {state.status === 'loading' ? 'Sending...' : 'Send Instructions'}
+              {state.status === 'loading'
+                ? t('auth.old-user-sending')
+                : t('auth.old-user-send')}
             </button>
 
             <p
@@ -133,7 +135,7 @@ export const LoginForm = () => {
               onClick={() => setShowOldUser(false)}
               style={{ cursor: 'pointer' }}
             >
-              Back to login
+              {t('auth.old-user-back')}
             </p>
           </form>
         )}

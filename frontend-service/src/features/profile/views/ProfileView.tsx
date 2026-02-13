@@ -26,11 +26,11 @@ export const ProfileView = () => {
 
   return (
     <div className="profile-container">
-      <h2 className="profile-title">Update Profile</h2>
+      <h2 className="profile-title">{t('profile.title')}</h2>
 
       <form onSubmit={handleSubmit} className="profile-form">
         <div className="form-group">
-          <label htmlFor="email">Email</label>
+          <label htmlFor="email">{t('profile.email')}</label>
           <input
             id="email"
             type="email"
@@ -40,7 +40,7 @@ export const ProfileView = () => {
               if (validationErrors.email) clearError('email');
             }}
             className={`profile-input ${validationErrors.email ? 'register-input-error' : ''}`}
-            placeholder="Enter your email"
+            placeholder={t('profile.email-placeholder')}
           />
           {validationErrors.email && (
             <p className="status-msg error">{t(validationErrors.email)}</p>
@@ -48,7 +48,7 @@ export const ProfileView = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="pnr">Personal Number</label>
+          <label htmlFor="pnr">{t('profile.pnr')}</label>
           <input
             id="pnr"
             type="text"
@@ -58,7 +58,7 @@ export const ProfileView = () => {
               if (validationErrors.pnr) clearError('pnr');
             }}
             className={`profile-input ${validationErrors.pnr ? 'register-input-error' : ''}`}
-            placeholder="YYYYMMDDXXXX"
+            placeholder={t('profile.pnr-placeholder')}
           />
           {validationErrors.pnr && (
             <p className="status-msg error">{t(validationErrors.pnr)}</p>
@@ -70,7 +70,7 @@ export const ProfileView = () => {
           disabled={state.status === 'loading'}
           className="profile-button"
         >
-          {state.status === 'loading' ? 'Updating...' : 'Save Changes'}
+          {state.status === 'loading' ? t('profile.saving') : t('profile.save')}
         </button>
       </form>
 

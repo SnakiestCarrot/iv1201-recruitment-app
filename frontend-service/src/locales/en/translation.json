@@ -24,7 +24,12 @@
     "username-required": "Username is required",
     "password-required": "Password is required",
     "username-invalid-characters": "Username can only contain letters, numbers, dots, hyphens, and underscores",
-    "password-invalid-characters": "Password can only contain letters, numbers, and common symbols (!@#$%^&*()-_=+.,;:?)"
+    "password-invalid-characters": "Password can only contain letters, numbers, and common symbols (!@#$%^&*()-_=+.,;:?)",
+    "old-user": "Old user?",
+    "old-user-email": "Email",
+    "old-user-sending": "Sending...",
+    "old-user-send": "Send Instructions",
+    "old-user-back": "Back to login"
   },
   "dash": {
     "title": "Welcome, ",
@@ -97,6 +102,16 @@
     "pnr-format": "Must be in format YYYYMMDD-XXXX",
     "name-invalid-characters": "First name can only contain letters, spaces, and hyphens",
     "surname-invalid-characters": "Surname can only contain letters, spaces, and hyphens"
+  },
+  "profile": {
+    "title": "Update Profile",
+    "email": "Email",
+    "email-placeholder": "Enter your email",
+    "pnr": "Personal Number",
+    "pnr-placeholder": "YYYYMMDD-XXXX",
+    "saving": "Updating...",
+    "save": "Save Changes",
+    "settings": "Settings"
   },
   "common": {
     "username": "Username",
