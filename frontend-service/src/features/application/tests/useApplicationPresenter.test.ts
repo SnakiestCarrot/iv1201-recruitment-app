@@ -384,6 +384,110 @@ describe('useApplicationPresenter', () => {
     expect(result.current.status).toBe('loading');
   });
 
+  it('rejects submission with invalid email format', async () => {
+    (applicationService.getCompetences as any).mockResolvedValue([]);
+
+    const { result } = renderHook(() => useApplicationPresenter());
+
+    act(() => {
+      result.current.handleInfoChange({ target: { name: 'name', value: 'John' } } as any);
+    });
+    act(() => {
+      result.current.handleInfoChange({ target: { name: 'surname', value: 'Doe' } } as any);
+    });
+    act(() => {
+      result.current.handleInfoChange({ target: { name: 'email', value: 'not-an-email' } } as any);
+    });
+    act(() => {
+      result.current.handleInfoChange({ target: { name: 'pnr', value: '19900101-1234' } } as any);
+    });
+
+    await act(async () => {
+      await result.current.submitApplication({ preventDefault: vi.fn() } as any);
+    });
+
+    expect(result.current.errors.email).toBe('validation.email-invalid');
+    expect(applicationService.submitApplication).not.toHaveBeenCalled();
+  });
+
+  it('rejects submission with invalid pnr format', async () => {
+    (applicationService.getCompetences as any).mockResolvedValue([]);
+
+    const { result } = renderHook(() => useApplicationPresenter());
+
+    act(() => {
+      result.current.handleInfoChange({ target: { name: 'name', value: 'John' } } as any);
+    });
+    act(() => {
+      result.current.handleInfoChange({ target: { name: 'surname', value: 'Doe' } } as any);
+    });
+    act(() => {
+      result.current.handleInfoChange({ target: { name: 'email', value: 'john@example.com' } } as any);
+    });
+    act(() => {
+      result.current.handleInfoChange({ target: { name: 'pnr', value: '12345' } } as any);
+    });
+
+    await act(async () => {
+      await result.current.submitApplication({ preventDefault: vi.fn() } as any);
+    });
+
+    expect(result.current.errors.pnr).toBe('validation.pnr-format');
+    expect(applicationService.submitApplication).not.toHaveBeenCalled();
+  });
+
+  it('rejects submission with invalid name characters', async () => {
+    (applicationService.getCompetences as any).mockResolvedValue([]);
+
+    const { result } = renderHook(() => useApplicationPresenter());
+
+    act(() => {
+      result.current.handleInfoChange({ target: { name: 'name', value: 'John123' } } as any);
+    });
+    act(() => {
+      result.current.handleInfoChange({ target: { name: 'surname', value: 'Doe' } } as any);
+    });
+    act(() => {
+      result.current.handleInfoChange({ target: { name: 'email', value: 'john@example.com' } } as any);
+    });
+    act(() => {
+      result.current.handleInfoChange({ target: { name: 'pnr', value: '19900101-1234' } } as any);
+    });
+
+    await act(async () => {
+      await result.current.submitApplication({ preventDefault: vi.fn() } as any);
+    });
+
+    expect(result.current.errors.name).toBe('validation.name-invalid-characters');
+    expect(applicationService.submitApplication).not.toHaveBeenCalled();
+  });
+
+  it('rejects submission with invalid surname characters', async () => {
+    (applicationService.getCompetences as any).mockResolvedValue([]);
+
+    const { result } = renderHook(() => useApplicationPresenter());
+
+    act(() => {
+      result.current.handleInfoChange({ target: { name: 'name', value: 'John' } } as any);
+    });
+    act(() => {
+      result.current.handleInfoChange({ target: { name: 'surname', value: 'Doe456' } } as any);
+    });
+    act(() => {
+      result.current.handleInfoChange({ target: { name: 'email', value: 'john@example.com' } } as any);
+    });
+    act(() => {
+      result.current.handleInfoChange({ target: { name: 'pnr', value: '19900101-1234' } } as any);
+    });
+
+    await act(async () => {
+      await result.current.submitApplication({ preventDefault: vi.fn() } as any);
+    });
+
+    expect(result.current.errors.surname).toBe('validation.surname-invalid-characters');
+    expect(applicationService.submitApplication).not.toHaveBeenCalled();
+  });
+
   it('handles application submission error', async () => {
     (applicationService.getCompetences as any).mockResolvedValue([]);
     (applicationService.submitApplication as any).mockRejectedValue(

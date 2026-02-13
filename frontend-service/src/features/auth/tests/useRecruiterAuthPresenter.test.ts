@@ -74,6 +74,46 @@ describe('useRecruiterAuthPresenter', () => {
     expect(authService.registerRecruiter).not.toHaveBeenCalled();
   });
 
+  it('rejects registration with invalid email format', async () => {
+    const { result } = renderHook(() => useRecruiterAuthPresenter());
+
+    await act(async () => {
+      await result.current.registerRecruiter({
+        username: 'validuser',
+        password: 'password123',
+        confirmPassword: 'password123',
+        email: 'not-an-email',
+        pnr: '19900101-1234',
+        secretCode: 'secret123',
+      });
+    });
+
+    expect(result.current.validationErrors.email).toBe(
+      'validation.email-invalid'
+    );
+    expect(authService.registerRecruiter).not.toHaveBeenCalled();
+  });
+
+  it('rejects registration with invalid pnr format', async () => {
+    const { result } = renderHook(() => useRecruiterAuthPresenter());
+
+    await act(async () => {
+      await result.current.registerRecruiter({
+        username: 'validuser',
+        password: 'password123',
+        confirmPassword: 'password123',
+        email: 'test@example.com',
+        pnr: '12345',
+        secretCode: 'secret123',
+      });
+    });
+
+    expect(result.current.validationErrors.pnr).toBe(
+      'validation.pnr-format'
+    );
+    expect(authService.registerRecruiter).not.toHaveBeenCalled();
+  });
+
   it('handles successful recruiter registration', async () => {
     (authService.registerRecruiter as any).mockResolvedValue(
       'Recruiter registered successfully'

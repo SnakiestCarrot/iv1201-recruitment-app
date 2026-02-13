@@ -43,6 +43,8 @@ export const useAuthPresenter = () => {
     const result = RegisterUserSchema.safeParse({
       username: credentials.username,
       password: credentials.password,
+      email: credentials.email,
+      pnr: credentials.pnr,
     });
 
     if (!result.success) {

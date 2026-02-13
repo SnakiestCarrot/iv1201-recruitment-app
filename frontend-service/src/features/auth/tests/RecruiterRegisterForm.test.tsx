@@ -168,6 +168,62 @@ describe('RecruiterRegisterForm Component', () => {
     expect(mockRegisterRecruiter).not.toHaveBeenCalled();
   });
 
+  it('shows error for invalid email format', () => {
+    render(<RecruiterRegisterForm />);
+
+    fireEvent.change(screen.getByLabelText('common.username'), {
+      target: { value: 'recruiter1' },
+    });
+    fireEvent.change(screen.getByLabelText('common.email'), {
+      target: { value: 'not-an-email' },
+    });
+    fireEvent.change(screen.getByLabelText('common.pnr'), {
+      target: { value: '19900101-1234' },
+    });
+    fireEvent.change(screen.getByLabelText('common.password'), {
+      target: { value: 'password123' },
+    });
+    fireEvent.change(screen.getByLabelText('auth.confirm-password'), {
+      target: { value: 'password123' },
+    });
+    fireEvent.change(screen.getByLabelText('auth.secret-code'), {
+      target: { value: 'secret123' },
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'auth.register' }));
+
+    expect(screen.getByText('validation.email-invalid')).toBeInTheDocument();
+    expect(mockRegisterRecruiter).not.toHaveBeenCalled();
+  });
+
+  it('shows error for invalid pnr format', () => {
+    render(<RecruiterRegisterForm />);
+
+    fireEvent.change(screen.getByLabelText('common.username'), {
+      target: { value: 'recruiter1' },
+    });
+    fireEvent.change(screen.getByLabelText('common.email'), {
+      target: { value: 'recruiter@example.com' },
+    });
+    fireEvent.change(screen.getByLabelText('common.pnr'), {
+      target: { value: '12345' },
+    });
+    fireEvent.change(screen.getByLabelText('common.password'), {
+      target: { value: 'password123' },
+    });
+    fireEvent.change(screen.getByLabelText('auth.confirm-password'), {
+      target: { value: 'password123' },
+    });
+    fireEvent.change(screen.getByLabelText('auth.secret-code'), {
+      target: { value: 'secret123' },
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'auth.register' }));
+
+    expect(screen.getByText('validation.pnr-format')).toBeInTheDocument();
+    expect(mockRegisterRecruiter).not.toHaveBeenCalled();
+  });
+
   it('calls registerRecruiter when inputs are valid', () => {
     render(<RecruiterRegisterForm />);
 
@@ -195,6 +251,7 @@ describe('RecruiterRegisterForm Component', () => {
     expect(mockRegisterRecruiter).toHaveBeenCalledWith({
       username: 'recruiter1',
       password: 'password123',
+      confirmPassword: 'password123',
       email: 'recruiter@example.com',
       pnr: '19900101-1234',
       secretCode: 'secret123',
