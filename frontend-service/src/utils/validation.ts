@@ -47,8 +47,6 @@ export const ApplicationSchema = z.object({
     .string()
     .min(1, 'validation.surname-required')
     .regex(nameCharsRegex, 'validation.surname-invalid-characters'),
-  email: commonRules.email,
-  pnr: commonRules.pnr,
 });
 
 /**
@@ -73,6 +71,15 @@ export const RegisterUserSchema = z.object({
     .regex(passwordCharsRegex, 'auth.password-invalid-characters'),
   email: commonRules.email,
   pnr: commonRules.pnr,
+});
+
+/**
+ * Schema for profile updates. Both fields are optional;
+ * when provided, they must have a valid format.
+ */
+export const UpdateProfileSchema = z.object({
+  email: z.string().email('validation.email-invalid').optional(),
+  pnr: z.string().regex(pnrRegex, 'validation.pnr-format').optional(),
 });
 
 /**

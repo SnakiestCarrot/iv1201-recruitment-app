@@ -4,15 +4,21 @@ import { ProfileView } from '../views/ProfileView';
 import { useProfilePresenter } from '../presenters/useProfilePresenter';
 
 vi.mock('../presenters/useProfilePresenter');
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({ t: (key: string) => key }),
+}));
 
 describe('ProfileView', () => {
   const mockUpdateProfile = vi.fn();
+  const mockClearError = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
 
     (useProfilePresenter as any).mockReturnValue({
       state: { status: 'idle', message: '' },
+      validationErrors: {},
+      clearError: mockClearError,
       updateProfile: mockUpdateProfile,
     });
   });
@@ -48,6 +54,8 @@ describe('ProfileView', () => {
   it('disables button when loading', () => {
     (useProfilePresenter as any).mockReturnValue({
       state: { status: 'loading', message: '' },
+      validationErrors: {},
+      clearError: mockClearError,
       updateProfile: mockUpdateProfile,
     });
 
@@ -60,11 +68,73 @@ describe('ProfileView', () => {
   it('displays success message', () => {
     (useProfilePresenter as any).mockReturnValue({
       state: { status: 'success', message: 'Updated!' },
+      validationErrors: {},
+      clearError: mockClearError,
       updateProfile: mockUpdateProfile,
     });
 
     render(<ProfileView />);
 
     expect(screen.getByText('Updated!')).toBeInTheDocument();
+  });
+
+  it('displays email validation error', () => {
+    (useProfilePresenter as any).mockReturnValue({
+      state: { status: 'idle', message: '' },
+      validationErrors: { email: 'validation.email-invalid' },
+      clearError: mockClearError,
+      updateProfile: mockUpdateProfile,
+    });
+
+    render(<ProfileView />);
+
+    expect(screen.getByText('validation.email-invalid')).toBeInTheDocument();
+  });
+
+  it('displays pnr validation error', () => {
+    (useProfilePresenter as any).mockReturnValue({
+      state: { status: 'idle', message: '' },
+      validationErrors: { pnr: 'validation.pnr-format' },
+      clearError: mockClearError,
+      updateProfile: mockUpdateProfile,
+    });
+
+    render(<ProfileView />);
+
+    expect(screen.getByText('validation.pnr-format')).toBeInTheDocument();
+  });
+
+  it('clears email error on input change', () => {
+    (useProfilePresenter as any).mockReturnValue({
+      state: { status: 'idle', message: '' },
+      validationErrors: { email: 'validation.email-invalid' },
+      clearError: mockClearError,
+      updateProfile: mockUpdateProfile,
+    });
+
+    render(<ProfileView />);
+
+    fireEvent.change(screen.getByLabelText('Email'), {
+      target: { value: 'new@mail.com' },
+    });
+
+    expect(mockClearError).toHaveBeenCalledWith('email');
+  });
+
+  it('clears pnr error on input change', () => {
+    (useProfilePresenter as any).mockReturnValue({
+      state: { status: 'idle', message: '' },
+      validationErrors: { pnr: 'validation.pnr-format' },
+      clearError: mockClearError,
+      updateProfile: mockUpdateProfile,
+    });
+
+    render(<ProfileView />);
+
+    fireEvent.change(screen.getByLabelText('Personal Number'), {
+      target: { value: '19900101-1234' },
+    });
+
+    expect(mockClearError).toHaveBeenCalledWith('pnr');
   });
 });
