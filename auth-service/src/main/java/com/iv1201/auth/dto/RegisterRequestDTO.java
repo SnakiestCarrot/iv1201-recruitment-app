@@ -1,6 +1,10 @@
 package com.iv1201.auth.dto;
 
 import com.iv1201.auth.validation.UniqueUsername;
+import com.iv1201.auth.validation.ValidEmail;
+import com.iv1201.auth.validation.ValidPnr;
+import com.iv1201.auth.validation.ValidUsername;
+import com.iv1201.auth.validation.ValidPassword;
 import jakarta.validation.constraints.NotBlank;
 
 /**
@@ -11,15 +15,19 @@ public class RegisterRequestDTO {
 
     @NotBlank(message = "Username is required")
     @UniqueUsername
+    @ValidUsername
     private String username;
 
     @NotBlank(message = "Password is required")
+    @ValidPassword
     private String password;
 
     @NotBlank(message = "Email is required")
+    @ValidEmail
     private String email;
 
     @NotBlank(message = "Personal number is required")
+    @ValidPnr
     private String pnr;
 
 
