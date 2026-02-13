@@ -80,6 +80,7 @@ public class ApplicationService {
     public List<ApplicationSummaryDTO> getAllApplications() {
         return personRepository.findAll()
                 .stream()
+                .filter(p -> p.getName() != null && p.getSurname() != null)
                 .map(this::mapToSummaryDTO)
                 .collect(Collectors.toList());
     }
