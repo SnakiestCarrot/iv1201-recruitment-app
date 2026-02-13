@@ -61,10 +61,14 @@ export const RegisterForm = () => {
             id="reg-email"
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className="register-input"
+            onChange={(e) =>
+              handleInputChange(setEmail, 'email', e.target.value)
+            }
+            className={`register-input ${validationErrors.email ? 'register-input-error' : ''}`}
           />
+          {validationErrors.email && (
+            <p className="status-msg error">{t(validationErrors.email)}</p>
+          )}
         </div>
 
         <div className="form-group">
@@ -73,10 +77,12 @@ export const RegisterForm = () => {
             id="reg-pnr"
             type="text"
             value={pnr}
-            onChange={(e) => setPnr(e.target.value)}
-            required
-            className="register-input"
+            onChange={(e) => handleInputChange(setPnr, 'pnr', e.target.value)}
+            className={`register-input ${validationErrors.pnr ? 'register-input-error' : ''}`}
           />
+          {validationErrors.pnr && (
+            <p className="status-msg error">{t(validationErrors.pnr)}</p>
+          )}
         </div>
 
         <div className="form-group">

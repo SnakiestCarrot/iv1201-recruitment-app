@@ -126,6 +126,44 @@ describe('useAuthPresenter', () => {
     expect(authService.register).not.toHaveBeenCalled();
   });
 
+  it('rejects registration with invalid email format', async () => {
+    const { result } = renderHook(() => useAuthPresenter());
+
+    await act(async () => {
+      await result.current.registerUser({
+        username: 'validuser',
+        password: 'password123',
+        confirmPassword: 'password123',
+        email: 'not-an-email',
+        pnr: '19900101-1234',
+      });
+    });
+
+    expect(result.current.validationErrors.email).toBe(
+      'validation.email-invalid'
+    );
+    expect(authService.register).not.toHaveBeenCalled();
+  });
+
+  it('rejects registration with invalid pnr format', async () => {
+    const { result } = renderHook(() => useAuthPresenter());
+
+    await act(async () => {
+      await result.current.registerUser({
+        username: 'validuser',
+        password: 'password123',
+        confirmPassword: 'password123',
+        email: 'test@example.com',
+        pnr: '12345',
+      });
+    });
+
+    expect(result.current.validationErrors.pnr).toBe(
+      'validation.pnr-format'
+    );
+    expect(authService.register).not.toHaveBeenCalled();
+  });
+
   it('handles successful registration', async () => {
     (authService.register as any).mockResolvedValue('Registration successful');
 

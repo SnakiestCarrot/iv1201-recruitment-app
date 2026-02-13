@@ -122,6 +122,32 @@ describe('RegisterForm Component', () => {
     });
   });
 
+  it('displays email validation error from presenter', () => {
+    (useAuthPresenter as any).mockReturnValue({
+      state: { status: 'idle', message: '' },
+      validationErrors: { email: 'validation.email-invalid' },
+      registerUser: mockRegisterUser,
+      clearError: vi.fn(),
+    });
+
+    render(<RegisterForm />);
+
+    expect(screen.getByText('validation.email-invalid')).toBeInTheDocument();
+  });
+
+  it('displays pnr validation error from presenter', () => {
+    (useAuthPresenter as any).mockReturnValue({
+      state: { status: 'idle', message: '' },
+      validationErrors: { pnr: 'validation.pnr-format' },
+      registerUser: mockRegisterUser,
+      clearError: vi.fn(),
+    });
+
+    render(<RegisterForm />);
+
+    expect(screen.getByText('validation.pnr-format')).toBeInTheDocument();
+  });
+
   it('displays backend error message', () => {
     (useAuthPresenter as any).mockReturnValue({
       state: { status: 'error', message: 'Username taken' },

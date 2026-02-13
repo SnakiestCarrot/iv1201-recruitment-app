@@ -44,6 +44,8 @@ export const RecruiterRegisterForm = () => {
     const result = RecruiterRegisterSchema.safeParse({
       username,
       password,
+      email,
+      pnr,
       secretCode,
     });
 
@@ -57,7 +59,14 @@ export const RecruiterRegisterForm = () => {
       return;
     }
 
-    registerRecruiter({ username, password, email, pnr, secretCode });
+    registerRecruiter({
+      username,
+      password,
+      confirmPassword,
+      email,
+      pnr,
+      secretCode,
+    });
   };
 
   return (
@@ -87,10 +96,21 @@ export const RecruiterRegisterForm = () => {
             id="rec-email"
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className="register-input"
+            onChange={(e) => {
+              setEmail(e.target.value);
+              if (validationErrors.email) {
+                setValidationErrors((prev) =>
+                  Object.fromEntries(
+                    Object.entries(prev).filter(([key]) => key !== 'email')
+                  )
+                );
+              }
+            }}
+            className={`register-input ${validationErrors.email ? 'register-input-error' : ''}`}
           />
+          {validationErrors.email && (
+            <p className="status-msg error">{t(validationErrors.email)}</p>
+          )}
         </div>
 
         <div className="form-group">
@@ -99,10 +119,21 @@ export const RecruiterRegisterForm = () => {
             id="rec-pnr"
             type="text"
             value={pnr}
-            onChange={(e) => setPnr(e.target.value)}
-            required
-            className="register-input"
+            onChange={(e) => {
+              setPnr(e.target.value);
+              if (validationErrors.pnr) {
+                setValidationErrors((prev) =>
+                  Object.fromEntries(
+                    Object.entries(prev).filter(([key]) => key !== 'pnr')
+                  )
+                );
+              }
+            }}
+            className={`register-input ${validationErrors.pnr ? 'register-input-error' : ''}`}
           />
+          {validationErrors.pnr && (
+            <p className="status-msg error">{t(validationErrors.pnr)}</p>
+          )}
         </div>
 
         <div className="form-group">

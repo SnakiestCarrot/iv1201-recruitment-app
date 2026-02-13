@@ -71,6 +71,8 @@ export const RegisterUserSchema = z.object({
     .string()
     .min(6, 'auth.insufficient-password-length')
     .regex(passwordCharsRegex, 'auth.password-invalid-characters'),
+  email: commonRules.email,
+  pnr: commonRules.pnr,
 });
 
 /**
