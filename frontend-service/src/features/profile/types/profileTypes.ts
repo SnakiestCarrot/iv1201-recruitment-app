@@ -1,9 +1,9 @@
-export type UpdateProfileRequest = {
+export interface UpdateProfileRequest {
   email?: string;
   pnr?: string;
-};
+}
 
-export type ProfileState = {
+export interface ProfileState {
   status: 'idle' | 'loading' | 'success' | 'error';
   message: string;
-};
+}

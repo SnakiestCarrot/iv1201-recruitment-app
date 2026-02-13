@@ -60,9 +60,7 @@ export const ProfileView = () => {
       </form>
 
       {state.message && (
-        <p className={`profile-message ${state.status}`}>
-          {state.message}
-        </p>
+        <p className={`profile-message ${state.status}`}>{state.message}</p>
       )}
     </div>
   );
