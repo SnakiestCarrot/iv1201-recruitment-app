@@ -50,6 +50,9 @@ export const AuthenticatedTopbar = () => {
                 {t('recruiter.applications')}
               </Link>
             )}
+            <Link to="/profile" className="topbar-link">
+              Settings
+            </Link>
           </nav>
         </div>
 

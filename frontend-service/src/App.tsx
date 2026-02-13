@@ -8,6 +8,7 @@ import { ApplicationList } from './features/recruiter/views/ApplicationList';
 import { ApplicationDetail } from './features/recruiter/views/ApplicationDetail';
 import { AuthenticatedTopbar } from './components/AuthenticatedTopbar';
 import { useAuth } from './features/auth/hooks/useAuth';
+import { ProfileView } from './features/profile/views/ProfileView';
 import './App.css';
 
 /**
@@ -62,6 +63,16 @@ function App() {
                   <Navigate to="/dashboard" replace />
                 ) : (
                   <ApplicationDetail />
+                )
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                isAuthenticated ? (
+                  <ProfileView />
+                ) : (
+                  <Navigate to="/login" replace />
                 )
               }
             />
