@@ -5,6 +5,7 @@ import com.iv1201.recruitment.dto.ApplicationsCreateDTO;
 import com.iv1201.recruitment.dto.CompetenceDTO;
 import com.iv1201.recruitment.dto.AvailabilityDTO;
 import com.iv1201.recruitment.dto.PersonCreateDTO;
+import com.iv1201.recruitment.dto.UpdateProfileDTO;
 import com.iv1201.recruitment.model.*;
 import com.iv1201.recruitment.repository.*;
 
@@ -71,7 +72,6 @@ class ApplicationServiceTest {
 
         when(dto.getName()).thenReturn("Alice");
         when(dto.getSurname()).thenReturn("Doe");
-
 
         when(compDto.getCompetenceId()).thenReturn(1L);
         when(compDto.getYearsOfExperience()).thenReturn(BigDecimal.valueOf(2.5));
@@ -214,11 +214,68 @@ class ApplicationServiceTest {
 
         applicationService.createPerson(dto);
 
-        verify(personRepository).save(argThat(person ->
-            person.getId().equals(42L)
-            && "test@example.com".equals(person.getEmail())
-            && "19900101-1234".equals(person.getPnr())
-            && "UNHANDLED".equals(person.getStatus())
-        ));
+        verify(personRepository).save(argThat(person -> person.getId().equals(42L)
+                && "test@example.com".equals(person.getEmail())
+                && "19900101-1234".equals(person.getPnr())
+                && "UNHANDLED".equals(person.getStatus())));
+    }
+
+    @Test
+    void updateUserProfile_updatesEmailAndPnr() {
+        Person person = new Person();
+        person.setId(1L);
+        person.setEmail("old@mail.com");
+        person.setPnr("123");
+
+        UpdateProfileDTO dto = new UpdateProfileDTO();
+        dto.setEmail("new@mail.com");
+        dto.setPnr("999");
+
+        when(personRepository.findById(1L)).thenReturn(Optional.of(person));
+        when(personRepository.existsByEmail("new@mail.com")).thenReturn(false);
+
+        applicationService.updateUserProfile(1L, dto);
+
+        assertThat(person.getEmail()).isEqualTo("new@mail.com");
+        assertThat(person.getPnr()).isEqualTo("999");
+
+        verify(personRepository).save(person);
+    }
+
+    @Test
+    void updateUserProfile_throwsBadRequest_whenEmailExists() {
+        Person person = new Person();
+        person.setId(1L);
+        person.setEmail("old@mail.com");
+
+        UpdateProfileDTO dto = new UpdateProfileDTO();
+        dto.setEmail("taken@mail.com");
+
+        when(personRepository.findById(1L)).thenReturn(Optional.of(person));
+        when(personRepository.existsByEmail("taken@mail.com")).thenReturn(true);
+
+        assertThatThrownBy(() -> applicationService.updateUserProfile(1L, dto))
+                .isInstanceOf(ResponseStatusException.class)
+                .satisfies(ex -> {
+                    ResponseStatusException rse = (ResponseStatusException) ex;
+                    assertThat(rse.getStatusCode().value()).isEqualTo(400);
+                });
+
+        verify(personRepository, never()).save(any());
+    }
+
+    @Test
+    void updateUserProfile_throwsNotFound_whenUserMissing() {
+        UpdateProfileDTO dto = new UpdateProfileDTO();
+        dto.setEmail("test@mail.com");
+
+        when(personRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> applicationService.updateUserProfile(99L, dto))
+                .isInstanceOf(ResponseStatusException.class)
+                .satisfies(ex -> {
+                    ResponseStatusException rse = (ResponseStatusException) ex;
+                    assertThat(rse.getStatusCode().value()).isEqualTo(404);
+                });
     }
 }

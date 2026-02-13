@@ -13,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 /**
  * Service that handles the core workflow for recruitment applications.
  *
@@ -21,7 +22,8 @@ import java.util.stream.Collectors;
  * submitted applications for use by higher layers such as controllers.
  *
  * All public operations run inside a transactional context. If an unchecked
- * exception occurs during execution, database changes are typically rolled back.
+ * exception occurs during execution, database changes are typically rolled
+ * back.
  *
  * When an application is created or updated and the person's status is not yet
  * set, the status is initialized to "UNHANDLED".
@@ -38,15 +40,16 @@ public class ApplicationService {
     /**
      * Creates the service with the required repositories used for persistence.
      *
-     * @param personRepository repository managing Person entities
-     * @param competenceRepository repository managing Competence entities
-     * @param competenceProfileRepository repository managing CompetenceProfile entities
-     * @param availabilityRepository repository managing Availability entities
+     * @param personRepository            repository managing Person entities
+     * @param competenceRepository        repository managing Competence entities
+     * @param competenceProfileRepository repository managing CompetenceProfile
+     *                                    entities
+     * @param availabilityRepository      repository managing Availability entities
      */
     public ApplicationService(PersonRepository personRepository,
-                              CompetenceRepository competenceRepository,
-                              CompetenceProfileRepository competenceProfileRepository,
-                              AvailabilityRepository availabilityRepository) {
+            CompetenceRepository competenceRepository,
+            CompetenceProfileRepository competenceProfileRepository,
+            AvailabilityRepository availabilityRepository) {
         this.personRepository = personRepository;
         this.competenceRepository = competenceRepository;
         this.competenceProfileRepository = competenceProfileRepository;
@@ -57,6 +60,7 @@ public class ApplicationService {
      * Checks whether a person with the given email exists.
      * 
      * Used for migrated user password reset flow.
+     * 
      * @param email the email address to check for existence
      * @return true if a person with the email exists, false otherwise
      */
@@ -75,9 +79,9 @@ public class ApplicationService {
      */
     public List<ApplicationSummaryDTO> getAllApplications() {
         return personRepository.findAll()
-            .stream()
-            .map(this::mapToSummaryDTO)
-            .collect(Collectors.toList());
+                .stream()
+                .map(this::mapToSummaryDTO)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -96,9 +100,10 @@ public class ApplicationService {
      * This operation writes to multiple repositories and therefore has
      * significant side effects within the database.
      *
-     * @param dto the incoming application data containing personal details,
-     *            competences, and availability periods
-     * @param userId the identifier of the applicant whose application is created or updated
+     * @param dto    the incoming application data containing personal details,
+     *               competences, and availability periods
+     * @param userId the identifier of the applicant whose application is created or
+     *               updated
      * @throws RuntimeException if a referenced competence cannot be found
      */
     public void createApplication(ApplicationsCreateDTO dto, Long userId) {
@@ -199,18 +204,22 @@ public class ApplicationService {
     }
 
     /**
-     * Updates the status of a specific recruitment application with optimistic locking.
+     * Updates the status of a specific recruitment application with optimistic
+     * locking.
      *
      * Validates that the new status is one of UNHANDLED, ACCEPTED, or REJECTED.
-     * Compares the expected version from the client against the current database version
+     * Compares the expected version from the client against the current database
+     * version
      * to detect concurrent modifications. If another user has already modified the
      * application, a 409 Conflict is returned.
      *
-     * @param id the person ID of the application to update
-     * @param status the new status value
-     * @param expectedVersion the version the client loaded, used for optimistic locking
+     * @param id              the person ID of the application to update
+     * @param status          the new status value
+     * @param expectedVersion the version the client loaded, used for optimistic
+     *                        locking
      * @throws ResponseStatusException with 404 if no person is found,
-     *         400 if the status value is invalid, or 409 if the version does not match
+     *                                 400 if the status value is invalid, or 409 if
+     *                                 the version does not match
      */
     public void updateApplicationStatus(Long id, String status, Long expectedVersion) {
         if (!VALID_STATUSES.contains(status)) {
@@ -252,5 +261,46 @@ public class ApplicationService {
         dto.setFullName(person.getName() + " " + person.getSurname());
         dto.setStatus(person.getStatus() != null ? person.getStatus() : "UNHANDLED");
         return dto;
+    }
+
+    /**
+     * Updates the profile information of a specific user.
+     *
+     * This method is primarily used to allow migrated (legacy) users
+     * to complete or update missing profile data such as email address
+     * and personal number (pnr).
+     *
+     * The update is partial:
+     * - Only non-null and non-blank fields in the DTO are applied.
+     * - Email uniqueness is validated before updating.
+     *
+     * @param userId the ID of the authenticated user whose profile should be updated
+     * @param dto    the data transfer object containing updated profile fields
+     *
+     * @throws ResponseStatusException
+     *          - 404 NOT_FOUND if the user does not exist
+     *          - 400 BAD_REQUEST if the provided email is already in use
+     *                                 
+     */
+    public void updateUserProfile(Long userId, UpdateProfileDTO dto) {
+        Person person = personRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        // Update email if provided
+        if (dto.getEmail() != null && !dto.getEmail().isBlank()) {
+
+            // Ensure uniqueness
+            if (!dto.getEmail().equals(person.getEmail()) && personRepository.existsByEmail(dto.getEmail())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is already in use");
+            }
+
+            person.setEmail(dto.getEmail());
+        }
+
+        if (dto.getPnr() != null && !dto.getPnr().isBlank()) {
+            person.setPnr(dto.getPnr());
+        }
+
+        personRepository.save(person);
     }
 }
