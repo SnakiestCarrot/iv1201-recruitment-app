@@ -90,41 +90,6 @@ export const ApplicationForm: React.FC = () => {
                 </span>
               )}
             </div>
-
-            {/* Email */}
-            <div className="application-field-wrapper">
-              <input
-                name="email"
-                type="email"
-                placeholder={t('application.email')}
-                value={personalInfo.email}
-                onChange={handleInfoChange}
-                className={`application-input ${
-                  errors.email ? 'application-input-error' : ''
-                }`}
-              />
-              {errors.email && (
-                <span className="application-error-text">
-                  {t(errors.email)}
-                </span>
-              )}
-            </div>
-
-            {/* PNR */}
-            <div className="application-field-wrapper">
-              <input
-                name="pnr"
-                placeholder={t('application.pnr')}
-                value={personalInfo.pnr}
-                onChange={handleInfoChange}
-                className={`application-input ${
-                  errors.pnr ? 'application-input-error' : ''
-                }`}
-              />
-              {errors.pnr && (
-                <span className="application-error-text">{t(errors.pnr)}</span>
-              )}
-            </div>
           </div>
         </section>
 

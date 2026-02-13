@@ -4,6 +4,7 @@ import {
   type ProfileState,
   type UpdateProfileRequest,
 } from '../types/profileTypes';
+import { UpdateProfileSchema } from '../../../utils/validation';
 
 /**
  * Custom hook for managing profile update operations.
@@ -14,6 +15,15 @@ export const useProfilePresenter = () => {
     status: 'idle',
     message: '',
   });
+  const [validationErrors, setValidationErrors] = useState<
+    Record<string, string>
+  >({});
+
+  const clearError = (field: string) => {
+    setValidationErrors((prev) =>
+      Object.fromEntries(Object.entries(prev).filter(([key]) => key !== field))
+    );
+  };
 
   /**
    * Updates the authenticated user's profile information.
@@ -21,6 +31,19 @@ export const useProfilePresenter = () => {
    * @param data - The profile update data (email and/or pnr).
    */
   const updateProfile = async (data: UpdateProfileRequest) => {
+    const result = UpdateProfileSchema.safeParse(data);
+
+    if (!result.success) {
+      const fieldErrors: Record<string, string> = {};
+      result.error.issues.forEach((issue) => {
+        const fieldName = issue.path[0] as string;
+        fieldErrors[fieldName] = issue.message;
+      });
+      setValidationErrors(fieldErrors);
+      return;
+    }
+
+    setValidationErrors({});
     setState({ status: 'loading', message: 'Updating profile...' });
 
     try {
@@ -41,6 +64,8 @@ export const useProfilePresenter = () => {
 
   return {
     state,
+    validationErrors,
+    clearError,
     updateProfile,
   };
 };

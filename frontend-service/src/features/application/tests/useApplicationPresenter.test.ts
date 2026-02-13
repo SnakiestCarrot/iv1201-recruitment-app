@@ -24,8 +24,6 @@ describe('useApplicationPresenter', () => {
     expect(result.current.personalInfo).toEqual({
       name: '',
       surname: '',
-      email: '',
-      pnr: '',
     });
     expect(result.current.addedCompetences).toEqual([]);
     expect(result.current.addedAvailabilities).toEqual([]);
@@ -297,18 +295,6 @@ describe('useApplicationPresenter', () => {
     });
 
     act(() => {
-      result.current.handleInfoChange({
-        target: { name: 'email', value: 'john@example.com' },
-      } as any);
-    });
-
-    act(() => {
-      result.current.handleInfoChange({
-        target: { name: 'pnr', value: '19900101-1234' },
-      } as any);
-    });
-
-    act(() => {
       result.current.setCurrentCompetenceId('1');
       result.current.setCurrentYoe('5');
     });
@@ -336,8 +322,6 @@ describe('useApplicationPresenter', () => {
     expect(applicationService.submitApplication).toHaveBeenCalledWith({
       name: 'John',
       surname: 'Doe',
-      email: 'john@example.com',
-      pnr: '19900101-1234',
       competences: [
         {
           competenceId: 1,
@@ -368,12 +352,6 @@ describe('useApplicationPresenter', () => {
     act(() => {
       result.current.handleInfoChange({ target: { name: 'surname', value: 'Doe' } } as any);
     });
-    act(() => {
-      result.current.handleInfoChange({ target: { name: 'email', value: 'john@example.com' } } as any);
-    });
-    act(() => {
-      result.current.handleInfoChange({ target: { name: 'pnr', value: '19900101-1234' } } as any);
-    });
 
     act(() => {
       result.current.submitApplication({
@@ -382,58 +360,6 @@ describe('useApplicationPresenter', () => {
     });
 
     expect(result.current.status).toBe('loading');
-  });
-
-  it('rejects submission with invalid email format', async () => {
-    (applicationService.getCompetences as any).mockResolvedValue([]);
-
-    const { result } = renderHook(() => useApplicationPresenter());
-
-    act(() => {
-      result.current.handleInfoChange({ target: { name: 'name', value: 'John' } } as any);
-    });
-    act(() => {
-      result.current.handleInfoChange({ target: { name: 'surname', value: 'Doe' } } as any);
-    });
-    act(() => {
-      result.current.handleInfoChange({ target: { name: 'email', value: 'not-an-email' } } as any);
-    });
-    act(() => {
-      result.current.handleInfoChange({ target: { name: 'pnr', value: '19900101-1234' } } as any);
-    });
-
-    await act(async () => {
-      await result.current.submitApplication({ preventDefault: vi.fn() } as any);
-    });
-
-    expect(result.current.errors.email).toBe('validation.email-invalid');
-    expect(applicationService.submitApplication).not.toHaveBeenCalled();
-  });
-
-  it('rejects submission with invalid pnr format', async () => {
-    (applicationService.getCompetences as any).mockResolvedValue([]);
-
-    const { result } = renderHook(() => useApplicationPresenter());
-
-    act(() => {
-      result.current.handleInfoChange({ target: { name: 'name', value: 'John' } } as any);
-    });
-    act(() => {
-      result.current.handleInfoChange({ target: { name: 'surname', value: 'Doe' } } as any);
-    });
-    act(() => {
-      result.current.handleInfoChange({ target: { name: 'email', value: 'john@example.com' } } as any);
-    });
-    act(() => {
-      result.current.handleInfoChange({ target: { name: 'pnr', value: '12345' } } as any);
-    });
-
-    await act(async () => {
-      await result.current.submitApplication({ preventDefault: vi.fn() } as any);
-    });
-
-    expect(result.current.errors.pnr).toBe('validation.pnr-format');
-    expect(applicationService.submitApplication).not.toHaveBeenCalled();
   });
 
   it('rejects submission with invalid name characters', async () => {
@@ -446,12 +372,6 @@ describe('useApplicationPresenter', () => {
     });
     act(() => {
       result.current.handleInfoChange({ target: { name: 'surname', value: 'Doe' } } as any);
-    });
-    act(() => {
-      result.current.handleInfoChange({ target: { name: 'email', value: 'john@example.com' } } as any);
-    });
-    act(() => {
-      result.current.handleInfoChange({ target: { name: 'pnr', value: '19900101-1234' } } as any);
     });
 
     await act(async () => {
@@ -472,12 +392,6 @@ describe('useApplicationPresenter', () => {
     });
     act(() => {
       result.current.handleInfoChange({ target: { name: 'surname', value: 'Doe456' } } as any);
-    });
-    act(() => {
-      result.current.handleInfoChange({ target: { name: 'email', value: 'john@example.com' } } as any);
-    });
-    act(() => {
-      result.current.handleInfoChange({ target: { name: 'pnr', value: '19900101-1234' } } as any);
     });
 
     await act(async () => {
@@ -501,12 +415,6 @@ describe('useApplicationPresenter', () => {
     });
     act(() => {
       result.current.handleInfoChange({ target: { name: 'surname', value: 'Doe' } } as any);
-    });
-    act(() => {
-      result.current.handleInfoChange({ target: { name: 'email', value: 'john@example.com' } } as any);
-    });
-    act(() => {
-      result.current.handleInfoChange({ target: { name: 'pnr', value: '19900101-1234' } } as any);
     });
 
     await act(async () => {

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useProfilePresenter } from '../presenters/useProfilePresenter';
+import { useTranslation } from 'react-i18next';
 import '../styles/ProfileView.css';
 
 /**
@@ -7,7 +8,9 @@ import '../styles/ProfileView.css';
  * to update their email and personal number (pnr).
  */
 export const ProfileView = () => {
-  const { state, updateProfile } = useProfilePresenter();
+  const { state, validationErrors, clearError, updateProfile } =
+    useProfilePresenter();
+  const { t } = useTranslation();
 
   const [email, setEmail] = useState('');
   const [pnr, setPnr] = useState('');
@@ -32,10 +35,16 @@ export const ProfileView = () => {
             id="email"
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="profile-input"
+            onChange={(e) => {
+              setEmail(e.target.value);
+              if (validationErrors.email) clearError('email');
+            }}
+            className={`profile-input ${validationErrors.email ? 'register-input-error' : ''}`}
             placeholder="Enter your email"
           />
+          {validationErrors.email && (
+            <p className="status-msg error">{t(validationErrors.email)}</p>
+          )}
         </div>
 
         <div className="form-group">
@@ -44,10 +53,16 @@ export const ProfileView = () => {
             id="pnr"
             type="text"
             value={pnr}
-            onChange={(e) => setPnr(e.target.value)}
-            className="profile-input"
+            onChange={(e) => {
+              setPnr(e.target.value);
+              if (validationErrors.pnr) clearError('pnr');
+            }}
+            className={`profile-input ${validationErrors.pnr ? 'register-input-error' : ''}`}
             placeholder="YYYYMMDDXXXX"
           />
+          {validationErrors.pnr && (
+            <p className="status-msg error">{t(validationErrors.pnr)}</p>
+          )}
         </div>
 
         <button
@@ -59,7 +74,7 @@ export const ProfileView = () => {
         </button>
       </form>
 
-      {state.message && (
+      {state.message && Object.keys(validationErrors).length === 0 && (
         <p className={`profile-message ${state.status}`}>{state.message}</p>
       )}
     </div>

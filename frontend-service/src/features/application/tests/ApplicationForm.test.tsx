@@ -130,7 +130,7 @@ describe('ApplicationForm Component', () => {
     (useApplicationPresenter as any).mockReturnValue({
       availableCompetences: [],
       status: 'idle',
-      personalInfo: { name: '', surname: '', email: '', pnr: '' },
+      personalInfo: { name: '', surname: '' },
       addedCompetences: [
         { competenceId: 1, yearsOfExperience: 3, name: 'JavaScript' },
         { competenceId: 2, yearsOfExperience: 2, name: 'Python' },
@@ -165,7 +165,7 @@ describe('ApplicationForm Component', () => {
     (useApplicationPresenter as any).mockReturnValue({
       availableCompetences: [],
       status: 'idle',
-      personalInfo: { name: '', surname: '', email: '', pnr: '' },
+      personalInfo: { name: '', surname: '' },
       addedCompetences: [
         { competenceId: 1, yearsOfExperience: 3, name: 'JavaScript' },
       ],
@@ -260,7 +260,7 @@ describe('ApplicationForm Component', () => {
     (useApplicationPresenter as any).mockReturnValue({
       availableCompetences: [],
       status: 'idle',
-      personalInfo: { name: '', surname: '', email: '', pnr: '' },
+      personalInfo: { name: '', surname: '' },
       addedCompetences: [],
       addedAvailabilities: [
         { fromDate: '2026-03-01', toDate: '2026-06-01' },
@@ -293,7 +293,7 @@ describe('ApplicationForm Component', () => {
     (useApplicationPresenter as any).mockReturnValue({
       availableCompetences: [],
       status: 'idle',
-      personalInfo: { name: '', surname: '', email: '', pnr: '' },
+      personalInfo: { name: '', surname: '' },
       addedCompetences: [],
       addedAvailabilities: [
         { fromDate: '2026-03-01', toDate: '2026-06-01' },
@@ -345,7 +345,7 @@ describe('ApplicationForm Component', () => {
     (useApplicationPresenter as any).mockReturnValue({
       availableCompetences: [],
       status: 'loading',
-      personalInfo: { name: '', surname: '', email: '', pnr: '' },
+      personalInfo: { name: '', surname: '' },
       addedCompetences: [],
       addedAvailabilities: [],
       currentCompetenceId: '',
@@ -378,7 +378,7 @@ describe('ApplicationForm Component', () => {
     (useApplicationPresenter as any).mockReturnValue({
       availableCompetences: [],
       status: 'error',
-      personalInfo: { name: '', surname: '', email: '', pnr: '' },
+      personalInfo: { name: '', surname: '' },
       addedCompetences: [],
       addedAvailabilities: [],
       currentCompetenceId: '',
@@ -409,7 +409,7 @@ describe('ApplicationForm Component', () => {
     (useApplicationPresenter as any).mockReturnValue({
       availableCompetences: [],
       status: 'success',
-      personalInfo: { name: '', surname: '', email: '', pnr: '' },
+      personalInfo: { name: '', surname: '' },
       addedCompetences: [],
       addedAvailabilities: [],
       currentCompetenceId: '',
@@ -438,11 +438,4 @@ describe('ApplicationForm Component', () => {
     expect(screen.queryByText('application.title')).not.toBeInTheDocument();
   });
 
-it('email input has correct type', () => {
-    render(<ApplicationForm />);
-
-    const emailInput = screen.getByPlaceholderText('application.email');
-
-    expect(emailInput).toHaveAttribute('type', 'email');
-  });
 });
