@@ -159,7 +159,7 @@ public class AuthControllerTest {
     public void shouldRegisterRecruiterSuccessfully() throws Exception {
         RecruiterRegisterRequestDTO request = new RecruiterRegisterRequestDTO();
         request.setUsername("recruiter");
-        request.setPassword("pass");
+        request.setPassword("password123");
         request.setEmail("recruiter@example.com");
         request.setPnr("19900101-1234");
         request.setSecretCode("correctCode");
@@ -180,7 +180,7 @@ public class AuthControllerTest {
     public void shouldReturnForbidden_WhenRecruiterCodeInvalid() throws Exception {
         RecruiterRegisterRequestDTO request = new RecruiterRegisterRequestDTO();
         request.setUsername("recruiter");
-        request.setPassword("pass");
+        request.setPassword("password123");
         request.setEmail("recruiter@example.com");
         request.setPnr("19900101-1234");
         request.setSecretCode("correctCode");
@@ -202,7 +202,7 @@ public class AuthControllerTest {
     public void shouldReturnBadRequest_WhenUsernameTaken() throws Exception {
         RecruiterRegisterRequestDTO request = new RecruiterRegisterRequestDTO();
         request.setUsername("takenUser");
-        request.setPassword("pass");
+        request.setPassword("password123");
         request.setEmail("taken@example.com");
         request.setPnr("19900101-1234");
         request.setSecretCode("correctCode");
@@ -236,5 +236,193 @@ public class AuthControllerTest {
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isInternalServerError()) // Expect 500
                 .andExpect(content().string("Internal Server Error"));
+    }
+
+    @Test
+    public void shouldReturnBadRequest_WhenEmailFormatInvalid() throws Exception {
+        RegisterRequestDTO request = new RegisterRequestDTO();
+        request.setUsername("newUser");
+        request.setPassword("password123");
+        request.setEmail("invalid-email");
+        request.setPnr("19900101-1234");
+
+        mockMvc.perform(post("/auth/register")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void shouldReturnBadRequest_WhenPnrFormatInvalid() throws Exception {
+        RegisterRequestDTO request = new RegisterRequestDTO();
+        request.setUsername("newUser");
+        request.setPassword("password123");
+        request.setEmail("test@example.com");
+        request.setPnr("1990-01-01");
+
+        mockMvc.perform(post("/auth/register")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void shouldReturnBadRequest_WhenPnrYearInvalid() throws Exception {
+        RegisterRequestDTO request = new RegisterRequestDTO();
+        request.setUsername("newUser");
+        request.setPassword("password123");
+        request.setEmail("test@example.com");
+        request.setPnr("18900101-1234");
+
+        mockMvc.perform(post("/auth/register")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void shouldReturnBadRequest_WhenPnrMonthInvalid() throws Exception {
+        RegisterRequestDTO request = new RegisterRequestDTO();
+        request.setUsername("newUser");
+        request.setPassword("password123");
+        request.setEmail("test@example.com");
+        request.setPnr("19901301-1234");
+
+        mockMvc.perform(post("/auth/register")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void shouldReturnBadRequest_WhenUsernameTooShort() throws Exception {
+        RegisterRequestDTO request = new RegisterRequestDTO();
+        request.setUsername("ab");
+        request.setPassword("password123");
+        request.setEmail("test@example.com");
+        request.setPnr("19900101-1234");
+
+        mockMvc.perform(post("/auth/register")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void shouldReturnBadRequest_WhenUsernameHasInvalidCharacters() throws Exception {
+        RegisterRequestDTO request = new RegisterRequestDTO();
+        request.setUsername("user@name");
+        request.setPassword("password123");
+        request.setEmail("test@example.com");
+        request.setPnr("19900101-1234");
+
+        mockMvc.perform(post("/auth/register")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void shouldReturnBadRequest_WhenPasswordTooShort() throws Exception {
+        RegisterRequestDTO request = new RegisterRequestDTO();
+        request.setUsername("newUser");
+        request.setPassword("pass1");
+        request.setEmail("test@example.com");
+        request.setPnr("19900101-1234");
+
+        mockMvc.perform(post("/auth/register")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void shouldReturnBadRequest_WhenPasswordHasInvalidCharacters() throws Exception {
+        RegisterRequestDTO request = new RegisterRequestDTO();
+        request.setUsername("newUser");
+        request.setPassword("password<script>");
+        request.setEmail("test@example.com");
+        request.setPnr("19900101-1234");
+
+        mockMvc.perform(post("/auth/register")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser
+    public void shouldReturnBadRequest_WhenRecruiterEmailFormatInvalid() throws Exception {
+        RecruiterRegisterRequestDTO request = new RecruiterRegisterRequestDTO();
+        request.setUsername("recruiter");
+        request.setPassword("password123");
+        request.setEmail("invalid.email");
+        request.setPnr("19900101-1234");
+        request.setSecretCode("correctCode");
+
+        mockMvc.perform(post("/auth/register/recruiter")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser
+    public void shouldReturnBadRequest_WhenRecruiterPnrFormatInvalid() throws Exception {
+        RecruiterRegisterRequestDTO request = new RecruiterRegisterRequestDTO();
+        request.setUsername("recruiter");
+        request.setPassword("password123");
+        request.setEmail("recruiter@example.com");
+        request.setPnr("invalid-pnr");
+        request.setSecretCode("correctCode");
+
+        mockMvc.perform(post("/auth/register/recruiter")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser
+    public void shouldReturnBadRequest_WhenRecruiterUsernameTooShort() throws Exception {
+        RecruiterRegisterRequestDTO request = new RecruiterRegisterRequestDTO();
+        request.setUsername("ab");
+        request.setPassword("password123");
+        request.setEmail("recruiter@example.com");
+        request.setPnr("19900101-1234");
+        request.setSecretCode("correctCode");
+
+        mockMvc.perform(post("/auth/register/recruiter")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser
+    public void shouldReturnBadRequest_WhenRecruiterPasswordTooShort() throws Exception {
+        RecruiterRegisterRequestDTO request = new RecruiterRegisterRequestDTO();
+        request.setUsername("recruiter");
+        request.setPassword("pass1");
+        request.setEmail("recruiter@example.com");
+        request.setPnr("19900101-1234");
+        request.setSecretCode("correctCode");
+
+        mockMvc.perform(post("/auth/register/recruiter")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
     }
 }
