@@ -90,8 +90,6 @@ export const ApplicationForm: React.FC = () => {
                 </span>
               )}
             </div>
-
-
           </div>
         </section>
 
