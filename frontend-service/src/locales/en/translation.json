@@ -22,7 +22,9 @@
     "register-as-recruiter": "Register as Recruiter",
     "insufficient-username-length": "Username must be at least 3 characters.",
     "username-required": "Username is required",
-    "password-required": "Password is required"
+    "password-required": "Password is required",
+    "username-invalid-characters": "Username can only contain letters, numbers, dots, hyphens, and underscores",
+    "password-invalid-characters": "Password can only contain letters, numbers, and common symbols (!@#$%^&*()-_=+.,;:?)"
   },
   "dash": {
     "title": "Welcome, ",
@@ -92,7 +94,9 @@
     "email-required": "Email is required",
     "email-invalid": "Please enter a valid email address",
     "pnr-required": "Personal number is required",
-    "pnr-format": "Must be in format YYYYMMDD-XXXX"
+    "pnr-format": "Must be in format YYYYMMDD-XXXX",
+    "name-invalid-characters": "First name can only contain letters, spaces, and hyphens",
+    "surname-invalid-characters": "Surname can only contain letters, spaces, and hyphens"
   },
   "common": {
     "username": "Username",

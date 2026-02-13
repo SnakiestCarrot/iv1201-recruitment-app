@@ -88,6 +88,44 @@ describe('useAuthPresenter', () => {
     });
   });
 
+  it('rejects registration with invalid username characters', async () => {
+    const { result } = renderHook(() => useAuthPresenter());
+
+    await act(async () => {
+      await result.current.registerUser({
+        username: '€σđuser',
+        password: 'password123',
+        confirmPassword: 'password123',
+        email: 'test@example.com',
+        pnr: '19900101-1234',
+      });
+    });
+
+    expect(result.current.validationErrors.username).toBe(
+      'auth.username-invalid-characters'
+    );
+    expect(authService.register).not.toHaveBeenCalled();
+  });
+
+  it('rejects registration with invalid password characters', async () => {
+    const { result } = renderHook(() => useAuthPresenter());
+
+    await act(async () => {
+      await result.current.registerUser({
+        username: 'validuser',
+        password: '¡£€pass',
+        confirmPassword: '¡£€pass',
+        email: 'test@example.com',
+        pnr: '19900101-1234',
+      });
+    });
+
+    expect(result.current.validationErrors.password).toBe(
+      'auth.password-invalid-characters'
+    );
+    expect(authService.register).not.toHaveBeenCalled();
+  });
+
   it('handles successful registration', async () => {
     (authService.register as any).mockResolvedValue('Registration successful');
 
