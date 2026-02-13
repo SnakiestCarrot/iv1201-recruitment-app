@@ -119,29 +119,29 @@ describe('LoginForm Component', () => {
 
   it('renders Old user? link', () => {
     render(<LoginForm />);
-    expect(screen.getByText('Old user?')).toBeInTheDocument();
+    expect(screen.getByText('auth.old-user')).toBeInTheDocument();
   });
 
   it('shows old user email form when clicked', () => {
     render(<LoginForm />);
 
-    fireEvent.click(screen.getByText('Old user?'));
+    fireEvent.click(screen.getByText('auth.old-user'));
 
-    expect(screen.getByLabelText('Email')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Send Instructions' })).toBeInTheDocument();
+    expect(screen.getByLabelText('auth.old-user-email')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'auth.old-user-send' })).toBeInTheDocument();
   });
 
 
   it('calls requestOldUserReset when old user form submitted', () => {
     render(<LoginForm />);
 
-    fireEvent.click(screen.getByText('Old user?'));
+    fireEvent.click(screen.getByText('auth.old-user'));
 
-    fireEvent.change(screen.getByLabelText('Email'), {
+    fireEvent.change(screen.getByLabelText('auth.old-user-email'), {
       target: { value: 'old@test.com' },
     });
 
-    fireEvent.click(screen.getByRole('button', { name: 'Send Instructions' }));
+    fireEvent.click(screen.getByRole('button', { name: 'auth.old-user-send' }));
 
     expect(mockRequestOldUserReset).toHaveBeenCalledWith('old@test.com');
   });

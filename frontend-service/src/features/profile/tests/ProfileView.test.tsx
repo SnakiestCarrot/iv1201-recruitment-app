@@ -26,24 +26,24 @@ describe('ProfileView', () => {
   it('renders form fields correctly', () => {
     render(<ProfileView />);
 
-    expect(screen.getByLabelText('Email')).toBeInTheDocument();
-    expect(screen.getByLabelText('Personal Number')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Save Changes' }))
+    expect(screen.getByLabelText('profile.email')).toBeInTheDocument();
+    expect(screen.getByLabelText('profile.pnr')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'profile.save' }))
       .toBeInTheDocument();
   });
 
   it('calls updateProfile with trimmed values', () => {
     render(<ProfileView />);
 
-    fireEvent.change(screen.getByLabelText('Email'), {
+    fireEvent.change(screen.getByLabelText('profile.email'), {
       target: { value: ' test@mail.com ' },
     });
 
-    fireEvent.change(screen.getByLabelText('Personal Number'), {
+    fireEvent.change(screen.getByLabelText('profile.pnr'), {
       target: { value: ' 199001011234 ' },
     });
 
-    fireEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
+    fireEvent.click(screen.getByRole('button', { name: 'profile.save' }));
 
     expect(mockUpdateProfile).toHaveBeenCalledWith({
       email: 'test@mail.com',
@@ -62,7 +62,7 @@ describe('ProfileView', () => {
     render(<ProfileView />);
 
     expect(screen.getByRole('button')).toBeDisabled();
-    expect(screen.getByRole('button')).toHaveTextContent('Updating...');
+    expect(screen.getByRole('button')).toHaveTextContent('profile.saving');
   });
 
   it('displays success message', () => {
@@ -114,7 +114,7 @@ describe('ProfileView', () => {
 
     render(<ProfileView />);
 
-    fireEvent.change(screen.getByLabelText('Email'), {
+    fireEvent.change(screen.getByLabelText('profile.email'), {
       target: { value: 'new@mail.com' },
     });
 
@@ -131,7 +131,7 @@ describe('ProfileView', () => {
 
     render(<ProfileView />);
 
-    fireEvent.change(screen.getByLabelText('Personal Number'), {
+    fireEvent.change(screen.getByLabelText('profile.pnr'), {
       target: { value: '19900101-1234' },
     });
 

@@ -51,7 +51,7 @@ export const AuthenticatedTopbar = () => {
               </Link>
             )}
             <Link to="/profile" className="topbar-link">
-              Settings
+              {t('profile.settings')}
             </Link>
           </nav>
         </div>

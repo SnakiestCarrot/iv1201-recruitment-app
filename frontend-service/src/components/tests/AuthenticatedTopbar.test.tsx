@@ -55,6 +55,7 @@ describe('AuthenticatedTopbar Component (applicant)', () => {
     expect(screen.getByText('Recruitment App')).toBeInTheDocument();
     expect(screen.getByText('dash.dashboard')).toBeInTheDocument();
     expect(screen.getByText('application.title')).toBeInTheDocument();
+    expect(screen.getByText('profile.settings')).toBeInTheDocument();
   });
 
   it('renders language buttons', () => {
@@ -113,9 +114,11 @@ describe('AuthenticatedTopbar Component (applicant)', () => {
 
     const dashboardLink = screen.getByText('dash.dashboard').closest('a');
     const applicationLink = screen.getByText('application.title').closest('a');
+    const settingsLink = screen.getByText('profile.settings').closest('a');
 
     expect(dashboardLink).toHaveAttribute('href', '/dashboard');
     expect(applicationLink).toHaveAttribute('href', '/application');
+    expect(settingsLink).toHaveAttribute('href', '/profile');
   });
 
   it('hides recruiter applications link for applicants', () => {

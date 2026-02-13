@@ -24,7 +24,12 @@
     "username-required": "Användarnamn krävs",
     "password-required": "Lösenord krävs",
     "username-invalid-characters": "Användarnamnet får bara innehålla bokstäver, siffror, punkter, bindestreck och understreck",
-    "password-invalid-characters": "Lösenordet får bara innehålla bokstäver, siffror och vanliga symboler (!@#$%^&*()-_=+.,;:?)"
+    "password-invalid-characters": "Lösenordet får bara innehålla bokstäver, siffror och vanliga symboler (!@#$%^&*()-_=+.,;:?)",
+    "old-user": "Gammal användare?",
+    "old-user-email": "E-post",
+    "old-user-sending": "Skickar...",
+    "old-user-send": "Skicka instruktioner",
+    "old-user-back": "Tillbaka till inloggning"
   },
   "dash": {
     "title": "Välkommen, ",
@@ -97,6 +102,16 @@
     "pnr-format": "Måste vara i formatet ÅÅÅÅMMDD-XXXX",
     "name-invalid-characters": "Förnamn får bara innehålla bokstäver, mellanslag och bindestreck",
     "surname-invalid-characters": "Efternamn får bara innehålla bokstäver, mellanslag och bindestreck"
+  },
+  "profile": {
+    "title": "Uppdatera Profil",
+    "email": "E-post",
+    "email-placeholder": "Ange din e-post",
+    "pnr": "Personnummer",
+    "pnr-placeholder": "ÅÅÅÅMMDD-XXXX",
+    "saving": "Uppdaterar...",
+    "save": "Spara Ändringar",
+    "settings": "Inställningar"
   },
   "common": {
     "username": "Användarnamn",
