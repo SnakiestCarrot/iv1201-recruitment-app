@@ -19,6 +19,7 @@ Core microservice for the IV1201 Recruitment Application. Manages applicant prof
 | POST | `/api/recruitment/persons` | Create person record (internal, called by auth-service) | No |
 | GET | `/api/recruitment/competences` | List available competences | No |
 | GET | `/api/recruitment/availabilities` | List all availability periods | No |
+| PUT | `/api/recruitment/profile` | Update user profile (email, pnr) for migrated users | Yes (X-User-ID) |
 | POST | `/api/recruitment/migrated-user` | Handle migrated user password reset | No |
 
 Authentication is handled by the API Gateway, which validates the JWT and forwards `X-User-ID` as a header.
@@ -99,6 +100,17 @@ This method is called by the auth-service during user registration as part of a 
 3. **Transaction commits** on return.
 
 **Why a transaction is needed:** These methods perform multiple SELECT queries (person + competences + availabilities for `getApplicationById`). The transaction ensures all reads see a **consistent snapshot** of the database (PostgreSQL's default READ COMMITTED isolation level). Without a transaction, a concurrent `createApplication()` could commit between our reads, causing us to see a person record but not their newly inserted competences.
+
+### updateUserProfile() — Partial Profile Update
+
+1. **Transaction begins** on method entry.
+2. The `person` is loaded by user ID (SELECT). If not found, a `404 Not Found` is thrown and the transaction **rolls back**.
+3. If a new email is provided, a uniqueness check runs (`existsByEmail`). If the email is already taken by another user, a `400 Bad Request` is thrown and the transaction **rolls back**.
+4. Non-blank `email` and `pnr` fields from the DTO are applied to the person entity.
+5. The person is saved (UPDATE).
+6. **Transaction commits** on successful return.
+
+**Why a transaction is needed:** This is a **read-check-write** operation. The transaction ensures the email uniqueness check and the subsequent update happen atomically. Without a transaction, two concurrent requests could both pass the uniqueness check and both write the same email, violating the uniqueness constraint. The transaction serializes these operations, preventing duplicate emails.
 
 ### emailExists() — Existence Check
 
