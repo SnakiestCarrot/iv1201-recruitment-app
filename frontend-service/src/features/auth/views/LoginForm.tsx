@@ -125,7 +125,9 @@ export const LoginForm = () => {
             </div>
 
             <button type="submit" disabled={state.status === 'loading'}>
-              {state.status === 'loading' ? t('auth.old-user-sending') : t('auth.old-user-send')}
+              {state.status === 'loading'
+                ? t('auth.old-user-sending')
+                : t('auth.old-user-send')}
             </button>
 
             <p
