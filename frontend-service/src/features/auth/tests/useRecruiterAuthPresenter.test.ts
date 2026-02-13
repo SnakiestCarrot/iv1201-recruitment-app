@@ -34,6 +34,46 @@ describe('useRecruiterAuthPresenter', () => {
     });
   });
 
+  it('rejects registration with invalid username characters', async () => {
+    const { result } = renderHook(() => useRecruiterAuthPresenter());
+
+    await act(async () => {
+      await result.current.registerRecruiter({
+        username: '€σđuser',
+        password: 'password123',
+        confirmPassword: 'password123',
+        email: 'test@example.com',
+        pnr: '19900101-1234',
+        secretCode: 'secret123',
+      });
+    });
+
+    expect(result.current.validationErrors.username).toBe(
+      'auth.username-invalid-characters'
+    );
+    expect(authService.registerRecruiter).not.toHaveBeenCalled();
+  });
+
+  it('rejects registration with invalid password characters', async () => {
+    const { result } = renderHook(() => useRecruiterAuthPresenter());
+
+    await act(async () => {
+      await result.current.registerRecruiter({
+        username: 'validuser',
+        password: '¡£€pass',
+        confirmPassword: '¡£€pass',
+        email: 'test@example.com',
+        pnr: '19900101-1234',
+        secretCode: 'secret123',
+      });
+    });
+
+    expect(result.current.validationErrors.password).toBe(
+      'auth.password-invalid-characters'
+    );
+    expect(authService.registerRecruiter).not.toHaveBeenCalled();
+  });
+
   it('handles successful recruiter registration', async () => {
     (authService.registerRecruiter as any).mockResolvedValue(
       'Recruiter registered successfully'

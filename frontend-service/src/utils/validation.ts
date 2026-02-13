@@ -6,6 +6,21 @@ import { z } from 'zod';
 const pnrRegex = /^(19|20)\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])-\d{4}$/;
 
 /**
+ * Allowed characters for usernames: letters, digits, dots, hyphens, underscores.
+ */
+const usernameCharsRegex = /^[a-zA-Z0-9._-]+$/;
+
+/**
+ * Allowed characters for passwords: letters, digits, and common symbols.
+ */
+const passwordCharsRegex = /^[a-zA-Z0-9!@#$%^&*()\-_=+.,;:?]+$/;
+
+/**
+ * Allowed characters for names: Unicode letters, spaces, and hyphens.
+ */
+const nameCharsRegex = /^[\p{L} -]+$/u;
+
+/**
  * Shared validation rules used across multiple schemas.
  */
 export const commonRules = {
@@ -24,8 +39,14 @@ export const commonRules = {
  * Schema for the job application personal details section.
  */
 export const ApplicationSchema = z.object({
-  name: z.string().min(1, 'validation.name-required'),
-  surname: z.string().min(1, 'validation.surname-required'),
+  name: z
+    .string()
+    .min(1, 'validation.name-required')
+    .regex(nameCharsRegex, 'validation.name-invalid-characters'),
+  surname: z
+    .string()
+    .min(1, 'validation.surname-required')
+    .regex(nameCharsRegex, 'validation.surname-invalid-characters'),
   email: commonRules.email,
   pnr: commonRules.pnr,
 });
@@ -42,8 +63,14 @@ export const LoginSchema = z.object({
  * Schema for basic applicant registration.
  */
 export const RegisterUserSchema = z.object({
-  username: z.string().min(3, 'auth.insufficient-username-length'),
-  password: z.string().min(6, 'auth.insufficient-password-length'),
+  username: z
+    .string()
+    .min(3, 'auth.insufficient-username-length')
+    .regex(usernameCharsRegex, 'auth.username-invalid-characters'),
+  password: z
+    .string()
+    .min(6, 'auth.insufficient-password-length')
+    .regex(passwordCharsRegex, 'auth.password-invalid-characters'),
 });
 
 /**
