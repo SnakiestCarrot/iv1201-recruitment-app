@@ -1,10 +1,11 @@
 package com.iv1201.recruitment.dto;
 
+import java.util.List;
+
 import com.iv1201.recruitment.validation.ValidName;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-
-import java.util.List;
 
 /**
  * Data Transfer Object used when an applicant submits a recruitment application.
@@ -25,7 +26,7 @@ public class ApplicationsCreateDTO {
 
     @Valid
     private List<CompetenceDTO> competences;
-
+    
     @Valid
     private List<AvailabilityDTO> availabilities;
 
