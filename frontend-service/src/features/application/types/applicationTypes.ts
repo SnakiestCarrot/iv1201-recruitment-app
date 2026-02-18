@@ -45,6 +45,22 @@ export interface ApplicationCreateDTO {
 }
 
 /**
+ * Represents the full application details as returned by the backend.
+ * This mirrors ApplicationDetailDTO on the recruitment-service side.
+ */
+export interface ApplicationDetailDTO {
+  personID: number;
+  name: string;
+  surname: string;
+  email: string;
+  pnr: string;
+  status: string;
+  version: number;
+  competences: CompetenceProfileDTO[];
+  availabilities: AvailabilityDTO[];
+}
+
+/**
  * Represents the status of an application submission operation.
  */
 export type ApplicationStatus = 'idle' | 'loading' | 'success' | 'error';

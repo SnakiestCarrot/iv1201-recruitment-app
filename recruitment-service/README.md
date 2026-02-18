@@ -21,6 +21,8 @@ Core microservice for the IV1201 Recruitment Application. Manages applicant prof
 | GET | `/api/recruitment/availabilities` | List all availability periods | No |
 | PUT | `/api/recruitment/profile` | Update user profile (email, pnr) for migrated users | Yes (X-User-ID) |
 | POST | `/api/recruitment/migrated-user` | Handle migrated user password reset | No |
+| GET | `/api/recruitment/applications/me` | Get the current users application details | Yes (X-User-ID) |
+| PUT | `/api/recruitment/applications/me` | Update the current users application | Yes (X-User-ID) |
 
 Authentication is handled by the API Gateway, which validates the JWT and forwards `X-User-ID` as a header.
 

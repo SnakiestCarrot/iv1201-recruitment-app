@@ -58,114 +58,75 @@ describe('applicationService', () => {
         'Failed to fetch competences: 500 Internal Server Error'
       );
     });
+  });
 
-    it('includes authorization header with token from localStorage', async () => {
-      (localStorage.getItem as any).mockReturnValue('my-custom-token');
-
+  describe('getMyApplication', () => {
+    it('fetches my application details', async () => {
+      const mockAppDetails = { name: 'John', surname: 'Doe' };
       fetchMock.mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve([]),
+        status: 200,
+        json: () => Promise.resolve(mockAppDetails),
       });
 
-      await applicationService.getCompetences();
+      const result = await applicationService.getMyApplication();
 
       expect(fetchMock).toHaveBeenCalledWith(
-        expect.any(String),
-        expect.objectContaining({
+        expect.stringContaining('/applications/me'),
+        {
+          method: 'GET',
           headers: expect.objectContaining({
-            Authorization: 'Bearer my-custom-token',
+            Authorization: 'Bearer fake-token',
           }),
-        })
+        }
       );
+      expect(result).toEqual(mockAppDetails);
+    });
+
+    it('throws specific error on 404', async () => {
+      fetchMock.mockResolvedValue({
+        ok: false,
+        status: 404,
+      });
+
+      await expect(applicationService.getMyApplication()).rejects.toThrow('APPLICATION_NOT_FOUND');
     });
   });
 
-  describe('submitApplication', () => {
+  describe('updateMyApplication', () => {
     const mockApplicationData: ApplicationCreateDTO = {
       name: 'John',
       surname: 'Doe',
-      competences: [
-        { competenceId: 1, yearsOfExperience: 5, name: 'JavaScript' },
-      ],
-      availabilities: [
-        { fromDate: '2026-03-01', toDate: '2026-06-01' },
-      ],
+      competences: [],
+      availabilities: [],
     };
 
-    it('submits application with auth token', async () => {
-      fetchMock.mockResolvedValue({
-        ok: true,
-      });
+    it('updates application using PUT', async () => {
+      fetchMock.mockResolvedValue({ ok: true });
 
-      await applicationService.submitApplication(mockApplicationData);
+      await applicationService.updateMyApplication(mockApplicationData);
 
       expect(fetchMock).toHaveBeenCalledWith(
-        expect.stringContaining('/applications'),
+        expect.stringContaining('/applications/me'),
         {
-          method: 'POST',
-          headers: {
+          method: 'PUT',
+          headers: expect.objectContaining({
             'Content-Type': 'application/json',
             Authorization: 'Bearer fake-token',
-          },
+          }),
           body: JSON.stringify(mockApplicationData),
         }
       );
     });
 
-    it('throws error when submission fails with error text', async () => {
+    it('throws error when update fails', async () => {
       fetchMock.mockResolvedValue({
         ok: false,
-        text: () => Promise.resolve('Application already submitted'),
+        text: () => Promise.resolve('Update failed'),
       });
 
-      await expect(
-        applicationService.submitApplication(mockApplicationData)
-      ).rejects.toThrow('Application already submitted');
-    });
-
-    it('throws default error when submission fails without error text', async () => {
-      fetchMock.mockResolvedValue({
-        ok: false,
-        text: () => Promise.resolve(''),
-      });
-
-      await expect(
-        applicationService.submitApplication(mockApplicationData)
-      ).rejects.toThrow('Failed to submit application');
-    });
-
-    it('includes authorization header with token from localStorage', async () => {
-      (localStorage.getItem as any).mockReturnValue('another-token');
-
-      fetchMock.mockResolvedValue({
-        ok: true,
-      });
-
-      await applicationService.submitApplication(mockApplicationData);
-
-      expect(fetchMock).toHaveBeenCalledWith(
-        expect.any(String),
-        expect.objectContaining({
-          headers: expect.objectContaining({
-            Authorization: 'Bearer another-token',
-          }),
-        })
-      );
-    });
-
-    it('sends correct JSON payload in request body', async () => {
-      fetchMock.mockResolvedValue({
-        ok: true,
-      });
-
-      await applicationService.submitApplication(mockApplicationData);
-
-      expect(fetchMock).toHaveBeenCalledWith(
-        expect.any(String),
-        expect.objectContaining({
-          body: JSON.stringify(mockApplicationData),
-        })
-      );
+      await expect(applicationService.updateMyApplication(mockApplicationData))
+        .rejects.toThrow('Update failed');
     });
   });
 });

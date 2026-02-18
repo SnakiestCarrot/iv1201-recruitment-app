@@ -23,61 +23,56 @@ describe('ApplicationForm Component', () => {
   const mockRemoveAvailability = vi.fn();
   const mockSubmitApplication = vi.fn();
 
+  const getDefaultPresenterState = () => ({
+    availableCompetences: [
+      { competenceId: 1, name: 'JavaScript' },
+      { competenceId: 2, name: 'Python' },
+    ],
+    status: 'idle',
+    errorMessage: '',
+    initialLoadDone: true,
+    personalInfo: {
+      name: '',
+      surname: '',
+    },
+    addedCompetences: [],
+    addedAvailabilities: [],
+    currentCompetenceId: '',
+    currentYoe: '',
+    currentFromDate: '',
+    currentToDate: '',
+    errors: {},
+    setCurrentCompetenceId: mockSetCurrentCompetenceId,
+    setCurrentYoe: mockSetCurrentYoe,
+    setCurrentFromDate: mockSetCurrentFromDate,
+    setCurrentToDate: mockSetCurrentToDate,
+    handleInfoChange: mockHandleInfoChange,
+    addCompetence: mockAddCompetence,
+    removeCompetence: mockRemoveCompetence,
+    addAvailability: mockAddAvailability,
+    removeAvailability: mockRemoveAvailability,
+    submitApplication: mockSubmitApplication,
+  });
+
   beforeEach(() => {
     vi.clearAllMocks();
-
-    (useApplicationPresenter as any).mockReturnValue({
-      availableCompetences: [
-        { competenceId: 1, name: 'JavaScript' },
-        { competenceId: 2, name: 'Python' },
-      ],
-      status: 'idle',
-      personalInfo: {
-        name: '',
-        surname: '',
-      },
-      addedCompetences: [],
-      addedAvailabilities: [],
-      currentCompetenceId: '',
-      currentYoe: '',
-      currentFromDate: '',
-      currentToDate: '',
-      errors: {},
-      setCurrentCompetenceId: mockSetCurrentCompetenceId,
-      setCurrentYoe: mockSetCurrentYoe,
-      setCurrentFromDate: mockSetCurrentFromDate,
-      setCurrentToDate: mockSetCurrentToDate,
-      handleInfoChange: mockHandleInfoChange,
-      addCompetence: mockAddCompetence,
-      removeCompetence: mockRemoveCompetence,
-      addAvailability: mockAddAvailability,
-      removeAvailability: mockRemoveAvailability,
-      submitApplication: mockSubmitApplication,
-    });
+    (useApplicationPresenter as any).mockReturnValue(getDefaultPresenterState());
   });
 
   it('renders the application form correctly', () => {
     render(<ApplicationForm />);
 
     expect(screen.getByText('application.title')).toBeInTheDocument();
-    expect(
-      screen.getByText('application.personal-details')
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText('application.competence-profile')
-    ).toBeInTheDocument();
+    expect(screen.getByText('application.personal-details')).toBeInTheDocument();
+    expect(screen.getByText('application.competence-profile')).toBeInTheDocument();
     expect(screen.getByText('application.availability')).toBeInTheDocument();
   });
 
   it('renders personal information input fields', () => {
     render(<ApplicationForm />);
 
-    expect(
-      screen.getByPlaceholderText('application.name')
-    ).toBeInTheDocument();
-    expect(
-      screen.getByPlaceholderText('application.surname')
-    ).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('application.name')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('application.surname')).toBeInTheDocument();
   });
 
   it('calls handleInfoChange when typing in personal info fields', () => {
@@ -92,11 +87,13 @@ describe('ApplicationForm Component', () => {
   it('renders competence dropdown with available competences', () => {
     render(<ApplicationForm />);
 
-    expect(
-      screen.getByText('application.select-competence')
-    ).toBeInTheDocument();
-    expect(screen.getByText('competence.JavaScript')).toBeInTheDocument();
-    expect(screen.getByText('competence.Python')).toBeInTheDocument();
+    expect(screen.getByText('application.select-competence')).toBeInTheDocument();
+    
+    const jsOptions = screen.getAllByText('competence.JavaScript');
+    expect(jsOptions.length).toBeGreaterThan(0);
+    
+    const pythonOptions = screen.getAllByText('competence.Python');
+    expect(pythonOptions.length).toBeGreaterThan(0);
   });
 
   it('calls setCurrentCompetenceId when competence is selected', () => {
@@ -128,63 +125,31 @@ describe('ApplicationForm Component', () => {
 
   it('displays added competences', () => {
     (useApplicationPresenter as any).mockReturnValue({
-      availableCompetences: [],
-      status: 'idle',
-      personalInfo: { name: '', surname: '' },
+      ...getDefaultPresenterState(),
       addedCompetences: [
         { competenceId: 1, yearsOfExperience: 3, name: 'JavaScript' },
         { competenceId: 2, yearsOfExperience: 2, name: 'Python' },
       ],
-      addedAvailabilities: [],
-      currentCompetenceId: '',
-      currentYoe: '',
-      currentFromDate: '',
-      currentToDate: '',
-      errors: {},
-      setCurrentCompetenceId: mockSetCurrentCompetenceId,
-      setCurrentYoe: mockSetCurrentYoe,
-      setCurrentFromDate: mockSetCurrentFromDate,
-      setCurrentToDate: mockSetCurrentToDate,
-      handleInfoChange: mockHandleInfoChange,
-      addCompetence: mockAddCompetence,
-      removeCompetence: mockRemoveCompetence,
-      addAvailability: mockAddAvailability,
-      removeAvailability: mockRemoveAvailability,
-      submitApplication: mockSubmitApplication,
     });
 
     render(<ApplicationForm />);
 
-    expect(screen.getByText(/competence\.JavaScript/)).toBeInTheDocument();
-    expect(screen.getByText(/competence\.Python/)).toBeInTheDocument();
+    const jsElements = screen.getAllByText(/competence\.JavaScript/);
+    expect(jsElements.length).toBeGreaterThan(0);
+
+    const pyElements = screen.getAllByText(/competence\.Python/);
+    expect(pyElements.length).toBeGreaterThan(0);
+
     expect(screen.getByText(/3\s+application\.years-exp/)).toBeInTheDocument();
     expect(screen.getByText(/2\s+application\.years-exp/)).toBeInTheDocument();
   });
 
   it('calls removeCompetence when remove button is clicked', () => {
     (useApplicationPresenter as any).mockReturnValue({
-      availableCompetences: [],
-      status: 'idle',
-      personalInfo: { name: '', surname: '' },
+      ...getDefaultPresenterState(),
       addedCompetences: [
         { competenceId: 1, yearsOfExperience: 3, name: 'JavaScript' },
       ],
-      addedAvailabilities: [],
-      currentCompetenceId: '',
-      currentYoe: '',
-      currentFromDate: '',
-      currentToDate: '',
-      errors: {},
-      setCurrentCompetenceId: mockSetCurrentCompetenceId,
-      setCurrentYoe: mockSetCurrentYoe,
-      setCurrentFromDate: mockSetCurrentFromDate,
-      setCurrentToDate: mockSetCurrentToDate,
-      handleInfoChange: mockHandleInfoChange,
-      addCompetence: mockAddCompetence,
-      removeCompetence: mockRemoveCompetence,
-      addAvailability: mockAddAvailability,
-      removeAvailability: mockRemoveAvailability,
-      submitApplication: mockSubmitApplication,
     });
 
     render(<ApplicationForm />);
@@ -197,7 +162,6 @@ describe('ApplicationForm Component', () => {
 
   it('does not display competence list when none are added', () => {
     render(<ApplicationForm />);
-
     expect(screen.queryByRole('list')).not.toBeInTheDocument();
   });
 
@@ -228,15 +192,10 @@ describe('ApplicationForm Component', () => {
   it('calls setCurrentToDate when to date is changed', () => {
     render(<ApplicationForm />);
 
-    // Find all inputs that are currently empty
     const inputs = screen.getAllByDisplayValue('');
-    
-    // Filter specifically for date inputs (From and To)
     const dateInputs = inputs.filter(
       (input) => (input as HTMLInputElement).type === 'date'
     );
-
-    // The "To" date input is the second one (index 1)
     const toDateInput = dateInputs[1];
 
     if (toDateInput) {
@@ -251,36 +210,18 @@ describe('ApplicationForm Component', () => {
     render(<ApplicationForm />);
 
     const addButtons = screen.getAllByText('application.add');
-    fireEvent.click(addButtons[1]);
+    fireEvent.click(addButtons[1]); 
 
     expect(mockAddAvailability).toHaveBeenCalledTimes(1);
   });
 
   it('displays added availabilities', () => {
     (useApplicationPresenter as any).mockReturnValue({
-      availableCompetences: [],
-      status: 'idle',
-      personalInfo: { name: '', surname: '' },
-      addedCompetences: [],
+      ...getDefaultPresenterState(),
       addedAvailabilities: [
         { fromDate: '2026-03-01', toDate: '2026-06-01' },
         { fromDate: '2026-07-01', toDate: '2026-09-01' },
       ],
-      currentCompetenceId: '',
-      currentYoe: '',
-      currentFromDate: '',
-      currentToDate: '',
-      errors: {},
-      setCurrentCompetenceId: mockSetCurrentCompetenceId,
-      setCurrentYoe: mockSetCurrentYoe,
-      setCurrentFromDate: mockSetCurrentFromDate,
-      setCurrentToDate: mockSetCurrentToDate,
-      handleInfoChange: mockHandleInfoChange,
-      addCompetence: mockAddCompetence,
-      removeCompetence: mockRemoveCompetence,
-      addAvailability: mockAddAvailability,
-      removeAvailability: mockRemoveAvailability,
-      submitApplication: mockSubmitApplication,
     });
 
     render(<ApplicationForm />);
@@ -291,28 +232,10 @@ describe('ApplicationForm Component', () => {
 
   it('calls removeAvailability when remove button is clicked', () => {
     (useApplicationPresenter as any).mockReturnValue({
-      availableCompetences: [],
-      status: 'idle',
-      personalInfo: { name: '', surname: '' },
-      addedCompetences: [],
+      ...getDefaultPresenterState(),
       addedAvailabilities: [
         { fromDate: '2026-03-01', toDate: '2026-06-01' },
       ],
-      currentCompetenceId: '',
-      currentYoe: '',
-      currentFromDate: '',
-      currentToDate: '',
-      errors: {},
-      setCurrentCompetenceId: mockSetCurrentCompetenceId,
-      setCurrentYoe: mockSetCurrentYoe,
-      setCurrentFromDate: mockSetCurrentFromDate,
-      setCurrentToDate: mockSetCurrentToDate,
-      handleInfoChange: mockHandleInfoChange,
-      addCompetence: mockAddCompetence,
-      removeCompetence: mockRemoveCompetence,
-      addAvailability: mockAddAvailability,
-      removeAvailability: mockRemoveAvailability,
-      submitApplication: mockSubmitApplication,
     });
 
     render(<ApplicationForm />);
@@ -325,15 +248,13 @@ describe('ApplicationForm Component', () => {
 
   it('does not display availability list when none are added', () => {
     render(<ApplicationForm />);
-
     expect(screen.queryByText(/→/)).not.toBeInTheDocument();
   });
 
   it('calls submitApplication when form is submitted', () => {
     render(<ApplicationForm />);
 
-    const form = screen.getByRole('button', { name: 'application.submit' })
-      .closest('form');
+    const form = screen.getByRole('button', { name: 'application.submit' }).closest('form');
     if (form) {
       fireEvent.submit(form);
     }
@@ -343,26 +264,8 @@ describe('ApplicationForm Component', () => {
 
   it('disables submit button and shows loading text when status is loading', () => {
     (useApplicationPresenter as any).mockReturnValue({
-      availableCompetences: [],
+      ...getDefaultPresenterState(),
       status: 'loading',
-      personalInfo: { name: '', surname: '' },
-      addedCompetences: [],
-      addedAvailabilities: [],
-      currentCompetenceId: '',
-      currentYoe: '',
-      currentFromDate: '',
-      currentToDate: '',
-      errors: {},
-      setCurrentCompetenceId: mockSetCurrentCompetenceId,
-      setCurrentYoe: mockSetCurrentYoe,
-      setCurrentFromDate: mockSetCurrentFromDate,
-      setCurrentToDate: mockSetCurrentToDate,
-      handleInfoChange: mockHandleInfoChange,
-      addCompetence: mockAddCompetence,
-      removeCompetence: mockRemoveCompetence,
-      addAvailability: mockAddAvailability,
-      removeAvailability: mockRemoveAvailability,
-      submitApplication: mockSubmitApplication,
     });
 
     render(<ApplicationForm />);
@@ -376,66 +279,26 @@ describe('ApplicationForm Component', () => {
 
   it('displays error message when status is error', () => {
     (useApplicationPresenter as any).mockReturnValue({
-      availableCompetences: [],
+      ...getDefaultPresenterState(),
       status: 'error',
-      personalInfo: { name: '', surname: '' },
-      addedCompetences: [],
-      addedAvailabilities: [],
-      currentCompetenceId: '',
-      currentYoe: '',
-      currentFromDate: '',
-      currentToDate: '',
-      errors: {},
-      setCurrentCompetenceId: mockSetCurrentCompetenceId,
-      setCurrentYoe: mockSetCurrentYoe,
-      setCurrentFromDate: mockSetCurrentFromDate,
-      setCurrentToDate: mockSetCurrentToDate,
-      handleInfoChange: mockHandleInfoChange,
-      addCompetence: mockAddCompetence,
-      removeCompetence: mockRemoveCompetence,
-      addAvailability: mockAddAvailability,
-      removeAvailability: mockRemoveAvailability,
-      submitApplication: mockSubmitApplication,
+      errorMessage: 'application.error-message', 
     });
 
     render(<ApplicationForm />);
 
-    expect(
-      screen.getByText('application.error-message')
-    ).toBeInTheDocument();
+    expect(screen.getByText('application.error-message')).toBeInTheDocument();
   });
 
   it('displays success message when status is success', () => {
     (useApplicationPresenter as any).mockReturnValue({
-      availableCompetences: [],
+      ...getDefaultPresenterState(),
       status: 'success',
-      personalInfo: { name: '', surname: '' },
-      addedCompetences: [],
-      addedAvailabilities: [],
-      currentCompetenceId: '',
-      currentYoe: '',
-      currentFromDate: '',
-      currentToDate: '',
-      errors: {},
-      setCurrentCompetenceId: mockSetCurrentCompetenceId,
-      setCurrentYoe: mockSetCurrentYoe,
-      setCurrentFromDate: mockSetCurrentFromDate,
-      setCurrentToDate: mockSetCurrentToDate,
-      handleInfoChange: mockHandleInfoChange,
-      addCompetence: mockAddCompetence,
-      removeCompetence: mockRemoveCompetence,
-      addAvailability: mockAddAvailability,
-      removeAvailability: mockRemoveAvailability,
-      submitApplication: mockSubmitApplication,
     });
 
     render(<ApplicationForm />);
 
     expect(screen.getByText('application.success-title')).toBeInTheDocument();
-    expect(
-      screen.getByText('application.success-message')
-    ).toBeInTheDocument();
-    expect(screen.queryByText('application.title')).not.toBeInTheDocument();
-  });
+    expect(screen.getByText('application.success-message')).toBeInTheDocument();
 
+  });
 });

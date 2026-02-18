@@ -8,6 +8,8 @@ export const ApplicationForm: React.FC = () => {
   const {
     availableCompetences,
     status,
+    errorMessage,
+    initialLoadDone,
     personalInfo,
     addedCompetences,
     addedAvailabilities,
@@ -36,18 +38,20 @@ export const ApplicationForm: React.FC = () => {
   const renderCompetenceLabel = (name?: string) =>
     name ? t(`competence.${name}`) : unknownCompetenceLabel;
 
-  if (status === 'success') {
-    return (
-      <div className="application-success-container">
-        <h2>{t('application.success-title')}</h2>
-        <p>{t('application.success-message')}</p>
-      </div>
-    );
-  }
-
   return (
     <div className="application-container">
       <h2 className="application-title">{t('application.title')}</h2>
+
+      {!initialLoadDone && (
+        <div className="application-loading">{t('application.loading')}</div>
+      )}
+
+      {initialLoadDone && status === 'success' && (
+        <div className="application-success-container">
+          <h3>{t('application.success-title')}</h3>
+          <p>{t('application.success-message')}</p>
+        </div>
+      )}
 
       <form onSubmit={submitApplication} noValidate>
         {/* Personal Information */}
@@ -231,7 +235,7 @@ export const ApplicationForm: React.FC = () => {
 
         {status === 'error' && (
           <div className="application-error">
-            {t('application.error-message')}
+            {errorMessage ? t(errorMessage) : t('application.error-message')}
           </div>
         )}
       </form>

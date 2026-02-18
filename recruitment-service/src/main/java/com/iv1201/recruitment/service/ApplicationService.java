@@ -144,6 +144,55 @@ public class ApplicationService {
     }
 
     /**
+     * Upserts a recruitment application for the specified user using replace-all
+     * semantics for competences and availabilities.
+     *
+     * Existing competence profiles and availability periods for the user are
+     * removed before inserting the new collections from the DTO.
+     *
+     * @param dto    the incoming application data
+     * @param userId the identifier of the applicant
+     */
+    public void upsertApplicationReplaceAll(ApplicationsCreateDTO dto, Long userId) {
+        Person person = personRepository.findById(userId).orElse(new Person());
+        person.setId(userId);
+        person.setName(dto.getName());
+        person.setSurname(dto.getSurname());
+
+        if (person.getStatus() == null) {
+            person.setStatus("UNHANDLED");
+        }
+
+        personRepository.save(person);
+
+        competenceProfileRepository.deleteByPerson_Id(userId);
+        availabilityRepository.deleteByPerson_Id(userId);
+
+        if (dto.getCompetences() != null) {
+            dto.getCompetences().forEach(compDto -> {
+                Competence competence = competenceRepository.findById(compDto.getCompetenceId())
+                        .orElseThrow(() -> new RuntimeException("Competence not found"));
+
+                CompetenceProfile profile = new CompetenceProfile();
+                profile.setPerson(person);
+                profile.setCompetence(competence);
+                profile.setYearsOfExperience(compDto.getYearsOfExperience());
+                competenceProfileRepository.save(profile);
+            });
+        }
+
+        if (dto.getAvailabilities() != null) {
+            dto.getAvailabilities().forEach(availDto -> {
+                Availability availability = new Availability();
+                availability.setPerson(person);
+                availability.setFromDate(availDto.getFromDate());
+                availability.setToDate(availDto.getToDate());
+                availabilityRepository.save(availability);
+            });
+        }
+    }
+
+    /**
      * Creates a person record with basic information during registration.
      * Called by the auth service as part of the registration saga.
      *

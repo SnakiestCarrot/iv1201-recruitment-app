@@ -17,5 +17,12 @@ public interface CompetenceProfileRepository extends JpaRepository<CompetencePro
      * @return list of competence profiles for the person
      */
     List<CompetenceProfile> findByPerson_Id(Long id);
+
+    /**
+     * Delete all competence profiles for a given person ID.
+     *
+     * @param id the person ID
+     */
+    void deleteByPerson_Id(Long id);
 }
 
