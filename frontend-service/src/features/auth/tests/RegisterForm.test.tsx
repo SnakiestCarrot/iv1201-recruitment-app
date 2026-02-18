@@ -67,7 +67,7 @@ describe('RegisterForm Component', () => {
   it('displays password mismatch error from presenter', () => {
     (useAuthPresenter as any).mockReturnValue({
       state: { status: 'idle', message: '' },
-      validationErrors: { confirmPassword: 'auth.password-mismatch' },
+      validationErrors: { confirmPassword: 'PASSWORD_MISMATCH' },
       registerUser: mockRegisterUser,
       clearError: vi.fn(),
     });
@@ -150,13 +150,13 @@ describe('RegisterForm Component', () => {
 
   it('displays backend error message', () => {
     (useAuthPresenter as any).mockReturnValue({
-      state: { status: 'error', message: 'Username taken' },
+      state: { status: 'error', message: 'USERNAME_TAKEN' },
       validationErrors: {},
       registerUser: mockRegisterUser,
       clearError: vi.fn(),
     });
 
     render(<RegisterForm />);
-    expect(screen.getByText('Username taken')).toBeInTheDocument();
+    expect(screen.getByText('auth.username-taken')).toBeInTheDocument();
   });
 });

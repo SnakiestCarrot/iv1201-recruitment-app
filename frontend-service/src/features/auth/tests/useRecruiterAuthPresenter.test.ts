@@ -2,6 +2,7 @@ import { renderHook, act } from '@testing-library/react';
 import { useRecruiterAuthPresenter } from '../presenters/useRecruiterAuthPresenter';
 import { authService } from '../services/authService';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { AuthError } from '../types/authTypes';
 
 const mockNavigate = vi.fn();
 
@@ -215,7 +216,7 @@ describe('useRecruiterAuthPresenter', () => {
 
     expect(result.current.state).toEqual({
       status: 'error',
-      message: 'Registration failed',
+      message: AuthError.REGISTRATION_FAILED,
     });
   });
 

@@ -29,7 +29,16 @@
     "old-user-email": "E-post",
     "old-user-sending": "Skickar...",
     "old-user-send": "Skicka instruktioner",
-    "old-user-back": "Tillbaka till inloggning"
+    "old-user-back": "Tillbaka till inloggning",
+    "login-success": "Inloggningen lyckades!",
+    "logging-in": "Loggar in...",
+    "registering": "Registrerar...",
+    "registration-failed": "Registreringen misslyckades. Försök igen.",
+    "login-failed": "Inloggningen misslyckades. Försök igen.",
+    "invalid-credentials": "Ogiltigt användarnamn eller lösenord.",
+    "username-taken": "Användarnamnet är redan taget.",
+    "server-error": "Något gick fel. Försök igen senare.",
+    "old-user-reset-message": "Om denna e-postadress finns i vårt system kommer du att få instruktioner för lösenordsåterställning."
   },
   "dash": {
     "title": "Välkommen, ",

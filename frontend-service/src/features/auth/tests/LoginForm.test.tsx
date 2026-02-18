@@ -81,7 +81,7 @@ describe('LoginForm Component', () => {
 
   it('disables the submit button when loading', () => {
     (useAuthPresenter as any).mockReturnValue({
-      state: { status: 'loading', message: 'Logging in...' },
+      state: { status: 'loading', message: 'LOGGING_IN' },
       loginUser: mockLoginUser,
     });
 
@@ -96,13 +96,13 @@ describe('LoginForm Component', () => {
 
   it('displays error message when state is error', () => {
     (useAuthPresenter as any).mockReturnValue({
-      state: { status: 'error', message: 'Invalid credentials' },
+      state: { status: 'error', message: 'INVALID_CREDENTIALS' },
       loginUser: mockLoginUser,
     });
 
     render(<LoginForm />);
 
-    expect(screen.getByText('Invalid credentials')).toBeInTheDocument();
+    expect(screen.getByText('auth.invalid-credentials')).toBeInTheDocument();
   });
 
   const mockRequestOldUserReset = vi.fn();

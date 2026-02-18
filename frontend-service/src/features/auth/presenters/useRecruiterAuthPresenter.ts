@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '../services/authService';
 import { RecruiterRegisterSchema } from '../../../utils/validation';
-import type { AuthState, RecruiterRegisterRequest } from '../types/authTypes';
+import { type AuthState, type RecruiterRegisterRequest, AuthError } from '../types/authTypes';
 
 /**
  * Custom React hook for managing recruiter registration operations.
@@ -34,7 +34,7 @@ export const useRecruiterAuthPresenter = () => {
     setValidationErrors({});
 
     if (credentials.password !== credentials.confirmPassword) {
-      setValidationErrors({ confirmPassword: 'auth.password-mismatch' });
+      setValidationErrors({ confirmPassword: AuthError.PASSWORD_MISMATCH });
       return;
     }
 
@@ -69,7 +69,7 @@ export const useRecruiterAuthPresenter = () => {
       }, 2000);
     } catch (error) {
       const errorMessage =
-        error instanceof Error ? error.message : 'Registration failed';
+        error instanceof Error ? error.message : AuthError.REGISTRATION_FAILED;
       setState({ status: 'error', message: errorMessage });
     }
   };

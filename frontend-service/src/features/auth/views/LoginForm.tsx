@@ -4,6 +4,7 @@ import { useAuthPresenter } from '../presenters/useAuthPresenter';
 import { useTranslation } from 'react-i18next';
 import { LanguageDropdown } from '../../../components/LanguageDropdown';
 import { LoginSchema } from '../../../utils/validation';
+import { authMessageMap } from '../utils/authMessageMap';
 import '../styles/LoginForm.css';
 
 /**
@@ -73,7 +74,7 @@ export const LoginForm = () => {
             />
             {validationErrors.username && (
               <span style={{ color: 'red', fontSize: '0.85em' }}>
-                {t(validationErrors.username)}
+                {t(authMessageMap[validationErrors.username] ?? validationErrors.username)}
               </span>
             )}
           </div>
@@ -90,7 +91,7 @@ export const LoginForm = () => {
             />
             {validationErrors.password && (
               <span style={{ color: 'red', fontSize: '0.85em' }}>
-                {t(validationErrors.password)}
+                {t(authMessageMap[validationErrors.password] ?? validationErrors.password)}
               </span>
             )}
           </div>
@@ -143,7 +144,7 @@ export const LoginForm = () => {
         </div>
 
         {state.message && Object.keys(validationErrors).length === 0 && (
-          <p className={`status-msg ${state.status}`}>{state.message}</p>
+          <p className={`status-msg ${state.status}`}>{t(authMessageMap[state.message] ?? state.message)}</p>
         )}
 
         <div className="login-footer">

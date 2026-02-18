@@ -29,7 +29,16 @@
     "old-user-email": "Email",
     "old-user-sending": "Sending...",
     "old-user-send": "Send Instructions",
-    "old-user-back": "Back to login"
+    "old-user-back": "Back to login",
+    "login-success": "Login successful!",
+    "logging-in": "Logging in...",
+    "registering": "Registering...",
+    "registration-failed": "Registration failed. Please try again.",
+    "login-failed": "Login failed. Please try again.",
+    "invalid-credentials": "Invalid username or password.",
+    "username-taken": "Username is already taken.",
+    "server-error": "Something went wrong. Please try again later.",
+    "old-user-reset-message": "If this email exists in our system, you will receive password reset instructions shortly."
   },
   "dash": {
     "title": "Welcome, ",

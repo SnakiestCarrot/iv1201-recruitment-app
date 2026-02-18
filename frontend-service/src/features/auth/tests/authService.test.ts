@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { authService } from '../services/authService';
+import { AuthError, AuthStatus } from '../types/authTypes';
 
 const fetchMock = vi.fn();
 vi.stubGlobal('fetch', fetchMock);
@@ -43,10 +44,10 @@ describe('authService', () => {
     expect(result).toBe('User created successfully');
   });
 
-  it('register throws error on failure', async () => {
+  it('register throws i18n key on failure', async () => {
     fetchMock.mockResolvedValue({
       ok: false,
-      text: () => Promise.resolve('Username already taken'),
+      status: 500,
     });
 
     await expect(
@@ -56,14 +57,27 @@ describe('authService', () => {
         email: 'taken@example.com',
         pnr: '19900101-1234',
       })
-    ).rejects.toThrow('Username already taken');
+    ).rejects.toThrow(AuthError.REGISTRATION_FAILED);
   });
 
-  it('register throws default error if backend response is empty', async () => {
+  it('register throws username-taken key on 409', async () => {
     fetchMock.mockResolvedValue({
       ok: false,
-      text: () => Promise.resolve(''),
+      status: 409,
     });
+
+    await expect(
+      authService.register({
+        username: 'taken',
+        password: 'pw',
+        email: 'taken@example.com',
+        pnr: '19900101-1234',
+      })
+    ).rejects.toThrow(AuthError.USERNAME_TAKEN);
+  });
+
+  it('register throws server-error on network failure', async () => {
+    fetchMock.mockRejectedValue(new TypeError('Failed to fetch'));
 
     await expect(
       authService.register({
@@ -72,7 +86,7 @@ describe('authService', () => {
         email: 'user@example.com',
         pnr: '19900101-1234',
       })
-    ).rejects.toThrow('Registration failed');
+    ).rejects.toThrow(AuthError.SERVER_ERROR);
   });
 
   // --- Register Recruiter Tests (Added) ---
@@ -109,11 +123,10 @@ describe('authService', () => {
     expect(result).toBe('Recruiter created successfully');
   });
 
-  it('registerRecruiter throws specific error for 403 Forbidden (Invalid code)', async () => {
+  it('registerRecruiter throws i18n key for 403 Forbidden (Invalid code)', async () => {
     fetchMock.mockResolvedValue({
       ok: false,
       status: 403,
-      text: () => Promise.resolve('Forbidden'),
     });
 
     await expect(
@@ -124,14 +137,13 @@ describe('authService', () => {
         pnr: '19900101-1234',
         secretCode: 'bad_code',
       })
-    ).rejects.toThrow('Invalid registration code');
+    ).rejects.toThrow(AuthError.INVALID_SECRET_CODE);
   });
 
-  it('registerRecruiter throws generic error for other failures', async () => {
+  it('registerRecruiter throws username-taken key for 409', async () => {
     fetchMock.mockResolvedValue({
       ok: false,
-      status: 400,
-      text: () => Promise.resolve('Username taken'),
+      status: 409,
     });
 
     await expect(
@@ -140,14 +152,13 @@ describe('authService', () => {
         password: 'pw',
         secretCode: 'code123',
       })
-    ).rejects.toThrow('Username taken');
+    ).rejects.toThrow(AuthError.USERNAME_TAKEN);
   });
 
-  it('registerRecruiter throws default error if backend response is empty', async () => {
+  it('registerRecruiter throws registration-failed for other errors', async () => {
     fetchMock.mockResolvedValue({
       ok: false,
       status: 500,
-      text: () => Promise.resolve(''),
     });
 
     await expect(
@@ -156,7 +167,19 @@ describe('authService', () => {
         password: 'pw',
         secretCode: 'code123',
       })
-    ).rejects.toThrow('Registration failed');
+    ).rejects.toThrow(AuthError.REGISTRATION_FAILED);
+  });
+
+  it('registerRecruiter throws server-error on network failure', async () => {
+    fetchMock.mockRejectedValue(new TypeError('Failed to fetch'));
+
+    await expect(
+      authService.registerRecruiter({
+        username: 'recruiter',
+        password: 'pw',
+        secretCode: 'code123',
+      })
+    ).rejects.toThrow(AuthError.SERVER_ERROR);
   });
 
   // --- Login Tests ---
@@ -182,37 +205,34 @@ describe('authService', () => {
     expect(result).toEqual(mockResponse);
   });
 
-  it('login throws specific error for invalid credentials', async () => {
+  it('login throws i18n key for 401 invalid credentials', async () => {
     fetchMock.mockResolvedValue({
       ok: false,
-      text: () => Promise.resolve('Invalid credentials provided'),
+      status: 401,
     });
 
     await expect(
       authService.login({ username: 'user', password: 'wrong' })
-    ).rejects.toThrow('Invalid username or password');
+    ).rejects.toThrow(AuthError.INVALID_CREDENTIALS);
   });
 
-  it('login throws generic error for other failures', async () => {
+  it('login throws login-failed for other server errors', async () => {
     fetchMock.mockResolvedValue({
       ok: false,
-      text: () => Promise.resolve('Database connection failed'),
+      status: 500,
     });
 
     await expect(
       authService.login({ username: 'user', password: 'pw' })
-    ).rejects.toThrow('Database connection failed');
+    ).rejects.toThrow(AuthError.LOGIN_FAILED);
   });
 
-  it('login throws default error if backend response is empty', async () => {
-    fetchMock.mockResolvedValue({
-      ok: false,
-      text: () => Promise.resolve(''),
-    });
+  it('login throws server-error on network failure', async () => {
+    fetchMock.mockRejectedValue(new TypeError('Failed to fetch'));
 
     await expect(
       authService.login({ username: 'user', password: 'pw' })
-    ).rejects.toThrow('Login failed');
+    ).rejects.toThrow(AuthError.SERVER_ERROR);
   });
   it('requestOldUserReset sends correct request and returns backend message', async () => {
     fetchMock.mockResolvedValue({
@@ -241,8 +261,6 @@ describe('authService', () => {
 
     const result = await authService.requestOldUserReset('test@mail.com');
 
-    expect(result).toBe(
-      'If this email exists in our system, you will receive password reset instructions shortly.'
-    );
+    expect(result).toBe(AuthStatus.OLD_USER_RESET_MESSAGE);
   });
 });

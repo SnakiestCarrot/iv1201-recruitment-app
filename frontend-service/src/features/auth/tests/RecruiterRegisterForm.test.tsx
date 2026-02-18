@@ -274,20 +274,20 @@ describe('RecruiterRegisterForm Component', () => {
 
   it('displays backend error message', () => {
     (useRecruiterAuthPresenter as any).mockReturnValue({
-      state: { status: 'error', message: 'Invalid secret code' },
+      state: { status: 'error', message: 'INVALID_SECRET_CODE' },
       registerRecruiter: mockRegisterRecruiter,
     });
 
     render(<RecruiterRegisterForm />);
 
-    expect(screen.getByText('Invalid secret code')).toBeInTheDocument();
+    expect(screen.getByText('auth.invalid-secret-code')).toBeInTheDocument();
   });
 
   it('displays success message', () => {
     (useRecruiterAuthPresenter as any).mockReturnValue({
       state: {
         status: 'success',
-        message: 'Recruiter registered successfully',
+        message: 'auth.recruiter-register-success',
       },
       registerRecruiter: mockRegisterRecruiter,
     });
@@ -295,7 +295,7 @@ describe('RecruiterRegisterForm Component', () => {
     render(<RecruiterRegisterForm />);
 
     expect(
-      screen.getByText('Recruiter registered successfully')
+      screen.getByText('auth.recruiter-register-success')
     ).toBeInTheDocument();
   });
 
