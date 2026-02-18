@@ -3,7 +3,6 @@ package com.iv1201.recruitment.dto;
 import com.iv1201.recruitment.validation.ValidName;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
@@ -24,11 +23,9 @@ public class ApplicationsCreateDTO {
     @ValidName(message = "Surname must contain only letters, spaces, and hyphens")
     private String surname;
 
-    @NotNull(message = "Competences are required")
     @Valid
     private List<CompetenceDTO> competences;
 
-    @NotNull(message = "Availabilities are required")
     @Valid
     private List<AvailabilityDTO> availabilities;
 
