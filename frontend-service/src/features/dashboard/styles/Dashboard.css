@@ -34,13 +34,15 @@
 }
 
 .dashboard-link:hover {
-  background-color: #1d4ed8;
+  background-color: #0036ca;
+  color: #ffffff;
 }
 
 /* Status Box */
 
 .dashboard-status-box {
   padding: 20px;
+  margin: 2rem;
   border: 1px solid #16a34a;
   display: inline-block;
   border-radius: 8px;

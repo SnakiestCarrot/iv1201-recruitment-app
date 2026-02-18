@@ -33,11 +33,13 @@
   },
   "dash": {
     "title": "Welcome, ",
-    "logged-in-state": "You are successfully logged in.",
-    "role-id-sentence": "You have role ID: ",
+    "logged-in-state": "You are logged in.",
+    "role-id-sentence": "You are ",
     "logout": "Log out",
     "dashboard": "Dashboard",
-    "apply-now": "Apply Now"
+    "apply-now": "Apply Now",
+    "recruiter": "a recruiter",
+    "applicant": "an applicant"
   },
   "application": {
     "title": "Recruitment Application",

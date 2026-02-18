@@ -1,19 +1,19 @@
 /* Application Form Container */
 
 .application-container {
-  max-width: 800px;
+  max-width: 600px;
   margin: 0 auto;
-  padding: 2.5rem;
-  margin-top: 2.5rem;
+  padding: 1.5rem;
+  margin-top: 1rem;
   background-color: #ffffff;
-  border: 1px solid #e5e7eb;
+  border: 0px solid #e5e7eb;
   border-radius: 8px;
 }
 
 .application-title {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: bold;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
   color: #000000;
 }
 
@@ -150,7 +150,7 @@
 }
 
 .application-btn-add:hover {
-  background-color: #f3f4f6;
+  background-color: #d2d3d5;
 }
 
 .application-btn-submit {
@@ -175,13 +175,15 @@
   border: none;
   color: #dc2626;
   text-decoration: underline;
-  padding: 0;
+  padding: 10px;
   font-size: 0.875rem;
   cursor: pointer;
+  width: 20%;
 }
 
 .application-btn-remove:hover {
-  color: #b91c1c;
+  color: #d21414;
+  background-color: #d2d3d5;
 }
 
 /* Lists */

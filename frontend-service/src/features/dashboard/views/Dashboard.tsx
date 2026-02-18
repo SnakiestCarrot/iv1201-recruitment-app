@@ -24,7 +24,7 @@ export const Dashboard = () => {
 
       <p>
         {t('dash.role-id-sentence')}
-        {roleId}
+        {roleId == 1 ? t('dash.recruiter') : t('dash.applicant')}
       </p>
 
       {roleId !== 1 && (
