@@ -54,101 +54,103 @@ export const LoginForm = () => {
   };
 
   return (
-    <div className="auth-container"><div className="auth-card">
-      <LanguageDropdown />
+    <div className="auth-container">
+      <div className="auth-card">
+        <LanguageDropdown />
 
-      <h2>{t('auth.login')}</h2>
+        <h2>{t('auth.login')}</h2>
 
-      <form onSubmit={handleSubmit} noValidate>
-        <div className="form-group">
-          <label htmlFor="username">{t('common.username')}</label>
-          <input
-            id="username"
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            autoComplete="username"
-            className={`login-input ${validationErrors.username ? 'input-error' : ''}`}
-          />
-          {validationErrors.username && (
-            <span style={{ color: 'red', fontSize: '0.85em' }}>
-              {t(validationErrors.username)}
-            </span>
-          )}
-        </div>
+        <form onSubmit={handleSubmit} noValidate>
+          <div className="form-group">
+            <label htmlFor="username">{t('common.username')}</label>
+            <input
+              id="username"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              autoComplete="username"
+              className={`login-input ${validationErrors.username ? 'input-error' : ''}`}
+            />
+            {validationErrors.username && (
+              <span style={{ color: 'red', fontSize: '0.85em' }}>
+                {t(validationErrors.username)}
+              </span>
+            )}
+          </div>
 
-        <div className="form-group">
-          <label htmlFor="password">{t('common.password')}</label>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            autoComplete="current-password"
-            className={`login-input ${validationErrors.password ? 'input-error' : ''}`}
-          />
-          {validationErrors.password && (
-            <span style={{ color: 'red', fontSize: '0.85em' }}>
-              {t(validationErrors.password)}
-            </span>
-          )}
-        </div>
+          <div className="form-group">
+            <label htmlFor="password">{t('common.password')}</label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
+              className={`login-input ${validationErrors.password ? 'input-error' : ''}`}
+            />
+            {validationErrors.password && (
+              <span style={{ color: 'red', fontSize: '0.85em' }}>
+                {t(validationErrors.password)}
+              </span>
+            )}
+          </div>
 
-        <button type="submit" disabled={state.status === 'loading'}>
-          {state.status === 'loading'
-            ? t('auth.verification')
-            : t('auth.login')}
-        </button>
-      </form>
+          <button type="submit" disabled={state.status === 'loading'}>
+            {state.status === 'loading'
+              ? t('auth.verification')
+              : t('auth.login')}
+          </button>
+        </form>
 
-      <div className="old-user-section">
-        {!showOldUser ? (
-          <p
-            className="old-user-link"
-            onClick={() => setShowOldUser(true)}
-            style={{ cursor: 'pointer' }}
-          >
-            {t('auth.old-user')}
-          </p>
-        ) : (
-          <form onSubmit={handleOldUserSubmit} className="old-user-form">
-            <div className="form-group">
-              <label htmlFor="oldUserEmail">{t('auth.old-user-email')}</label>
-              <input
-                id="oldUserEmail"
-                type="email"
-                value={oldUserEmail}
-                onChange={(e) => setOldUserEmail(e.target.value)}
-                required
-                className="login-input"
-              />
-            </div>
-
-            <button type="submit" disabled={state.status === 'loading'}>
-              {state.status === 'loading'
-                ? t('auth.old-user-sending')
-                : t('auth.old-user-send')}
-            </button>
-
+        <div className="old-user-section">
+          {!showOldUser ? (
             <p
               className="old-user-link"
-              onClick={() => setShowOldUser(false)}
+              onClick={() => setShowOldUser(true)}
               style={{ cursor: 'pointer' }}
             >
-              {t('auth.old-user-back')}
+              {t('auth.old-user')}
             </p>
-          </form>
+          ) : (
+            <form onSubmit={handleOldUserSubmit} className="old-user-form">
+              <div className="form-group">
+                <label htmlFor="oldUserEmail">{t('auth.old-user-email')}</label>
+                <input
+                  id="oldUserEmail"
+                  type="email"
+                  value={oldUserEmail}
+                  onChange={(e) => setOldUserEmail(e.target.value)}
+                  required
+                  className="login-input"
+                />
+              </div>
+
+              <button type="submit" disabled={state.status === 'loading'}>
+                {state.status === 'loading'
+                  ? t('auth.old-user-sending')
+                  : t('auth.old-user-send')}
+              </button>
+
+              <p
+                className="old-user-link"
+                onClick={() => setShowOldUser(false)}
+                style={{ cursor: 'pointer' }}
+              >
+                {t('auth.old-user-back')}
+              </p>
+            </form>
+          )}
+        </div>
+
+        {state.message && Object.keys(validationErrors).length === 0 && (
+          <p className={`status-msg ${state.status}`}>{state.message}</p>
         )}
-      </div>
 
-      {state.message && Object.keys(validationErrors).length === 0 && (
-        <p className={`status-msg ${state.status}`}>{state.message}</p>
-      )}
-
-      <div className="login-footer">
-        <p>{t('auth.dont-have-account')}</p>
-        <Link to="/register">{t('auth.register')}</Link>
+        <div className="login-footer">
+          <p>{t('auth.dont-have-account')}</p>
+          <Link to="/register">{t('auth.register')}</Link>
+        </div>
       </div>
-    </div></div>
+    </div>
   );
 };
