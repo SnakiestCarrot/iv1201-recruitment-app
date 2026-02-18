@@ -89,6 +89,18 @@ describe('recruiterService', () => {
         'Failed to fetch application'
       );
     });
+
+    it('throws error with status on server error', async () => {
+      fetchMock.mockResolvedValue({
+        ok: false,
+        status: 500,
+        statusText: 'Internal Server Error',
+      });
+
+      await expect(recruiterService.getApplicationById(1)).rejects.toThrow(
+        'Failed to fetch application: 500 Internal Server Error'
+      );
+    });
   });
 
   describe('updateApplicationStatus', () => {
@@ -127,6 +139,18 @@ describe('recruiterService', () => {
       await expect(
         recruiterService.updateApplicationStatus(1, 'INVALID', 0)
       ).rejects.toThrow('Invalid status');
+    });
+
+    it('throws fallback error when server returns empty text', async () => {
+      fetchMock.mockResolvedValue({
+        ok: false,
+        status: 400,
+        text: async () => '',
+      });
+
+      await expect(
+        recruiterService.updateApplicationStatus(1, 'INVALID', 0)
+      ).rejects.toThrow('Failed to update application status');
     });
   });
 });
