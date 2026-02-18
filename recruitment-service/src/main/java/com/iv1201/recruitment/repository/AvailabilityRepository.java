@@ -17,5 +17,12 @@ public interface AvailabilityRepository extends JpaRepository<Availability, Long
      * @return list of availability periods for the person
      */
     List<Availability> findByPerson_Id(Long id);
+
+    /**
+     * Delete all availability periods for a given person ID.
+     *
+     * @param id the person ID
+     */
+    void deleteByPerson_Id(Long id);
 }
 

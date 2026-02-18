@@ -12,6 +12,7 @@ import type {
   AvailabilityDTO,
   ApplicationCreateDTO,
   ApplicationStatus,
+  ApplicationDetailDTO,
 } from '../../application/types/applicationTypes'; // Check this path matches your structure
 import { ApplicationSchema } from '../../../utils/validation';
 
@@ -26,6 +27,7 @@ export const useApplicationPresenter = () => {
   >([]);
   const [status, setStatus] = useState<ApplicationStatus>('idle');
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [initialLoadDone, setInitialLoadDone] = useState<boolean>(false);
 
   // NEW: State to hold validation errors
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -62,13 +64,55 @@ export const useApplicationPresenter = () => {
   useEffect(() => {
     let alive = true;
 
-    void fetchCompetences()
-      .then((uniqueData) => {
-        if (alive) setAvailableCompetences(uniqueData);
-      })
-      .catch((error) => {
-        console.error('Failed to load competences', error);
-      });
+    const loadInitialData = async () => {
+      try {
+        const uniqueCompetences = await fetchCompetences();
+        if (!alive) return;
+        setAvailableCompetences(uniqueCompetences);
+
+        try {
+          const existingApplication: ApplicationDetailDTO =
+            await applicationService.getMyApplication();
+
+          if (!alive) return;
+
+          setPersonalInfo({
+            name: existingApplication.name ?? '',
+            surname: existingApplication.surname ?? '',
+          });
+
+          setAddedCompetences(
+            existingApplication.competences?.map((c) => ({
+              competenceId: c.competenceId,
+              yearsOfExperience: c.yearsOfExperience,
+              name: c.name,
+            })) ?? []
+          );
+
+          setAddedAvailabilities(
+            existingApplication.availabilities?.map((a) => ({
+              fromDate: a.fromDate,
+              toDate: a.toDate,
+            })) ?? []
+          );
+        } catch (error) {
+          if (
+            error instanceof Error &&
+            error.message === 'APPLICATION_NOT_FOUND'
+          ) {
+            // No existing application is fine; keep defaults.
+          } else {
+            console.error('Failed to load existing application', error);
+          }
+        }
+      } finally {
+        if (alive) {
+          setInitialLoadDone(true);
+        }
+      }
+    };
+
+    void loadInitialData();
 
     return () => {
       alive = false;
@@ -176,7 +220,7 @@ export const useApplicationPresenter = () => {
     };
 
     try {
-      await applicationService.submitApplication(payload);
+      await applicationService.updateMyApplication(payload);
       setStatus('success');
     } catch (error) {
       console.error(error);
@@ -189,6 +233,7 @@ export const useApplicationPresenter = () => {
     availableCompetences,
     status,
     errorMessage,
+    initialLoadDone,
     errors,
     personalInfo,
     addedCompetences,
