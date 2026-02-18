@@ -191,6 +191,74 @@ Client-side validation uses **Zod** schemas defined in `src/utils/validation.ts`
 
 Validation errors are stored as `Record<string, string>` in presenter state and displayed inline in the form views.
 
+## Error Handling
+
+Errors flow through the MVP layers differently depending on the feature. All user-facing error messages are translated via i18next.
+
+### Auth (Login, Registration)
+
+The auth feature uses a **domain code mapping** pattern to keep i18n concerns out of the service and presenter layers:
+
+```
+Service                    Presenter                  View
+───────                    ─────────                  ────
+throw Error(               setState({                 t(authMessageMap[
+  AuthError.SERVER_ERROR     message: "SERVER_ERROR"    "SERVER_ERROR"
+)                          })                         ] ?? "SERVER_ERROR")
+                                                      → t("auth.server-error")
+                                                      → "Server error"
+```
+
+1. **Service** (`authService.ts`) — Catches HTTP and network errors, throws `Error` with a domain constant from `AuthError` (e.g., `INVALID_CREDENTIALS`, `SERVER_ERROR`, `USERNAME_TAKEN`). Never contains i18n keys.
+2. **Presenter** (`useAuthPresenter.ts`, `useRecruiterAuthPresenter.ts`) — Catches the error and stores the domain code string in `useState`. Status messages also use domain constants from `AuthStatus` (e.g., `LOGGING_IN`, `LOGIN_SUCCESS`). Never contains i18n keys.
+3. **View** (`LoginForm.tsx`, `RegisterForm.tsx`, `RecruiterRegisterForm.tsx`) — Maps the domain code to an i18n key using `authMessageMap` (`utils/authMessageMap.ts`), then passes it to `t()`. The fallback `?? value` handles codes that are already i18n keys (e.g., Zod validation messages).
+
+```tsx
+// View rendering pattern
+{t(authMessageMap[state.message] ?? state.message)}
+{t(authMessageMap[validationErrors.field] ?? validationErrors.field)}
+```
+
+**Key files:**
+- `types/authTypes.ts` — `AuthError` and `AuthStatus` domain constants
+- `utils/authMessageMap.ts` — Maps domain codes to i18n keys (e.g., `SERVER_ERROR` → `'auth.server-error'`)
+
+**HTTP status code mapping in `authService.ts`:**
+
+| HTTP Status | Domain Code | i18n Key |
+|-------------|-------------|----------|
+| 401 | `INVALID_CREDENTIALS` | `auth.invalid-credentials` |
+| 403 | `INVALID_SECRET_CODE` | `auth.invalid-secret-code` |
+| 409 | `USERNAME_TAKEN` | `auth.username-taken` |
+| 5xx | `LOGIN_FAILED` / `REGISTRATION_FAILED` | `auth.login-failed` / `auth.registration-failed` |
+| Network error | `SERVER_ERROR` | `auth.server-error` |
+
+### Application
+
+The application feature uses **generic i18n keys** in the view, ignoring specific error details:
+
+1. **Service** (`applicationService.ts`) — Throws raw error text from the server response or generic fallback messages.
+2. **Presenter** (`useApplicationPresenter.ts`) — Stores the raw error string in `errorMessage` state. Validation errors come from Zod schemas.
+3. **View** (`ApplicationForm.tsx`) — Displays a hardcoded i18n key (`'application.error-message'`) for API errors. Validation errors are translated directly as i18n keys.
+
+### Dashboard
+
+The dashboard has no error state. If the JWT is missing or invalid, the user is silently redirected to the login page.
+
+### Recruiter Review
+
+The recruiter feature handles **optimistic locking conflicts** as a special case:
+
+1. **Service** (`recruiterService.ts`) — Throws `"CONFLICT"` for HTTP 409 (version mismatch). Other errors throw raw HTTP status text.
+2. **Presenter** (`useApplicationDetailPresenter.ts`) — Detects `"CONFLICT"` via string comparison, sets `isConflict: true`, and re-fetches the latest data. Other errors are stored as generic strings.
+3. **View** (`ApplicationDetail.tsx`) — Renders specific i18n keys per error type: `'recruiter.status-conflict'` for conflicts, `'recruiter.status-update-error'` for other failures.
+
+### Profile
+
+1. **Service** (`profileService.ts`) — Throws raw response text or generic fallback messages.
+2. **Presenter** (`useProfilePresenter.ts`) — Stores the raw error string in state. Validation errors come from Zod schemas.
+3. **View** (`ProfileView.tsx`) — Renders the raw error message for API errors. Validation errors are translated as i18n keys.
+
 ## Testing
 
 ### Running Tests

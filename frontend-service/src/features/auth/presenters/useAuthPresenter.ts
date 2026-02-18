@@ -5,6 +5,8 @@ import {
   type ApplicantRegisterRequest,
   type AuthRequest,
   type AuthState,
+  AuthError,
+  AuthStatus,
 } from '../types/authTypes';
 import { AUTH_CHANGED_EVENT } from '../hooks/useAuth';
 
@@ -36,7 +38,7 @@ export const useAuthPresenter = () => {
     setValidationErrors({});
 
     if (credentials.password !== credentials.confirmPassword) {
-      setValidationErrors({ confirmPassword: 'auth.password-mismatch' });
+      setValidationErrors({ confirmPassword: AuthError.PASSWORD_MISMATCH });
       return;
     }
 
@@ -57,7 +59,7 @@ export const useAuthPresenter = () => {
       return;
     }
 
-    setState({ status: 'loading', message: 'Registering...' });
+    setState({ status: 'loading', message: AuthStatus.REGISTERING });
     try {
       const payload: ApplicantRegisterRequest = {
         username: credentials.username,
@@ -65,13 +67,16 @@ export const useAuthPresenter = () => {
         email: credentials.email,
         pnr: credentials.pnr,
       };
-      const successMessage = await authService.register(payload);
+      await authService.register(payload);
 
-      setState({ status: 'success', message: successMessage });
+      setState({ status: 'success', message: '' });
     } catch (error: unknown) {
       setState({
         status: 'error',
-        message: error instanceof Error ? error.message : 'Registration failed',
+        message:
+          error instanceof Error
+            ? error.message
+            : AuthError.REGISTRATION_FAILED,
       });
     }
   };
@@ -98,19 +103,20 @@ export const useAuthPresenter = () => {
       return;
     }
 
-    setState({ status: 'loading', message: 'Logging in...' });
+    setState({ status: 'loading', message: AuthStatus.LOGGING_IN });
     try {
       const data = await authService.login(credentials);
       localStorage.setItem('authToken', data.token);
       window.dispatchEvent(new Event(AUTH_CHANGED_EVENT));
       setState({
         status: 'success',
-        message: 'Login successful! Token saved.',
+        message: AuthStatus.LOGIN_SUCCESS,
       });
     } catch (error: unknown) {
       setState({
         status: 'error',
-        message: error instanceof Error ? error.message : 'Login failed',
+        message:
+          error instanceof Error ? error.message : AuthError.LOGIN_FAILED,
       });
     }
   };
@@ -127,7 +133,7 @@ export const useAuthPresenter = () => {
   };
 
   const requestOldUserReset = async (email: string) => {
-    setState({ status: 'loading', message: 'Sending instructions...' });
+    setState({ status: 'loading', message: AuthStatus.OLD_USER_SENDING });
 
     try {
       const message = await authService.requestOldUserReset(email);
@@ -139,8 +145,7 @@ export const useAuthPresenter = () => {
     } catch {
       setState({
         status: 'success',
-        message:
-          'If this email exists in our system, you will receive password reset instructions shortly.',
+        message: AuthStatus.OLD_USER_RESET_MESSAGE,
       });
     }
   };

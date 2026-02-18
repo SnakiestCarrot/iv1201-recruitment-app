@@ -3,6 +3,7 @@ import { useAuthPresenter } from '../presenters/useAuthPresenter';
 import { authService } from '../services/authService';
 import { AUTH_CHANGED_EVENT } from '../hooks/useAuth';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
+import { AuthStatus } from '../types/authTypes';
 
 vi.mock('../services/authService', () => ({
   authService: {
@@ -52,7 +53,7 @@ describe('useAuthPresenter', () => {
 
     expect(result.current.state).toEqual({
       status: 'success',
-      message: 'Login successful! Token saved.',
+      message: AuthStatus.LOGIN_SUCCESS,
     });
   });
 
@@ -188,7 +189,7 @@ describe('useAuthPresenter', () => {
 
     expect(result.current.state).toEqual({
       status: 'success',
-      message: 'Registration successful',
+      message: '',
     });
   });
 
@@ -215,7 +216,7 @@ describe('useAuthPresenter', () => {
 
   it('handles successful old user reset request', async () => {
     (authService.requestOldUserReset as any).mockResolvedValue(
-      'If this email exists in our system, you will receive password reset instructions shortly.'
+      AuthStatus.OLD_USER_RESET_MESSAGE
     );
 
     const { result } = renderHook(() => useAuthPresenter());
@@ -228,8 +229,7 @@ describe('useAuthPresenter', () => {
 
     expect(result.current.state).toEqual({
       status: 'success',
-      message:
-        'If this email exists in our system, you will receive password reset instructions shortly.',
+      message: AuthStatus.OLD_USER_RESET_MESSAGE,
     });
   });
 
@@ -245,8 +245,6 @@ describe('useAuthPresenter', () => {
     });
 
     expect(result.current.state.status).toBe('success');
-    expect(result.current.state.message).toContain(
-      'If this email exists'
-    );
+    expect(result.current.state.message).toBe(AuthStatus.OLD_USER_RESET_MESSAGE);
   });
 });

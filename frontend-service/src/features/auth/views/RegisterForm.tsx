@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuthPresenter } from '../presenters/useAuthPresenter';
 import { useTranslation } from 'react-i18next';
 import { LanguageDropdown } from '../../../components/LanguageDropdown';
+import { authMessageMap } from '../utils/authMessageMap';
 import '../styles/RegisterForm.css';
 
 export const RegisterForm = () => {
@@ -52,7 +53,12 @@ export const RegisterForm = () => {
               className={`register-input ${validationErrors.username ? 'register-input-error' : ''}`}
             />
             {validationErrors.username && (
-              <p className="status-msg error">{t(validationErrors.username)}</p>
+              <p className="status-msg error">
+                {t(
+                  authMessageMap[validationErrors.username] ??
+                    validationErrors.username
+                )}
+              </p>
             )}
           </div>
 
@@ -68,7 +74,12 @@ export const RegisterForm = () => {
               className={`register-input ${validationErrors.email ? 'register-input-error' : ''}`}
             />
             {validationErrors.email && (
-              <p className="status-msg error">{t(validationErrors.email)}</p>
+              <p className="status-msg error">
+                {t(
+                  authMessageMap[validationErrors.email] ??
+                    validationErrors.email
+                )}
+              </p>
             )}
           </div>
 
@@ -82,7 +93,11 @@ export const RegisterForm = () => {
               className={`register-input ${validationErrors.pnr ? 'register-input-error' : ''}`}
             />
             {validationErrors.pnr && (
-              <p className="status-msg error">{t(validationErrors.pnr)}</p>
+              <p className="status-msg error">
+                {t(
+                  authMessageMap[validationErrors.pnr] ?? validationErrors.pnr
+                )}
+              </p>
             )}
           </div>
 
@@ -98,7 +113,12 @@ export const RegisterForm = () => {
               className={`register-input ${validationErrors.password ? 'register-input-error' : ''}`}
             />
             {validationErrors.password && (
-              <p className="status-msg error">{t(validationErrors.password)}</p>
+              <p className="status-msg error">
+                {t(
+                  authMessageMap[validationErrors.password] ??
+                    validationErrors.password
+                )}
+              </p>
             )}
           </div>
 
@@ -119,7 +139,10 @@ export const RegisterForm = () => {
             />
             {validationErrors.confirmPassword && (
               <p className="status-msg error">
-                {t(validationErrors.confirmPassword)}
+                {t(
+                  authMessageMap[validationErrors.confirmPassword] ??
+                    validationErrors.confirmPassword
+                )}
               </p>
             )}
           </div>
@@ -132,7 +155,9 @@ export const RegisterForm = () => {
         </form>
 
         {state.message && Object.keys(validationErrors).length === 0 && (
-          <p className={`status-msg ${state.status}`}>{state.message}</p>
+          <p className={`status-msg ${state.status}`}>
+            {t(authMessageMap[state.message] ?? state.message)}
+          </p>
         )}
 
         <div className="register-footer">

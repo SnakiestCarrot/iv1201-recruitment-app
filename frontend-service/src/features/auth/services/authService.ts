@@ -3,6 +3,8 @@ import {
   type AuthRequest,
   type AuthResponse,
   type RecruiterRegisterRequest,
+  AuthError,
+  AuthStatus,
 } from '../types/authTypes';
 
 /**
@@ -26,15 +28,22 @@ export const authService = {
    * @throws {Error} If registration fails or username is already taken.
    */
   async register(data: ApplicantRegisterRequest): Promise<string> {
-    const response = await fetch(`${API_BASE_URL}/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
+    let response: Response;
+    try {
+      response = await fetch(`${API_BASE_URL}/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+    } catch {
+      throw new Error(AuthError.SERVER_ERROR);
+    }
 
     if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(errorText || 'Registration failed');
+      if (response.status === 409) {
+        throw new Error(AuthError.USERNAME_TAKEN);
+      }
+      throw new Error(AuthError.REGISTRATION_FAILED);
     }
     return await response.text();
   },
@@ -47,18 +56,25 @@ export const authService = {
    * @throws {Error} If registration fails, username is taken, or secret code is invalid.
    */
   async registerRecruiter(data: RecruiterRegisterRequest): Promise<string> {
-    const response = await fetch(`${API_BASE_URL}/register/recruiter`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
+    let response: Response;
+    try {
+      response = await fetch(`${API_BASE_URL}/register/recruiter`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+    } catch {
+      throw new Error(AuthError.SERVER_ERROR);
+    }
 
     if (!response.ok) {
-      const errorText = await response.text();
       if (response.status === 403) {
-        throw new Error('Invalid registration code');
+        throw new Error(AuthError.INVALID_SECRET_CODE);
       }
-      throw new Error(errorText || 'Registration failed');
+      if (response.status === 409) {
+        throw new Error(AuthError.USERNAME_TAKEN);
+      }
+      throw new Error(AuthError.REGISTRATION_FAILED);
     }
     return await response.text();
   },
@@ -82,9 +98,9 @@ export const authService = {
       body: JSON.stringify({ email }),
     });
 
-    // We intentionally do NOT expose whether the emails exists
+    // We intentionally do NOT expose whether the email exists
     if (!response.ok) {
-      return 'If this email exists in our system, you will receive password reset instructions shortly.';
+      return AuthStatus.OLD_USER_RESET_MESSAGE;
     }
 
     return await response.text();
@@ -98,19 +114,22 @@ export const authService = {
    * @throws {Error} If login fails or credentials are invalid.
    */
   async login(data: AuthRequest): Promise<AuthResponse> {
-    const response = await fetch(`${API_BASE_URL}/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
+    let response: Response;
+    try {
+      response = await fetch(`${API_BASE_URL}/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+    } catch {
+      throw new Error(AuthError.SERVER_ERROR);
+    }
 
     if (!response.ok) {
-      const errorText = await response.text();
-      if (errorText.includes('Invalid')) {
-        throw new Error('Invalid username or password');
-      } else {
-        throw new Error(errorText || 'Login failed');
+      if (response.status === 401) {
+        throw new Error(AuthError.INVALID_CREDENTIALS);
       }
+      throw new Error(AuthError.LOGIN_FAILED);
     }
     return await response.json();
   },
