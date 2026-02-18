@@ -136,6 +136,51 @@ class ApplicationServiceTest {
     }
 
     @Test
+    void upsertApplicationReplaceAll_deletesExistingCollectionsAndInsertsNewOnes() {
+        ApplicationsCreateDTO dto = mock(ApplicationsCreateDTO.class);
+        CompetenceDTO compDto = mock(CompetenceDTO.class);
+        AvailabilityDTO availDto = mock(AvailabilityDTO.class);
+
+        when(dto.getName()).thenReturn("Bob");
+        when(dto.getSurname()).thenReturn("Builder");
+
+        when(compDto.getCompetenceId()).thenReturn(1L);
+        when(compDto.getYearsOfExperience()).thenReturn(BigDecimal.ONE);
+        when(dto.getCompetences()).thenReturn(List.of(compDto));
+
+        when(availDto.getFromDate()).thenReturn(LocalDate.parse("2024-01-01"));
+        when(availDto.getToDate()).thenReturn(LocalDate.parse("2024-01-31"));
+        when(dto.getAvailabilities()).thenReturn(List.of(availDto));
+
+        Person existingPerson = new Person();
+        when(personRepository.findById(200L)).thenReturn(Optional.of(existingPerson));
+
+        Competence mockCompetence = new Competence();
+        when(competenceRepository.findById(1L)).thenReturn(Optional.of(mockCompetence));
+
+        applicationService.upsertApplicationReplaceAll(dto, 200L);
+
+        verify(personRepository).save(existingPerson);
+        assertThat(existingPerson.getName()).isEqualTo("Bob");
+        assertThat(existingPerson.getSurname()).isEqualTo("Builder");
+        assertThat(existingPerson.getStatus()).isEqualTo("UNHANDLED");
+
+        verify(competenceProfileRepository).deleteByPerson_Id(200L);
+        verify(availabilityRepository).deleteByPerson_Id(200L);
+
+        verify(competenceProfileRepository).save(argThat(profile ->
+                profile.getPerson() == existingPerson &&
+                        profile.getCompetence() == mockCompetence &&
+                        profile.getYearsOfExperience().equals(BigDecimal.ONE)));
+
+        verify(availabilityRepository).save(argThat(avail ->
+                avail.getPerson() == existingPerson &&
+                        avail.getFromDate().equals(LocalDate.parse("2024-01-01")) &&
+                        avail.getToDate().equals(LocalDate.parse("2024-01-31"))));
+    }
+
+
+    @Test
     void updateApplicationStatus_successWhenVersionMatches() {
         Person person = new Person();
         person.setId(1L);
@@ -184,6 +229,70 @@ class ApplicationServiceTest {
                     assertThat(rse.getStatusCode().value()).isEqualTo(409);
                 });
     }
+
+    @Test
+    void getApplicationById_returnsMappedDetailDto() {
+        Person person = new Person();
+        person.setId(10L);
+        person.setName("Anna");
+        person.setSurname("Andersson");
+        person.setEmail("anna@example.com");
+        person.setPnr("19900101-0000");
+        person.setStatus(null);
+        person.setVersion(5L);
+
+        Competence competence = new Competence();
+        competence.setCompetenceId(3L);
+        competence.setName("Java");
+
+        CompetenceProfile profile = new CompetenceProfile();
+        profile.setPerson(person);
+        profile.setCompetence(competence);
+        profile.setYearsOfExperience(BigDecimal.TEN);
+
+        Availability availability = new Availability();
+        availability.setPerson(person);
+        availability.setFromDate(LocalDate.parse("2024-02-01"));
+        availability.setToDate(LocalDate.parse("2024-02-28"));
+
+        when(personRepository.findById(10L)).thenReturn(Optional.of(person));
+        when(competenceProfileRepository.findByPerson_Id(10L)).thenReturn(List.of(profile));
+        when(availabilityRepository.findByPerson_Id(10L)).thenReturn(List.of(availability));
+
+        var result = applicationService.getApplicationById(10L);
+
+        assertThat(result.getPersonID()).isEqualTo(10L);
+        assertThat(result.getName()).isEqualTo("Anna");
+        assertThat(result.getSurname()).isEqualTo("Andersson");
+        assertThat(result.getEmail()).isEqualTo("anna@example.com");
+        assertThat(result.getPnr()).isEqualTo("19900101-0000");
+        assertThat(result.getStatus()).isEqualTo("UNHANDLED");
+        assertThat(result.getVersion()).isEqualTo(5L);
+
+        assertThat(result.getCompetences()).hasSize(1);
+        CompetenceDTO mappedComp = result.getCompetences().get(0);
+        assertThat(mappedComp.getCompetenceId()).isEqualTo(3L);
+        assertThat(mappedComp.getName()).isEqualTo("Java");
+        assertThat(mappedComp.getYearsOfExperience()).isEqualTo(BigDecimal.TEN);
+
+        assertThat(result.getAvailabilities()).hasSize(1);
+        AvailabilityDTO mappedAvail = result.getAvailabilities().get(0);
+        assertThat(mappedAvail.getFromDate()).isEqualTo(LocalDate.parse("2024-02-01"));
+        assertThat(mappedAvail.getToDate()).isEqualTo(LocalDate.parse("2024-02-28"));
+    }
+
+    @Test
+    void getApplicationById_throwsNotFoundWhenPersonMissing() {
+        when(personRepository.findById(999L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> applicationService.getApplicationById(999L))
+                .isInstanceOf(ResponseStatusException.class)
+                .satisfies(ex -> {
+                    ResponseStatusException rse = (ResponseStatusException) ex;
+                    assertThat(rse.getStatusCode().value()).isEqualTo(404);
+                });
+    }
+
 
     @Test
     void emailExists_returnsTrue_whenRepositoryReturnsTrue() {

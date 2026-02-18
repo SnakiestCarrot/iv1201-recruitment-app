@@ -1,6 +1,7 @@
 import type {
   Competence,
   ApplicationCreateDTO,
+  ApplicationDetailDTO,
 } from '../types/applicationTypes';
 
 /**
@@ -66,6 +67,60 @@ export const applicationService = {
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(errorText || 'Failed to submit application');
+    }
+  },
+
+  /**
+   * Fetches the current user's application details for pre-filling the form.
+   *
+   * @returns A promise that resolves to the application details.
+   * @throws {Error} If the request fails with a non-OK and non-404 status.
+   */
+  async getMyApplication(): Promise<ApplicationDetailDTO> {
+    const token = localStorage.getItem('authToken');
+
+    const response = await fetch(`${BASE_URL}/applications/me`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.status === 404) {
+      throw new Error('APPLICATION_NOT_FOUND');
+    }
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText || 'Failed to load application');
+    }
+
+    return await response.json();
+  },
+
+  /**
+   * Creates or updates the current user's application using replace-all semantics.
+   *
+   * @param data - The application data including personal info, competences, and availabilities.
+   * @returns A promise that resolves when the application is successfully saved.
+   * @throws {Error} If the update fails or returns a non-OK status.
+   */
+  async updateMyApplication(data: ApplicationCreateDTO): Promise<void> {
+    const token = localStorage.getItem('authToken');
+
+    const response = await fetch(`${BASE_URL}/applications/me`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText || 'Failed to update application');
     }
   },
 };

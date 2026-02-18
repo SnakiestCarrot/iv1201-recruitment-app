@@ -46,6 +46,44 @@ public class ApplicationController {
     }
 
     /**
+     * Returns the full details of the currently authenticated user's application.
+     *
+     * @param userIdHeader the authenticated user's ID forwarded by the Gateway
+     * @return the application detail DTO
+     */
+    @GetMapping("/me")
+    public ResponseEntity<ApplicationDetailDTO> getMyApplication(
+            @RequestHeader(value = "X-User-ID", required = false) Long userIdHeader) {
+
+        if (userIdHeader == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User ID header missing");
+        }
+
+        return ResponseEntity.ok(applicationService.getApplicationById(userIdHeader));
+    }
+
+    /**
+     * Creates or updates the currently authenticated user's application using
+     * replace-all semantics for competences and availabilities.
+     *
+     * @param applicationDTO the application payload
+     * @param userIdHeader   the authenticated user's ID forwarded by the Gateway
+     * @return 204 No Content on success
+     */
+    @PutMapping("/me")
+    public ResponseEntity<Void> upsertMyApplication(
+            @RequestBody ApplicationsCreateDTO applicationDTO,
+            @RequestHeader(value = "X-User-ID", required = false) Long userIdHeader) {
+
+        if (userIdHeader == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User ID header missing");
+        }
+
+        applicationService.upsertApplicationReplaceAll(applicationDTO, userIdHeader);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
      * Returns the full details of a specific application.
      *
      * @param id the person ID of the application to retrieve
