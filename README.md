@@ -181,15 +181,19 @@ Core business logic for managing job applications, competences, and availability
 
 **Endpoints:**
 
-| Method | Path | Auth | Description |
-|--------|------|:----:|-------------|
-| GET | `/api/recruitment/competences` | No | List all available competences |
-| POST | `/api/recruitment/applications` | Yes | Submit a new application |
-| GET | `/api/recruitment/applications` | Yes | List all applications (summaries) |
-| GET | `/api/recruitment/applications/{id}` | Yes | Get full application details |
-| PUT | `/api/recruitment/applications/{id}/status` | Yes | Update application status |
-| POST | `/api/recruitment/persons` | Internal | Create person record (called by auth service) |
-| POST | `/api/recruitment/migrated-user` | No | Password reset for legacy users |
+| Method | Path | Description | Auth |
+|--------|------|-------------|------|
+| POST | `/api/recruitment/applications` | Submit an application (competences + availability) | Yes (X-User-ID) |
+| GET | `/api/recruitment/applications` | List all applications (summary view) | Yes |
+| GET | `/api/recruitment/applications/{id}` | Get full application details | Yes |
+| PUT | `/api/recruitment/applications/{id}/status` | Update application status (accept/reject) | Yes |
+| POST | `/api/recruitment/persons` | Create person record (internal, called by auth-service) | No |
+| GET | `/api/recruitment/competences` | List available competences | No |
+| GET | `/api/recruitment/availabilities` | List all availability periods | No |
+| PUT | `/api/recruitment/profile` | Update user profile (email, pnr) for migrated users | Yes (X-User-ID) |
+| POST | `/api/recruitment/migrated-user` | Handle migrated user password reset | No |
+| GET | `/api/recruitment/applications/me` | Get the current users application details | Yes (X-User-ID) |
+| PUT | `/api/recruitment/applications/me` | Update the current users application | Yes (X-User-ID) |
 
 **Optimistic locking:** Application status updates use a `version` field. The client must send the expected version; if it doesn't match (another recruiter updated it), the service returns `409 Conflict`.
 
