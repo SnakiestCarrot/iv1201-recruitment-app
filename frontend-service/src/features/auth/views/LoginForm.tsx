@@ -54,7 +54,7 @@ export const LoginForm = () => {
   };
 
   return (
-    <div className="auth-card">
+    <div className="auth-container"><div className="auth-card">
       <LanguageDropdown />
 
       <h2>{t('auth.login')}</h2>
@@ -149,6 +149,6 @@ export const LoginForm = () => {
         <p>{t('auth.dont-have-account')}</p>
         <Link to="/register">{t('auth.register')}</Link>
       </div>
-    </div>
+    </div></div>
   );
 };

@@ -1,4 +1,4 @@
-/* ============ Container ============ */
+/* Container */
 .recruiter-detail-container {
   max-width: 800px;
   margin: 0 auto;
@@ -8,15 +8,15 @@
 .recruiter-detail-title {
   font-size: 1.75rem;
   font-weight: 700;
-  color: #ffffff;
+  color: #000000;
   margin-bottom: 1.5rem;
 }
 
-/* ============ Back Button ============ */
+/* Back Button */
 .recruiter-back-btn {
   background: none;
-  border: 1px solid #6b7280;
-  color: #d1d5db;
+  border: 1px solid #d1d5db;
+  color: #374151;
   padding: 0.5rem 1rem;
   border-radius: 6px;
   cursor: pointer;
@@ -26,13 +26,14 @@
 }
 
 .recruiter-back-btn:hover {
-  background-color: rgb(74, 74, 74);
-  color: #ffffff;
+  background-color: #f3f4f6;
+  color: #000000;
 }
 
-/* ============ Sections ============ */
+/* Sections */
 .recruiter-detail-section {
-  background-color: rgb(94, 94, 94);
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
   border-radius: 8px;
   padding: 1.5rem;
   margin-bottom: 1.5rem;
@@ -41,13 +42,13 @@
 .recruiter-detail-section h2 {
   font-size: 1.2rem;
   font-weight: 600;
-  color: #d1d5db;
+  color: #000000;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid rgb(74, 74, 74);
+  border-bottom: 1px solid #e5e7eb;
 }
 
-/* ============ Detail Grid ============ */
+/* Detail Grid */
 .recruiter-detail-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -68,17 +69,17 @@
 
 .recruiter-detail-label {
   font-size: 0.8rem;
-  color: #9ca3af;
+  color: #6b7280;
   text-transform: uppercase;
   font-weight: 600;
 }
 
 .recruiter-detail-value {
-  color: #ffffff;
+  color: #000000;
   font-size: 1rem;
 }
 
-/* ============ Lists ============ */
+/* Lists */
 .recruiter-detail-list {
   list-style: none;
   padding: 0;
@@ -90,8 +91,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 0;
-  color: #ffffff;
-  border-bottom: 1px solid rgb(74, 74, 74);
+  color: #000000;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .recruiter-detail-list-item:last-child {
@@ -103,7 +104,7 @@
 }
 
 .recruiter-detail-comp-years {
-  color: #9ca3af;
+  color: #6b7280;
   font-size: 0.9rem;
 }
 
@@ -112,7 +113,7 @@
   margin: 0 0.5rem;
 }
 
-/* ============ Status Buttons ============ */
+/* Status Buttons */
 .recruiter-status-buttons {
   display: flex;
   gap: 0.75rem;
@@ -136,62 +137,62 @@
 }
 
 .recruiter-status-btn-unhandled {
-  background-color: #374151;
-  color: #9ca3af;
-  border-color: #4b5563;
+  background-color: #f3f4f6;
+  color: #6b7280;
+  border-color: #d1d5db;
 }
 
 .recruiter-status-btn-unhandled:hover:not(:disabled) {
-  background-color: #4b5563;
+  background-color: #e5e7eb;
 }
 
 .recruiter-status-btn-unhandled.recruiter-status-btn-active {
-  border-color: #9ca3af;
-  background-color: #4b5563;
-  color: #ffffff;
+  border-color: #6b7280;
+  background-color: #e5e7eb;
+  color: #000000;
 }
 
 .recruiter-status-btn-accepted {
-  background-color: #065f46;
-  color: #a7f3d0;
-  border-color: #047857;
+  background-color: #f0fdf4;
+  color: #16a34a;
+  border-color: #a7f3d0;
 }
 
 .recruiter-status-btn-accepted:hover:not(:disabled) {
-  background-color: #047857;
+  background-color: #dcfce7;
 }
 
 .recruiter-status-btn-accepted.recruiter-status-btn-active {
-  border-color: #a7f3d0;
-  background-color: #047857;
-  color: #ffffff;
+  border-color: #16a34a;
+  background-color: #dcfce7;
+  color: #047857;
 }
 
 .recruiter-status-btn-rejected {
-  background-color: #7f1d1d;
-  color: #fca5a5;
-  border-color: #991b1b;
+  background-color: #fef2f2;
+  color: #dc2626;
+  border-color: #fecaca;
 }
 
 .recruiter-status-btn-rejected:hover:not(:disabled) {
-  background-color: #991b1b;
+  background-color: #fee2e2;
 }
 
 .recruiter-status-btn-rejected.recruiter-status-btn-active {
-  border-color: #fca5a5;
-  background-color: #991b1b;
-  color: #ffffff;
+  border-color: #dc2626;
+  background-color: #fee2e2;
+  color: #b91c1c;
 }
 
-/* ============ Messages ============ */
+/* Messages */
 .recruiter-success-msg {
   margin-top: 0.75rem;
-  color: #a7f3d0;
+  color: #16a34a;
   font-size: 0.9rem;
 }
 
 .recruiter-error-msg {
   margin-top: 0.75rem;
-  color: #fca5a5;
+  color: #dc2626;
   font-size: 0.9rem;
 }

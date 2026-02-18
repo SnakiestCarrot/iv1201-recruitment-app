@@ -70,7 +70,7 @@ export const RecruiterRegisterForm = () => {
   };
 
   return (
-    <div className="auth-card">
+    <div className="auth-container"><div className="auth-card">
       <LanguageDropdown />
 
       <h2>{t('auth.recruiter-register')}</h2>
@@ -199,6 +199,6 @@ export const RecruiterRegisterForm = () => {
         <p>{t('auth.already-have-account')}</p>
         <Link to="/login">{t('auth.login-here')}</Link>
       </div>
-    </div>
+    </div></div>
   );
 };

@@ -34,7 +34,7 @@ export const RegisterForm = () => {
   };
 
   return (
-    <div className="auth-card">
+    <div className="auth-container"><div className="auth-card">
       <LanguageDropdown />
       <h2>{t('auth.register')}</h2>
 
@@ -140,6 +140,6 @@ export const RegisterForm = () => {
         <p>{t('auth.register-as-recruiter')}</p>
         <Link to="/register/recruiter">{t('auth.recruiter-register')}</Link>
       </div>
-    </div>
+    </div></div>
   );
 };

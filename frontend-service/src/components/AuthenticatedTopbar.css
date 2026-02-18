@@ -1,8 +1,8 @@
 .topbar {
-  background-color: #1f2937;
-  color: white;
+  background-color: #ffffff;
+  color: #000000;
   padding: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid #e5e7eb;
   position: sticky;
   top: 0;
   left: 0;
@@ -33,6 +33,7 @@
   font-weight: bold;
   margin: 0;
   white-space: nowrap;
+  color: #000000;
 }
 
 .topbar-nav {
@@ -42,14 +43,14 @@
 }
 
 .topbar-link {
-  color: #d1d5db;
+  color: #374151;
   text-decoration: none;
   font-size: 0.875rem;
   transition: color 0.2s;
 }
 
 .topbar-link:hover {
-  color: white;
+  color: #2563eb;
 }
 
 .topbar-right {
@@ -65,21 +66,23 @@
 
 .topbar-lang-btn {
   padding: 0.5rem 0.75rem;
-  border: none;
+  border: 1px solid #d1d5db;
   border-radius: 0.25rem;
-  background-color: #374151;
-  color: white;
+  background-color: #ffffff;
+  color: #000000;
   font-size: 0.875rem;
   cursor: pointer;
   transition: background-color 0.2s;
 }
 
 .topbar-lang-btn:hover {
-  background-color: #4b5563;
+  background-color: #f3f4f6;
 }
 
 .topbar-lang-btn-active {
   background-color: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
 }
 
 .topbar-logout-btn {
@@ -87,7 +90,7 @@
   border: none;
   border-radius: 0.25rem;
   background-color: #dc2626;
-  color: white;
+  color: #ffffff;
   font-size: 0.875rem;
   cursor: pointer;
   transition: background-color 0.2s;
@@ -97,7 +100,6 @@
   background-color: #b91c1c;
 }
 
-/* Responsive design */
 @media (max-width: 768px) {
   .topbar-container {
     flex-direction: column;
