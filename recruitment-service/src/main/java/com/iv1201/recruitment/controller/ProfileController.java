@@ -2,6 +2,7 @@ package com.iv1201.recruitment.controller;
 
 import com.iv1201.recruitment.dto.UpdateProfileDTO;
 import com.iv1201.recruitment.service.ApplicationService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ public class ProfileController {
      */
     @PutMapping
     public ResponseEntity<Void> updateProfile(
-            @RequestBody UpdateProfileDTO dto,
+            @Valid @RequestBody UpdateProfileDTO dto,
             @RequestHeader(value = "X-User-ID", required = false) Long userId) {
 
         if (userId == null) {

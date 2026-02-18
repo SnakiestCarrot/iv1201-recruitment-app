@@ -2,6 +2,11 @@ package com.iv1201.recruitment.dto;
 
 import java.util.List;
 
+import com.iv1201.recruitment.validation.ValidName;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+
+
 /**
  * Data Transfer Object used when an applicant submits a recruitment application.
  *
@@ -11,10 +16,18 @@ import java.util.List;
  */
 public class ApplicationsCreateDTO {
 
+    @NotBlank(message = "Name is required")
+    @ValidName(message = "Name must contain only letters, spaces, and hyphens")
     private String name;
+
+    @NotBlank(message = "Surname is required")
+    @ValidName(message = "Surname must contain only letters, spaces, and hyphens")
     private String surname;
 
+    @Valid
     private List<CompetenceDTO> competences;
+
+    @Valid
     private List<AvailabilityDTO> availabilities;
 
     public String getName() {
