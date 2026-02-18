@@ -5,6 +5,7 @@ import com.iv1201.recruitment.dto.ApplicationSummaryDTO;
 import com.iv1201.recruitment.dto.ApplicationsCreateDTO;
 import com.iv1201.recruitment.dto.StatusUpdateDTO;
 import com.iv1201.recruitment.service.ApplicationService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +33,7 @@ public class ApplicationController {
      * Expects a header 'X-User-ID' forwarded by the Gateway.
      */
     @PostMapping
-    public ResponseEntity<Void> submitApplication(@RequestBody ApplicationsCreateDTO applicationDTO, 
+    public ResponseEntity<Void> submitApplication(@Valid @RequestBody ApplicationsCreateDTO applicationDTO, 
                                                   @RequestHeader(value = "X-User-ID", required = false) Long userIdHeader) {
         
         // PRODUCTION FIX: Fail loudly if the header is missing
@@ -72,7 +73,7 @@ public class ApplicationController {
      */
     @PutMapping("/me")
     public ResponseEntity<Void> upsertMyApplication(
-            @RequestBody ApplicationsCreateDTO applicationDTO,
+            @Valid @RequestBody ApplicationsCreateDTO applicationDTO,
             @RequestHeader(value = "X-User-ID", required = false) Long userIdHeader) {
 
         if (userIdHeader == null) {
@@ -103,7 +104,7 @@ public class ApplicationController {
      */
     @PutMapping("/{id}/status")
     public ResponseEntity<Void> updateApplicationStatus(@PathVariable Long id,
-                                                         @RequestBody StatusUpdateDTO statusUpdateDTO) {
+                                                         @Valid @RequestBody StatusUpdateDTO statusUpdateDTO) {
         applicationService.updateApplicationStatus(id, statusUpdateDTO.getStatus(), statusUpdateDTO.getVersion());
         return ResponseEntity.ok().build();
     }

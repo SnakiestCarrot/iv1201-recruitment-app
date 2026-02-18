@@ -31,7 +31,7 @@ class ProfileControllerTest {
     void updateProfile_returnsOk_whenSuccessful() throws Exception {
         UpdateProfileDTO dto = new UpdateProfileDTO();
         dto.setEmail("new@mail.com");
-        dto.setPnr("199001011234");
+        dto.setPnr("19900101-1234");
 
         mockMvc.perform(put("/api/recruitment/profile")
                 .header("X-User-ID", 1L)

@@ -2,6 +2,7 @@ package com.iv1201.recruitment.controller;
 
 import com.iv1201.recruitment.dto.EmailRequestDTO;
 import com.iv1201.recruitment.service.ApplicationService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public class MigrationController {
      * Always returns a generic response for security reasons.
      */
     @PostMapping("/migrated-user")
-    public ResponseEntity<String> handleMigratedUser(@RequestBody EmailRequestDTO request) {
+    public ResponseEntity<String> handleMigratedUser(@Valid @RequestBody EmailRequestDTO request) {
 
         boolean exists = applicationService.emailExists(request.getEmail());
 

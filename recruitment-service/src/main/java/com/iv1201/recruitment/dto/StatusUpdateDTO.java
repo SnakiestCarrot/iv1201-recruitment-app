@@ -1,5 +1,9 @@
 package com.iv1201.recruitment.dto;
 
+import com.iv1201.recruitment.validation.ValidStatus;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 /**
  * Data Transfer Object for updating the status of a recruitment application.
  *
@@ -7,7 +11,11 @@ package com.iv1201.recruitment.dto;
  */
 public class StatusUpdateDTO {
 
+    @NotBlank(message = "Status is required")
+    @ValidStatus
     private String status;
+
+    @NotNull(message = "Version is required")
     private Long version;
 
     public String getStatus() {

@@ -52,11 +52,18 @@ class ApplicationControllerTest {
             .andExpect(jsonPath("$[0].status").value("UNHANDLED"));
     }
 
+    private static final String VALID_APPLICATION_JSON = "{" +
+            "\"name\":\"Alice\"," +
+            "\"surname\":\"Doe\"," +
+            "\"competences\":[{\"competenceId\":1,\"yearsOfExperience\":2.5}]," +
+            "\"availabilities\":[{\"fromDate\":\"2026-06-01\",\"toDate\":\"2026-08-01\"}]" +
+            "}";
+
     @Test
     void submitApplication_withUserHeader_callsServiceAndReturns201() throws Exception {
         mockMvc.perform(post("/api/recruitment/applications")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{}")
+                .content(VALID_APPLICATION_JSON)
                 .header("X-User-ID", "42"))
             .andExpect(status().isCreated());
 
@@ -67,7 +74,7 @@ class ApplicationControllerTest {
     void submitApplication_missingUserHeader_returns401() throws Exception {
         mockMvc.perform(post("/api/recruitment/applications")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{}"))
+                .content(VALID_APPLICATION_JSON))
             .andExpect(status().isUnauthorized());
     }
 
@@ -99,7 +106,7 @@ class ApplicationControllerTest {
     void upsertMyApplication_withUserHeader_callsServiceAndReturns204() throws Exception {
         mockMvc.perform(put("/api/recruitment/applications/me")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{}")
+                .content(VALID_APPLICATION_JSON)
                 .header("X-User-ID", "7"))
             .andExpect(status().isNoContent());
 
@@ -110,7 +117,7 @@ class ApplicationControllerTest {
     void upsertMyApplication_missingUserHeader_returns401() throws Exception {
         mockMvc.perform(put("/api/recruitment/applications/me")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{}"))
+                .content(VALID_APPLICATION_JSON))
             .andExpect(status().isUnauthorized());
     }
 
