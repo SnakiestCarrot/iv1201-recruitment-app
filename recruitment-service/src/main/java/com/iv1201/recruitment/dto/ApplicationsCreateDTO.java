@@ -6,6 +6,9 @@ import com.iv1201.recruitment.validation.ValidName;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+import java.util.List;
 
 /**
  * Data Transfer Object used when an applicant submits a recruitment application.
@@ -26,7 +29,8 @@ public class ApplicationsCreateDTO {
 
     @Valid
     private List<CompetenceDTO> competences;
-    
+
+    @NotNull(message = "Availabilities are required")
     @Valid
     private List<AvailabilityDTO> availabilities;
 
