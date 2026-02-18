@@ -73,7 +73,10 @@ export const useAuthPresenter = () => {
     } catch (error: unknown) {
       setState({
         status: 'error',
-        message: error instanceof Error ? error.message : AuthError.REGISTRATION_FAILED,
+        message:
+          error instanceof Error
+            ? error.message
+            : AuthError.REGISTRATION_FAILED,
       });
     }
   };
@@ -112,7 +115,8 @@ export const useAuthPresenter = () => {
     } catch (error: unknown) {
       setState({
         status: 'error',
-        message: error instanceof Error ? error.message : AuthError.LOGIN_FAILED,
+        message:
+          error instanceof Error ? error.message : AuthError.LOGIN_FAILED,
       });
     }
   };

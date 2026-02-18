@@ -74,7 +74,10 @@ export const LoginForm = () => {
             />
             {validationErrors.username && (
               <span style={{ color: 'red', fontSize: '0.85em' }}>
-                {t(authMessageMap[validationErrors.username] ?? validationErrors.username)}
+                {t(
+                  authMessageMap[validationErrors.username] ??
+                    validationErrors.username
+                )}
               </span>
             )}
           </div>
@@ -91,7 +94,10 @@ export const LoginForm = () => {
             />
             {validationErrors.password && (
               <span style={{ color: 'red', fontSize: '0.85em' }}>
-                {t(authMessageMap[validationErrors.password] ?? validationErrors.password)}
+                {t(
+                  authMessageMap[validationErrors.password] ??
+                    validationErrors.password
+                )}
               </span>
             )}
           </div>
@@ -144,7 +150,9 @@ export const LoginForm = () => {
         </div>
 
         {state.message && Object.keys(validationErrors).length === 0 && (
-          <p className={`status-msg ${state.status}`}>{t(authMessageMap[state.message] ?? state.message)}</p>
+          <p className={`status-msg ${state.status}`}>
+            {t(authMessageMap[state.message] ?? state.message)}
+          </p>
         )}
 
         <div className="login-footer">

@@ -2,7 +2,11 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '../services/authService';
 import { RecruiterRegisterSchema } from '../../../utils/validation';
-import { type AuthState, type RecruiterRegisterRequest, AuthError } from '../types/authTypes';
+import {
+  type AuthState,
+  type RecruiterRegisterRequest,
+  AuthError,
+} from '../types/authTypes';
 
 /**
  * Custom React hook for managing recruiter registration operations.
