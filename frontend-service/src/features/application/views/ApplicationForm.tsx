@@ -43,9 +43,7 @@ export const ApplicationForm: React.FC = () => {
       <h2 className="application-title">{t('application.title')}</h2>
 
       {!initialLoadDone && (
-        <div className="application-loading">
-          {t('application.loading')}
-        </div>
+        <div className="application-loading">{t('application.loading')}</div>
       )}
 
       {initialLoadDone && status === 'success' && (
