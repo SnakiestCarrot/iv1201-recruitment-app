@@ -18,7 +18,8 @@ export const AuthenticatedTopbar = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  const handleLanguageChange = (lng: string) => {
+  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const lng = e.target.value;
     i18n.changeLanguage(lng);
     localStorage.setItem('lang', lng);
     document.documentElement.lang = lng;
@@ -57,20 +58,14 @@ export const AuthenticatedTopbar = () => {
         </div>
 
         <div className="topbar-right">
-          <div className="topbar-language">
-            <button
-              onClick={() => handleLanguageChange('en')}
-              className={`topbar-lang-btn ${i18n.language === 'en' ? 'topbar-lang-btn-active' : ''}`}
-            >
-              EN
-            </button>
-            <button
-              onClick={() => handleLanguageChange('sv')}
-              className={`topbar-lang-btn ${i18n.language === 'sv' ? 'topbar-lang-btn-active' : ''}`}
-            >
-              SV
-            </button>
-          </div>
+          <select
+            value={i18n.language?.startsWith('sv') ? 'sv' : 'en'}
+            onChange={handleLanguageChange}
+            className="topbar-lang-select"
+          >
+            <option value="en">English</option>
+            <option value="sv">Svenska</option>
+          </select>
           <button onClick={handleLogout} className="topbar-logout-btn">
             {t('dash.logout')}
           </button>

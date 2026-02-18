@@ -1,15 +1,11 @@
-/* ============================================
-   Dashboard Styles
-   ============================================ */
+/* Dashboard Styles */
 
 .dashboard-container {
   text-align: center;
   margin-top: 50px;
 }
 
-/* ============================================
-   Language Selector
-   ============================================ */
+/* Language Selector */
 
 .dashboard-language-selector {
   position: absolute;
@@ -21,9 +17,7 @@
   padding: 5px;
 }
 
-/* ============================================
-   Dashboard Link
-   ============================================ */
+/* Dashboard Link */
 
 .dashboard-link-section {
   margin-top: 1.5rem;
@@ -31,8 +25,8 @@
 
 .dashboard-link {
   display: inline-block;
-  background-color: #3b82f6;
-  color: rgb(255, 255, 255);
+  background-color: #2563eb;
+  color: #ffffff;
   padding: 0.5rem 1.5rem;
   border-radius: 4px;
   text-decoration: none;
@@ -40,29 +34,27 @@
 }
 
 .dashboard-link:hover {
-  background-color: #777777;
+  background-color: #0036ca;
+  color: #ffffff;
 }
 
-/* ============================================
-   Status Box
-   ============================================ */
+/* Status Box */
 
 .dashboard-status-box {
   padding: 20px;
-  border: 1px solid #4CAF50;
+  margin: 2rem;
+  border: 1px solid #16a34a;
   display: inline-block;
   border-radius: 8px;
-  background-color: #f0fff4;
+  background-color: #f0fdf4;
 }
 
 .dashboard-status-title {
-  color: #2e7d32;
+  color: #16a34a;
   margin: 0;
 }
 
-/* ============================================
-   Actions
-   ============================================ */
+/* Actions */
 
 .dashboard-actions {
   margin-top: 30px;
@@ -70,8 +62,8 @@
 
 .dashboard-btn-logout {
   padding: 0.625rem 1.25rem;
-  background-color: #b8120c;
-  color: white;
+  background-color: #dc2626;
+  color: #ffffff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -80,5 +72,5 @@
 }
 
 .dashboard-btn-logout:hover {
-  background-color: #991008;
+  background-color: #b91c1c;
 }

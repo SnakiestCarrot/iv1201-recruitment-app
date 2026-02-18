@@ -36,7 +36,7 @@ describe('Dashboard Component', () => {
     expect(screen.getByText(/dash.title/)).toBeInTheDocument();
     expect(screen.getByText(/testuser/)).toBeInTheDocument();
     expect(screen.getByText(/dash.role-id-sentence/)).toBeInTheDocument();
-    expect(screen.getByText(/1/)).toBeInTheDocument();
+    expect(screen.getByText(/dash.recruiter/)).toBeInTheDocument();
   });
 
   it('displays the correct username from presenter', () => {
@@ -49,7 +49,7 @@ describe('Dashboard Component', () => {
     render(<Dashboard />);
 
     expect(screen.getByText(/johndoe/)).toBeInTheDocument();
-    expect(screen.getByText(/2/)).toBeInTheDocument();
+    expect(screen.getByText(/dash.applicant/)).toBeInTheDocument();
   });
 
   it('renders application link for applicants', () => {

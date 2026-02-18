@@ -33,11 +33,13 @@
   },
   "dash": {
     "title": "Välkommen, ",
-    "logged-in-state": "Du är nu inloggad.",
-    "role-id-sentence": "Du har roll-ID: ",
+    "logged-in-state": "Du är inloggad.",
+    "role-id-sentence": "Du är ",
     "logout": "Logga ut",
     "dashboard": "Instrumentpanel",
-    "apply-now": "Ansök Nu"
+    "apply-now": "Ansök Nu",
+    "recruiter": "en rekryterare",
+    "applicant": "en sökande"
   },
   "application": {
     "title": "Registrera Ansökan",

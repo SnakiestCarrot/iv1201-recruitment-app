@@ -1,25 +1,21 @@
-/* ============================================
-   Login Form Styles
-   ============================================ */
+/* Login Form Styles */
 
-/* Language Selector */
 .login-language-selector {
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.3rem;
 }
 
 .login-language-label {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.2rem;
   align-items: center;
-  font-size: 0.9rem;
+  font-size: 0.2rem;
 }
 
-/* Form Input */
 .login-input {
-  width: 100%;
-  padding: 0.5rem;
+  width: 90%;
+  padding: 0.2rem;
   border: 1px solid #d1d5db;
   border-radius: 4px;
   outline: none;
@@ -28,23 +24,22 @@
 }
 
 .login-input:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
 }
 
-/* Footer */
 .login-footer {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   text-align: center;
   font-size: 0.9rem;
 }
 
 .login-footer p {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.2rem;
 }
 
 .login-footer a {
-  color: #3b82f6;
+  color: #2563eb;
   text-decoration: none;
 }
 
@@ -52,9 +47,7 @@
   text-decoration: underline;
 }
 
-/* ============================================
-   Old User Section
-   ============================================ */
+/* Old User Section */
 
 .old-user-section {
   margin-top: 1rem;
@@ -62,7 +55,7 @@
 }
 
 .old-user-link {
-  color: #3b82f6;
+  color: #2563eb;
   font-size: 0.9rem;
   cursor: pointer;
   margin-top: 0.5rem;

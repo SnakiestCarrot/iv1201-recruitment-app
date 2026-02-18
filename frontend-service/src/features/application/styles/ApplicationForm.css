@@ -1,34 +1,30 @@
-/* ============================================
-   Application Form Container
-   ============================================ */
+/* Application Form Container */
 
 .application-container {
-  max-width: 800px;
+  max-width: 600px;
   margin: 0 auto;
-  padding: 2.5rem;
-  margin-top: 2.5rem;
-  background-color: rgb(94, 94, 94);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-top: 1rem;
+  background-color: #ffffff;
+  border: 0px solid #e5e7eb;
   border-radius: 8px;
 }
 
 .application-title {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: bold;
-  margin-bottom: 1.5rem;
-  color: #1f2937;
+  margin-bottom: 0.5rem;
+  color: #000000;
 }
 
-/* ============================================
-   Success State
-   ============================================ */
+/* Success State */
 
 .application-success-container {
   max-width: 800px;
   margin: 0 auto;
   margin-top: 2.5rem;
   padding: 1.5rem;
-  background-color:  rgb(94, 94, 94);
+  background-color: #f0fdf4;
   border-radius: 8px;
   border: 1px solid #a7f3d0;
 }
@@ -44,9 +40,7 @@
   color: #065f46;
 }
 
-/* ============================================
-   Form Sections
-   ============================================ */
+/* Form Sections */
 
 .application-section {
   margin-bottom: 1.5rem;
@@ -56,12 +50,10 @@
   font-size: 1.125rem;
   font-weight: 600;
   margin-bottom: 0.75rem;
-  color: #374151;
+  color: #000000;
 }
 
-/* ============================================
-   Form Grid
-   ============================================ */
+/* Form Grid */
 
 .application-grid {
   display: grid;
@@ -75,14 +67,12 @@
   }
 }
 
-/* ============================================
-   Form Inputs
-   ============================================ */
+/* Form Inputs */
 
 .application-input {
   width: 100%;
   padding: 0.5rem;
-  border: 1px solid  rgb(94, 94, 94);
+  border: 1px solid #d1d5db;
   border-radius: 4px;
   outline: none;
   transition: all 0.2s;
@@ -90,29 +80,28 @@
 }
 
 .application-input:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
 }
 
 .application-select {
   width: 100%;
   padding: 0.5rem;
-  border: 1px solid  rgb(179, 179, 179);
+  border: 1px solid #d1d5db;
   border-radius: 4px;
-  background-color:  rgb(94, 94, 94);
+  background-color: #ffffff;
+  color: #000000;
   box-sizing: border-box;
 }
 
 .application-label {
   display: block;
   font-size: 0.75rem;
-  color: #ffffff;
+  color: #374151;
   margin-bottom: 0.25rem;
 }
 
-/* ============================================
-   Input Groups
-   ============================================ */
+/* Input Groups */
 
 .application-input-group {
   display: flex;
@@ -142,9 +131,7 @@
   }
 }
 
-/* ============================================
-   Buttons
-   ============================================ */
+/* Buttons */
 
 .application-btn {
   padding: 0.5rem 1rem;
@@ -157,49 +144,49 @@
 }
 
 .application-btn-add {
-  background-color: white;
-  color: #1f2937;
+  background-color: #ffffff;
+  color: #000000;
   border: 1px solid #d1d5db;
 }
 
 .application-btn-add:hover {
-  background-color: #f3f4f6;
+  background-color: #d2d3d5;
 }
 
 .application-btn-submit {
   width: 100%;
   padding: 0.625rem;
-  background-color: #1f2937;
-  color: white;
+  background-color: #2563eb;
+  color: #ffffff;
 }
 
 .application-btn-submit:hover {
-  background-color: #374151;
+  background-color: #1d4ed8;
 }
 
 .application-btn-submit:disabled {
-  background-color: #e5e7eb;
-  color: #9ca3af;
+  background-color: #d1d5db;
+  color: #6b7280;
   cursor: not-allowed;
 }
 
 .application-btn-remove {
   background: none;
   border: none;
-  color: #ffffff;
+  color: #dc2626;
   text-decoration: underline;
-  padding: 0;
+  padding: 10px;
   font-size: 0.875rem;
   cursor: pointer;
+  width: 20%;
 }
 
 .application-btn-remove:hover {
-  color: #ef4444;
+  color: #d21414;
+  background-color: #d2d3d5;
 }
 
-/* ============================================
-   Lists
-   ============================================ */
+/* Lists */
 
 .application-list {
   list-style: none;
@@ -208,14 +195,13 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  background-color: rgb(94, 94, 94);;
 }
 
 .application-list-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: rgb(94, 94, 94);;
+  background-color: #f9fafb;
   padding: 0.75rem;
   border-radius: 4px;
   border: 1px solid #e5e7eb;
@@ -228,25 +214,22 @@
 
 .application-list-item-label {
   font-weight: 500;
+  color: #000000;
 }
 
 .application-list-item-value {
-  color: #ffffff;
+  color: #374151;
 }
 
-/* ============================================
-   Empty State
-   ============================================ */
+/* Empty State */
 
 .application-empty-text {
-  color: #9ca3af;
+  color: #6b7280;
   font-size: 0.875rem;
   font-style: italic;
 }
 
-/* ============================================
-   Error Message
-   ============================================ */
+/* Error Message */
 
 .application-error {
   padding: 0.75rem;
@@ -258,9 +241,7 @@
   margin-top: 1rem;
 }
 
-/* ============================================
-   Alignment Helper
-   ============================================ */
+/* Alignment Helper */
 
 .application-align-end {
   align-self: flex-end;

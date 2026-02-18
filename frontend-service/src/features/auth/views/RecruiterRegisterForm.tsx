@@ -70,134 +70,140 @@ export const RecruiterRegisterForm = () => {
   };
 
   return (
-    <div className="auth-card">
-      <LanguageDropdown />
+    <div className="auth-container">
+      <div className="auth-card">
+        <LanguageDropdown />
 
-      <h2>{t('auth.recruiter-register')}</h2>
+        <h2>{t('auth.recruiter-register')}</h2>
 
-      <form onSubmit={handleSubmit} noValidate>
-        <div className="form-group">
-          <label htmlFor="rec-username">{t('common.username')}</label>
-          <input
-            id="rec-username"
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className={`register-input ${validationErrors.username ? 'register-input-error' : ''}`}
-          />
-          {validationErrors.username && (
-            <p className="status-msg error">{t(validationErrors.username)}</p>
-          )}
+        <form onSubmit={handleSubmit} noValidate>
+          <div className="form-group">
+            <label htmlFor="rec-username">{t('common.username')}</label>
+            <input
+              id="rec-username"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className={`register-input ${validationErrors.username ? 'register-input-error' : ''}`}
+            />
+            {validationErrors.username && (
+              <p className="status-msg error">{t(validationErrors.username)}</p>
+            )}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="rec-email">{t('common.email')}</label>
+            <input
+              id="rec-email"
+              type="email"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (validationErrors.email) {
+                  setValidationErrors((prev) =>
+                    Object.fromEntries(
+                      Object.entries(prev).filter(([key]) => key !== 'email')
+                    )
+                  );
+                }
+              }}
+              className={`register-input ${validationErrors.email ? 'register-input-error' : ''}`}
+            />
+            {validationErrors.email && (
+              <p className="status-msg error">{t(validationErrors.email)}</p>
+            )}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="rec-pnr">{t('common.pnr')}</label>
+            <input
+              id="rec-pnr"
+              type="text"
+              value={pnr}
+              onChange={(e) => {
+                setPnr(e.target.value);
+                if (validationErrors.pnr) {
+                  setValidationErrors((prev) =>
+                    Object.fromEntries(
+                      Object.entries(prev).filter(([key]) => key !== 'pnr')
+                    )
+                  );
+                }
+              }}
+              className={`register-input ${validationErrors.pnr ? 'register-input-error' : ''}`}
+            />
+            {validationErrors.pnr && (
+              <p className="status-msg error">{t(validationErrors.pnr)}</p>
+            )}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="rec-password">{t('common.password')}</label>
+            <input
+              id="rec-password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className={`register-input ${validationErrors.password ? 'register-input-error' : ''}`}
+            />
+            {validationErrors.password && (
+              <p className="status-msg error">{t(validationErrors.password)}</p>
+            )}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="rec-confirm">{t('auth.confirm-password')}</label>
+            <input
+              id="rec-confirm"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className={`register-input ${validationErrors.confirmPassword ? 'register-input-error' : ''}`}
+            />
+            {validationErrors.confirmPassword && (
+              <p className="status-msg error">
+                {t(validationErrors.confirmPassword)}
+              </p>
+            )}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="rec-secret">{t('auth.secret-code')}</label>
+            <input
+              id="rec-secret"
+              type="password"
+              value={secretCode}
+              onChange={(e) => setSecretCode(e.target.value)}
+              placeholder={t('auth.secret-code-placeholder')}
+              className={`register-input ${validationErrors.secretCode ? 'register-input-error' : ''}`}
+            />
+            {validationErrors.secretCode && (
+              <p className="status-msg error">
+                {t(validationErrors.secretCode)}
+              </p>
+            )}
+          </div>
+
+          <button type="submit" disabled={state.status === 'loading'}>
+            {state.status === 'loading'
+              ? t('auth.creating')
+              : t('auth.register')}
+          </button>
+        </form>
+
+        {state.message && Object.keys(validationErrors).length === 0 && (
+          <p className={`status-msg ${state.status}`}>{state.message}</p>
+        )}
+
+        <div className="register-footer">
+          <p>{t('auth.register-as-applicant')}</p>
+          <Link to="/register">{t('auth.register')}</Link>
         </div>
 
-        <div className="form-group">
-          <label htmlFor="rec-email">{t('common.email')}</label>
-          <input
-            id="rec-email"
-            type="email"
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              if (validationErrors.email) {
-                setValidationErrors((prev) =>
-                  Object.fromEntries(
-                    Object.entries(prev).filter(([key]) => key !== 'email')
-                  )
-                );
-              }
-            }}
-            className={`register-input ${validationErrors.email ? 'register-input-error' : ''}`}
-          />
-          {validationErrors.email && (
-            <p className="status-msg error">{t(validationErrors.email)}</p>
-          )}
+        <div className="register-footer">
+          <p>{t('auth.already-have-account')}</p>
+          <Link to="/login">{t('auth.login-here')}</Link>
         </div>
-
-        <div className="form-group">
-          <label htmlFor="rec-pnr">{t('common.pnr')}</label>
-          <input
-            id="rec-pnr"
-            type="text"
-            value={pnr}
-            onChange={(e) => {
-              setPnr(e.target.value);
-              if (validationErrors.pnr) {
-                setValidationErrors((prev) =>
-                  Object.fromEntries(
-                    Object.entries(prev).filter(([key]) => key !== 'pnr')
-                  )
-                );
-              }
-            }}
-            className={`register-input ${validationErrors.pnr ? 'register-input-error' : ''}`}
-          />
-          {validationErrors.pnr && (
-            <p className="status-msg error">{t(validationErrors.pnr)}</p>
-          )}
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="rec-password">{t('common.password')}</label>
-          <input
-            id="rec-password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className={`register-input ${validationErrors.password ? 'register-input-error' : ''}`}
-          />
-          {validationErrors.password && (
-            <p className="status-msg error">{t(validationErrors.password)}</p>
-          )}
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="rec-confirm">{t('auth.confirm-password')}</label>
-          <input
-            id="rec-confirm"
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className={`register-input ${validationErrors.confirmPassword ? 'register-input-error' : ''}`}
-          />
-          {validationErrors.confirmPassword && (
-            <p className="status-msg error">
-              {t(validationErrors.confirmPassword)}
-            </p>
-          )}
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="rec-secret">{t('auth.secret-code')}</label>
-          <input
-            id="rec-secret"
-            type="password"
-            value={secretCode}
-            onChange={(e) => setSecretCode(e.target.value)}
-            placeholder={t('auth.secret-code-placeholder')}
-            className={`register-input ${validationErrors.secretCode ? 'register-input-error' : ''}`}
-          />
-          {validationErrors.secretCode && (
-            <p className="status-msg error">{t(validationErrors.secretCode)}</p>
-          )}
-        </div>
-
-        <button type="submit" disabled={state.status === 'loading'}>
-          {state.status === 'loading' ? t('auth.creating') : t('auth.register')}
-        </button>
-      </form>
-
-      {state.message && Object.keys(validationErrors).length === 0 && (
-        <p className={`status-msg ${state.status}`}>{state.message}</p>
-      )}
-
-      <div className="register-footer">
-        <p>{t('auth.register-as-applicant')}</p>
-        <Link to="/register">{t('auth.register')}</Link>
-      </div>
-
-      <div className="register-footer">
-        <p>{t('auth.already-have-account')}</p>
-        <Link to="/login">{t('auth.login-here')}</Link>
       </div>
     </div>
   );

@@ -58,14 +58,12 @@ describe('AuthenticatedTopbar Component (applicant)', () => {
     expect(screen.getByText('profile.settings')).toBeInTheDocument();
   });
 
-  it('renders language buttons', () => {
+  it('renders language dropdown', () => {
     render(<AuthenticatedTopbar />);
 
-    const enButton = screen.getByRole('button', { name: 'EN' });
-    const svButton = screen.getByRole('button', { name: 'SV' });
-
-    expect(enButton).toBeInTheDocument();
-    expect(svButton).toBeInTheDocument();
+    const langSelect = screen.getByRole('combobox');
+    expect(langSelect).toBeInTheDocument();
+    expect(langSelect).toHaveValue('en');
   });
 
   it('renders logout button', () => {
@@ -76,11 +74,11 @@ describe('AuthenticatedTopbar Component (applicant)', () => {
     expect(logoutButton).toBeInTheDocument();
   });
 
-  it('changes language when language button is clicked', () => {
+  it('changes language when dropdown selection changes', () => {
     render(<AuthenticatedTopbar />);
 
-    const svButton = screen.getByRole('button', { name: 'SV' });
-    fireEvent.click(svButton);
+    const langSelect = screen.getByRole('combobox');
+    fireEvent.change(langSelect, { target: { value: 'sv' } });
 
     expect(localStorage.setItem).toHaveBeenCalledWith('lang', 'sv');
   });
@@ -100,13 +98,12 @@ describe('AuthenticatedTopbar Component (applicant)', () => {
     expect(mockNavigate).toHaveBeenCalledWith('/login');
   });
 
-  it('applies active class to current language button', () => {
+  it('selects current language in dropdown', () => {
     render(<AuthenticatedTopbar />);
 
-    const enButton = screen.getByRole('button', { name: 'EN' });
-
-    // EN should be active since the mock returns language: 'en'
-    expect(enButton).toHaveClass('topbar-lang-btn-active');
+    const langSelect = screen.getByRole('combobox');
+    // EN should be selected since the mock returns language: 'en'
+    expect(langSelect).toHaveValue('en');
   });
 
   it('navigation links have correct href attributes', () => {
