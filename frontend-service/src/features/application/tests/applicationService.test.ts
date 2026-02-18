@@ -60,6 +60,55 @@ describe('applicationService', () => {
     });
   });
 
+  describe('submitApplication', () => {
+    const mockApplicationData: ApplicationCreateDTO = {
+      name: 'John',
+      surname: 'Doe',
+      competences: [{ competenceId: 1, yearsOfExperience: 3 }],
+      availabilities: [{ fromDate: '2026-06-01', toDate: '2026-08-31' }],
+    };
+
+    it('submits application with auth token', async () => {
+      fetchMock.mockResolvedValue({ ok: true });
+
+      await applicationService.submitApplication(mockApplicationData);
+
+      expect(fetchMock).toHaveBeenCalledWith(
+        expect.stringContaining('/applications'),
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer fake-token',
+          },
+          body: JSON.stringify(mockApplicationData),
+        }
+      );
+    });
+
+    it('throws error with server message on failure', async () => {
+      fetchMock.mockResolvedValue({
+        ok: false,
+        text: () => Promise.resolve('Duplicate application'),
+      });
+
+      await expect(
+        applicationService.submitApplication(mockApplicationData)
+      ).rejects.toThrow('Duplicate application');
+    });
+
+    it('throws fallback error when server returns empty text', async () => {
+      fetchMock.mockResolvedValue({
+        ok: false,
+        text: () => Promise.resolve(''),
+      });
+
+      await expect(
+        applicationService.submitApplication(mockApplicationData)
+      ).rejects.toThrow('Failed to submit application');
+    });
+  });
+
   describe('getMyApplication', () => {
     it('fetches my application details', async () => {
       const mockAppDetails = { name: 'John', surname: 'Doe' };
@@ -90,6 +139,30 @@ describe('applicationService', () => {
       });
 
       await expect(applicationService.getMyApplication()).rejects.toThrow('APPLICATION_NOT_FOUND');
+    });
+
+    it('throws error with server message on non-404 failure', async () => {
+      fetchMock.mockResolvedValue({
+        ok: false,
+        status: 500,
+        text: () => Promise.resolve('Internal server error'),
+      });
+
+      await expect(applicationService.getMyApplication()).rejects.toThrow(
+        'Internal server error'
+      );
+    });
+
+    it('throws fallback error when server returns empty text on non-404 failure', async () => {
+      fetchMock.mockResolvedValue({
+        ok: false,
+        status: 500,
+        text: () => Promise.resolve(''),
+      });
+
+      await expect(applicationService.getMyApplication()).rejects.toThrow(
+        'Failed to load application'
+      );
     });
   });
 
