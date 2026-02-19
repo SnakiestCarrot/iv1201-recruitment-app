@@ -6,9 +6,20 @@ import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Route configuration for the API gateway.
+ * Defines routing rules for auth and recruitment services.
+ */
 @Configuration
 public class RouteConfig {
 
+    /**
+     * Configures custom routes for the gateway, applying JWT authentication where required.
+     *
+     * @param builder the route locator builder.
+     * @param authFilter the JWT authentication filter.
+     * @return the configured route locator.
+     */
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder, JwtAuthenticationFilter authFilter) {
         return builder.routes()

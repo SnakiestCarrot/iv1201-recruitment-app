@@ -19,6 +19,9 @@ public class AuthController {
 
     private final AuthService authService;
 
+    /**
+     * @param authService the service handling authentication business logic.
+     */
     public AuthController(AuthService authService) {
         this.authService = authService;
     }

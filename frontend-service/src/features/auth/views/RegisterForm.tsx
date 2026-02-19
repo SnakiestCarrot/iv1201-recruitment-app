@@ -6,6 +6,10 @@ import { LanguageDropdown } from '../../../components/LanguageDropdown';
 import { authMessageMap } from '../utils/authMessageMap';
 import '../styles/RegisterForm.css';
 
+/**
+ * Registration form view for new applicant accounts.
+ * Handles username, email, personal number, and password input with validation.
+ */
 export const RegisterForm = () => {
   const { state, registerUser, validationErrors, clearError } =
     useAuthPresenter();

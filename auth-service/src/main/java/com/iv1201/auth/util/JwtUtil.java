@@ -12,6 +12,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Utility for generating signed JWT tokens.
+ */
 @Component
 public class JwtUtil {
 
@@ -20,9 +23,9 @@ public class JwtUtil {
     private String secret;
 
     /**
-     * Generates a token for the user.
-     * @param username The user's ID/Username.
-     * @param roleId The user's role (to be embedded in the token).
+     * Generates a JWT token containing the user's role and ID as claims.
+     *
+     * @param user The authenticated user entity.
      * @return A signed JWT string.
      */
     public String generateToken(com.iv1201.auth.model.User user) {

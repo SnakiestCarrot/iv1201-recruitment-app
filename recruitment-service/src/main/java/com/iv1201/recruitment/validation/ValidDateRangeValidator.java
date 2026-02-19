@@ -10,10 +10,12 @@ import jakarta.validation.ConstraintValidatorContext;
  */
 public class ValidDateRangeValidator implements ConstraintValidator<ValidDateRange, AvailabilityDTO> {
 
+    /** {@inheritDoc} */
     @Override
     public void initialize(ValidDateRange constraintAnnotation) {
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isValid(AvailabilityDTO value, ConstraintValidatorContext context) {
         if (value == null) {

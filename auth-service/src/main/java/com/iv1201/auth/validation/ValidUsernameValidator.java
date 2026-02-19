@@ -21,10 +21,12 @@ public class ValidUsernameValidator implements ConstraintValidator<ValidUsername
 
     private static final int MIN_LENGTH = 3;
 
+    /** {@inheritDoc} */
     @Override
     public void initialize(ValidUsername constraintAnnotation) {
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         if (value == null || value.isBlank()) {

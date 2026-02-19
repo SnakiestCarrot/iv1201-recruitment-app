@@ -15,6 +15,11 @@ public class AvailabilityService {
 
     private final AvailabilityRepository AvailabilityRepository;
     
+    /**
+     * Constructs an AvailabilityService with the required repository.
+     *
+     * @param AvailabilityRepository the availability repository.
+     */
     public AvailabilityService(AvailabilityRepository AvailabilityRepository) {
         this.AvailabilityRepository = AvailabilityRepository;
     }

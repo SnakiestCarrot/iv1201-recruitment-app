@@ -19,6 +19,9 @@ public class PersonController {
 
     private final ApplicationService applicationService;
 
+    /**
+     * @param applicationService the service for person/application operations.
+     */
     public PersonController(ApplicationService applicationService) {
         this.applicationService = applicationService;
     }

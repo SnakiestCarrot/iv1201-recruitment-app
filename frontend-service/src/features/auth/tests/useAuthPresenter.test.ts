@@ -189,7 +189,7 @@ describe('useAuthPresenter', () => {
 
     expect(result.current.state).toEqual({
       status: 'success',
-      message: '',
+      message: 'REGISTRATION_SUCCESS',
     });
   });
 

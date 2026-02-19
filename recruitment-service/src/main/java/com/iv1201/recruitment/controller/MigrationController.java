@@ -6,12 +6,18 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * REST controller for data migration endpoints.
+ */
 @RestController
 @RequestMapping("api/recruitment")
 public class MigrationController {
 
     private final ApplicationService applicationService;
 
+    /**
+     * @param applicationService the service for application operations.
+     */
     public MigrationController(ApplicationService applicationService) {
         this.applicationService = applicationService;
     }

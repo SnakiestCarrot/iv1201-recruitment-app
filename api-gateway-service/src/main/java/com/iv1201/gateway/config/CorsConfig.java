@@ -9,11 +9,20 @@ import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
+/**
+ * CORS configuration for the API gateway.
+ * Allows cross-origin requests from the frontend.
+ */
 @Configuration
 public class CorsConfig {
     @Value("${app.frontend.url:http://localhost:3000}")
     private String frontendUrl;
 
+    /**
+     * Creates the CORS web filter with allowed origins, methods, and headers.
+     *
+     * @return the configured CORS filter.
+     */
     @Bean
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration corsConfig = new CorsConfiguration();

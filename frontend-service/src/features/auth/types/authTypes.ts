@@ -1,3 +1,7 @@
+/**
+ * Domain-level error codes thrown by the auth service layer.
+ * Mapped to i18n keys in the view layer via {@link authMessageMap}.
+ */
 export const AuthError = {
   INVALID_CREDENTIALS: 'INVALID_CREDENTIALS',
   USERNAME_TAKEN: 'USERNAME_TAKEN',
@@ -8,9 +12,14 @@ export const AuthError = {
   PASSWORD_MISMATCH: 'PASSWORD_MISMATCH',
 } as const;
 
+/**
+ * Domain-level status codes used by the auth presenter layer.
+ * Mapped to i18n keys in the view layer via {@link authMessageMap}.
+ */
 export const AuthStatus = {
   LOGGING_IN: 'LOGGING_IN',
   LOGIN_SUCCESS: 'LOGIN_SUCCESS',
+  REGISTRATION_SUCCESS: 'REGISTRATION_SUCCESS',
   REGISTERING: 'REGISTERING',
   OLD_USER_SENDING: 'OLD_USER_SENDING',
   OLD_USER_RESET_MESSAGE: 'OLD_USER_RESET_MESSAGE',

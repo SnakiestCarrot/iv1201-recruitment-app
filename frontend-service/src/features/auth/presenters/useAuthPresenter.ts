@@ -69,7 +69,7 @@ export const useAuthPresenter = () => {
       };
       await authService.register(payload);
 
-      setState({ status: 'success', message: '' });
+      setState({ status: 'success', message: AuthStatus.REGISTRATION_SUCCESS });
     } catch (error: unknown) {
       setState({
         status: 'error',
