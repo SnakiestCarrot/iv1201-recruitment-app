@@ -2,6 +2,8 @@
 
 A web-based recruitment system for an amusement park, built with a microservices architecture. Applicants can register, submit their competence profiles and availability periods, and recruiters can review and manage applications.
 
+deployed at http://18.193.22.98:3000/
+
 ## Tech Stack
 
 | Layer | Technology |
