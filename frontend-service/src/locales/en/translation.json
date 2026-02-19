@@ -112,7 +112,9 @@
     "pnr-required": "Personal number is required",
     "pnr-format": "Must be in format YYYYMMDD-XXXX",
     "name-invalid-characters": "First name can only contain letters, spaces, and hyphens",
-    "surname-invalid-characters": "Surname can only contain letters, spaces, and hyphens"
+    "surname-invalid-characters": "Surname can only contain letters, spaces, and hyphens",
+    "experience-negative": "Years of experience cannot be negative",
+    "date-range-invalid": "From date must be before to date"
   },
   "profile": {
     "title": "Update Profile",

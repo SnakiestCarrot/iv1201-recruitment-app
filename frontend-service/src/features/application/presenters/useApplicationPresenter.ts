@@ -139,6 +139,16 @@ export const useApplicationPresenter = () => {
   const addCompetence = () => {
     if (!currentCompetenceId || !currentYoe) return;
 
+    const yoe = parseFloat(currentYoe);
+    if (yoe < 0) {
+      setErrors((prev) => ({ ...prev, yearsOfExperience: 'validation.experience-negative' }));
+      return;
+    }
+    setErrors((prev) => {
+      const { yearsOfExperience, ...rest } = prev;
+      return rest;
+    });
+
     const compId = parseInt(currentCompetenceId);
     const compName = availableCompetences.find(
       (c) => c.competenceId === compId
@@ -169,6 +179,15 @@ export const useApplicationPresenter = () => {
    */
   const addAvailability = () => {
     if (!currentFromDate || !currentToDate) return;
+
+    if (currentFromDate >= currentToDate) {
+      setErrors((prev) => ({ ...prev, dateRange: 'validation.date-range-invalid' }));
+      return;
+    }
+    setErrors((prev) => {
+      const { dateRange, ...rest } = prev;
+      return rest;
+    });
 
     setAddedAvailabilities((prev) => [
       ...prev,

@@ -112,7 +112,9 @@
     "pnr-required": "Personnummer krävs",
     "pnr-format": "Måste vara i formatet ÅÅÅÅMMDD-XXXX",
     "name-invalid-characters": "Förnamn får bara innehålla bokstäver, mellanslag och bindestreck",
-    "surname-invalid-characters": "Efternamn får bara innehålla bokstäver, mellanslag och bindestreck"
+    "surname-invalid-characters": "Efternamn får bara innehålla bokstäver, mellanslag och bindestreck",
+    "experience-negative": "Antal års erfarenhet kan inte vara negativt",
+    "date-range-invalid": "Från-datum måste vara före till-datum"
   },
   "profile": {
     "title": "Uppdatera Profil",

@@ -123,7 +123,7 @@ export const ApplicationForm: React.FC = () => {
               placeholder={t('application.years-exp')}
               value={currentYoe}
               onChange={(e) => setCurrentYoe(e.target.value)}
-              className="application-input application-input-small"
+              className={`application-input application-input-small ${errors.yearsOfExperience ? 'application-input-error' : ''}`}
             />
 
             <button
@@ -134,6 +134,10 @@ export const ApplicationForm: React.FC = () => {
               {t('application.add')}
             </button>
           </div>
+
+          {errors.yearsOfExperience && (
+            <span className="application-error-text">{t(errors.yearsOfExperience)}</span>
+          )}
 
           {addedCompetences.length > 0 && (
             <ul className="application-list">
@@ -202,6 +206,10 @@ export const ApplicationForm: React.FC = () => {
               {t('application.add')}
             </button>
           </div>
+
+          {errors.dateRange && (
+            <span className="application-error-text">{t(errors.dateRange)}</span>
+          )}
 
           {addedAvailabilities.length > 0 && (
             <ul className="application-list">
