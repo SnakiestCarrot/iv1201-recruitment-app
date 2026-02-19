@@ -15,10 +15,12 @@ public class ValidSecretCodeValidator implements ConstraintValidator<ValidSecret
     @Value("${recruiter.secret.code}")
     private String recruiterSecretCode;
 
+    /** {@inheritDoc} */
     @Override
     public void initialize(ValidSecretCode constraintAnnotation) {
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         if (value == null) {

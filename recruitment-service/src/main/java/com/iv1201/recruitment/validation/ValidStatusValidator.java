@@ -12,10 +12,12 @@ public class ValidStatusValidator implements ConstraintValidator<ValidStatus, St
 
     private static final Set<String> VALID_STATUSES = Set.of("UNHANDLED", "ACCEPTED", "REJECTED");
 
+    /** {@inheritDoc} */
     @Override
     public void initialize(ValidStatus constraintAnnotation) {
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         if (value == null || value.isBlank()) {

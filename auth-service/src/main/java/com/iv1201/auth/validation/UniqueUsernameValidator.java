@@ -14,14 +14,19 @@ public class UniqueUsernameValidator implements ConstraintValidator<UniqueUserna
 
     private final UserRepository userRepository;
 
+    /**
+     * @param userRepository the repository for checking username existence.
+     */
     public UniqueUsernameValidator(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void initialize(UniqueUsername constraintAnnotation) {
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         if (value == null) {

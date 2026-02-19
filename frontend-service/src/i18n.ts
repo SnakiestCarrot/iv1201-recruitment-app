@@ -18,4 +18,5 @@ i18n.use(initReactI18next).init({
   },
 });
 
+/** Configured i18next instance with English and Swedish translations. */
 export default i18n;

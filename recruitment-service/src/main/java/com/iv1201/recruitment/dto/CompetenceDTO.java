@@ -5,6 +5,9 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
+/**
+ * DTO representing a competence with years of experience.
+ */
 public class CompetenceDTO {
 
     @NotNull(message = "Competence ID is required")

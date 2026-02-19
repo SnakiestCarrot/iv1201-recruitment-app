@@ -8,5 +8,11 @@ import com.iv1201.recruitment.model.Person;
  */
 public interface PersonRepository extends JpaRepository<Person, Long> {
     
+    /**
+     * Checks whether a person with the given email already exists.
+     *
+     * @param email the email address to check.
+     * @return {@code true} if a person with the email exists, {@code false} otherwise.
+     */
     boolean existsByEmail(String email);
 }

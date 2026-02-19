@@ -3,6 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { useApplicationPresenter } from '../presenters/useApplicationPresenter';
 import '../styles/ApplicationForm.css';
 
+/**
+ * Application form view for submitting job applications.
+ * Allows applicants to enter personal info, competences, and availability periods.
+ */
 export const ApplicationForm: React.FC = () => {
   const { t } = useTranslation();
   const {

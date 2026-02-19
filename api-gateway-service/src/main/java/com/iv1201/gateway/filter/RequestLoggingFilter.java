@@ -8,11 +8,19 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import reactor.core.publisher.Mono;
 
+/**
+ * Configuration for request logging in the API gateway.
+ */
 @Configuration
 public class RequestLoggingFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestLoggingFilter.class);
 
+    /**
+     * Creates a global filter that logs incoming request details.
+     *
+     * @return the logging filter.
+     */
     @Bean
     @Order(-1) // make sure this filter is applied early when request comes in
     public GlobalFilter globalLogger() {

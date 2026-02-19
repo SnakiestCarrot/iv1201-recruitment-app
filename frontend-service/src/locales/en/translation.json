@@ -30,6 +30,7 @@
     "old-user-sending": "Sending...",
     "old-user-send": "Send Instructions",
     "old-user-back": "Back to login",
+    "register-success": "Account created successfully!",
     "login-success": "Login successful!",
     "logging-in": "Logging in...",
     "registering": "Registering...",

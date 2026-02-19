@@ -13,16 +13,27 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
+/**
+ * REST controller for managing recruitment applications.
+ */
 @RestController
 @RequestMapping("api/recruitment/applications")
 public class ApplicationController {
 
     private final ApplicationService applicationService;
 
+    /**
+     * @param applicationService the service for application operations.
+     */
     public ApplicationController(ApplicationService applicationService) {
         this.applicationService = applicationService;
     }
 
+    /**
+     * Retrieves all applications as summaries.
+     *
+     * @return list of application summaries.
+     */
     @GetMapping
     public ResponseEntity<List<ApplicationSummaryDTO>> getAllApplications() {
         return ResponseEntity.ok(applicationService.getAllApplications());

@@ -2,6 +2,9 @@ package com.iv1201.recruitment.model;
 
 import jakarta.persistence.*;
 
+/**
+ * JPA entity representing a competence type available in the system.
+ */
 @Entity
 @Table(name = "competence")
 public class Competence {

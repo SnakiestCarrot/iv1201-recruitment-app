@@ -8,12 +8,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+/**
+ * REST controller for user profile management.
+ */
 @RestController
 @RequestMapping("api/recruitment/profile")
 public class ProfileController {
 
     private final ApplicationService applicationService;
 
+    /**
+     * @param applicationService the service for profile operations.
+     */
     public ProfileController(ApplicationService applicationService) {
         this.applicationService = applicationService;
     }

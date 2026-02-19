@@ -2,6 +2,9 @@ package com.iv1201.recruitment.model;
 
 import jakarta.persistence.*;
 
+/**
+ * JPA entity representing a person in the recruitment system.
+ */
 @Entity
 @Table(name = "person")
 public class Person {

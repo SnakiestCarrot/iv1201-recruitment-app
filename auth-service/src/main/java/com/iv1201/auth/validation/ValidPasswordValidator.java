@@ -21,10 +21,12 @@ public class ValidPasswordValidator implements ConstraintValidator<ValidPassword
 
     private static final int MIN_LENGTH = 6;
 
+    /** {@inheritDoc} */
     @Override
     public void initialize(ValidPassword constraintAnnotation) {
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         if (value == null || value.isBlank()) {

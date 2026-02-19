@@ -17,10 +17,12 @@ public class ValidNameValidator implements ConstraintValidator<ValidName, String
         "^[\\p{L} -]+$"
     );
 
+    /** {@inheritDoc} */
     @Override
     public void initialize(ValidName constraintAnnotation) {
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         if (value == null || value.isBlank()) {

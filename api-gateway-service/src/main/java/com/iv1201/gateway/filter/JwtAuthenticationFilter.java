@@ -25,10 +25,20 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
     @Value("${jwt.secret:defaultSecretKey12345678901234567890}") 
     private String secretKey;
 
+    /**
+     * Creates a new JWT authentication filter with default configuration.
+     */
     public JwtAuthenticationFilter() {
         super(Config.class);
     }
 
+    /**
+     * Applies the JWT authentication filter to incoming requests.
+     * Validates the JWT token and injects the user ID as an X-User-ID header.
+     *
+     * @param config the filter configuration.
+     * @return the configured gateway filter.
+     */
     @Override
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
@@ -75,6 +85,7 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
         };
     }
 
+    /** Configuration class for the JWT authentication filter. */
     public static class Config {
         // Configuration properties if needed
     }

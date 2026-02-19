@@ -22,10 +22,12 @@ public class ValidPnrValidator implements ConstraintValidator<ValidPnr, String> 
         "^(19|20)\\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])-\\d{4}$"
     );
 
+    /** {@inheritDoc} */
     @Override
     public void initialize(ValidPnr constraintAnnotation) {
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         if (value == null || value.isBlank()) {

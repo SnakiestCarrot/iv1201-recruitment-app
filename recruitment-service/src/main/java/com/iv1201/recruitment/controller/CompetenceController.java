@@ -23,6 +23,9 @@ public class CompetenceController {
 
     private final CompetenceService competenceService;
 
+    /**
+     * @param competenceService the service for competence operations.
+     */
     public CompetenceController(CompetenceService competenceService) {
         this.competenceService = competenceService;
     }
